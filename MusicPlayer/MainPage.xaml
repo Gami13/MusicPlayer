@@ -22,8 +22,6 @@
 
 
 
-                <mdc:Button Clicked="ToggleLanguage"
-                            Text="{x:Static res:AppResources.toggleLanguage}"/>
 
             </StackLayout>
         </StackLayout>

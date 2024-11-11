@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -122,5 +125,20 @@
   </data>
   <data name="toggleLanguage" xml:space="preserve">
     <value>Zmień język</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="musicDirectory" xml:space="preserve">
+    <value>Katalog muzyki</value>
+  </data>
+  <data name="noDirectorySelected" xml:space="preserve">
+    <value>Nie wybrano katalogu</value>
+  </data>
+  <data name="browse" xml:space="preserve">
+    <value>Przeglądaj</value>
   </data>
 </root>

@@ -2,9 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using Android.Graphics;
-using Android.Runtime;
-using AndroidX.Annotations;
+
 
 namespace MusicPlayer;
 
@@ -15,38 +13,53 @@ public class MainActivity : MauiAppCompatActivity
 	{
 		base.OnCreate(savedInstanceState);
 
-		if (Build.VERSION.SdkInt >= BuildVersionCodes.R) // API level 30
+		if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
 		{
-			SetStatusBarColorForNew();
+			SetStatusBarColorApi30();
 		}
 		else if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
 		{
-			SetStatusBarColorForLollipopAndAbove();
+			SetStatusBarColorApi21();
 		}
-
 
 	}
-	[RequiresApi(Api = (int)BuildVersionCodes.R)]
-	private void SetStatusBarColorForNew()
+
+#pragma warning disable CA1416
+
+	private void SetStatusBarColorApi30()
 	{
-		if (Window != null)
+		Window?.SetDecorFitsSystemWindows(false);
+		Window?.SetStatusBarColor(Android.Graphics.Color.Transparent);
+		Window?.InsetsController?.Apply(controller =>
 		{
-			Window.SetDecorFitsSystemWindows(false);
-		}
-		Window.SetStatusBarColor(Android.Graphics.Color.Transparent);
-		var windowInsetsController = Window.InsetsController;
-		if (windowInsetsController != null)
-		{
-			windowInsetsController.Hide(WindowInsets.Type.StatusBars());
-			windowInsetsController.SystemBarsBehavior = (int)WindowInsetsControllerBehavior.ShowTransientBarsBySwipe;
-		}
+			controller.Hide(WindowInsets.Type.StatusBars());
+			controller.SystemBarsBehavior = (int)WindowInsetsControllerBehavior.ShowTransientBarsBySwipe;
+		});
 	}
 
-	[RequiresApi(Api = (int)BuildVersionCodes.Lollipop)]
-	private void SetStatusBarColorForLollipopAndAbove()
+#pragma warning disable CS0618 // Type or member is obsolete
+
+	private void SetStatusBarColorApi21()
 	{
-		Window.SetStatusBarColor(Android.Graphics.Color.Transparent);
-		Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(
-			SystemUiFlags.LayoutStable | SystemUiFlags.LayoutFullscreen);
+		Window?.SetStatusBarColor(Android.Graphics.Color.Transparent);
+		if (Window?.DecorView != null)
+		{
+			Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(
+				SystemUiFlags.LayoutStable | SystemUiFlags.LayoutFullscreen);
+		}
+	}
+#pragma warning restore CS0618 // Type or member is obsolete
+
+#pragma warning restore CA1416
+}
+
+public static class AndroidExtensions
+{
+	public static void Apply(this IWindowInsetsController? controller, Action<IWindowInsetsController> action)
+	{
+		if (controller != null)
+		{
+			action(controller);
+		}
 	}
 }
