@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-	x:Class="MusicPlayer.SettingsPage"
-	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	xmlns:local="clr-namespace:MusicPlayer"
-	xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-	BackgroundColor="{DynamicResource SurfaceColor}">
+<ContentPage x:Class="MusicPlayer.SettingsPage"
+			 xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:local="clr-namespace:MusicPlayer"
+			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
 	<ScrollView>
 		<VerticalStackLayout Padding="16"
 							 Spacing="16">
-			<!-- Language Section -->
-			<Label
-				Text="{local:Translate Key=language}"
-				FontSize="20"
-				FontAttributes="Bold"/>
+
+			<Label Text="{local:Translate Key=language}"
+				   FontSize="20"
+				   FontAttributes="Bold"/>
+			<mdc:ComboBox x:Name="LanguageSelector"
+						  LabelText="{local:Translate Key=selectLanguage}"
+						  Style="{DynamicResource FilledComboBoxStyle}"/>
+
+
 			<mdc:Button
-				x:Name="LanguageButton"
-				Clicked="OnLanguageClicked"
+				Clicked="ChangeLanguage"
 				Text="{local:Translate Key=toggleLanguage}"/>
 
-			<!-- Music Directory Section -->
-			<Label
-				Text="{local:Translate Key=musicDirectory}"
-				FontSize="20"
-				FontAttributes="Bold"/>
+
+			<Label Text="{local:Translate Key=musicDirectory}"
+				   FontSize="20"
+				   FontAttributes="Bold"/>
 			<Grid ColumnDefinitions="*,Auto">
-				<Label
-					x:Name="DirectoryLabel"
-					Text="{local:Translate Key=noDirectorySelected}"
-					VerticalOptions="Center"/>
-				<mdc:Button
-					Grid.Column="1"
-					Clicked="OnSelectDirectoryClicked"
-					Text="{local:Translate Key=browse}"/>
+				<Label x:Name="DirectoryLabel"
+					   Text="{local:Translate Key=noDirectorySelected}"
+					   VerticalOptions="Center"/>
+				<mdc:Button Grid.Column="1"
+							Text="{local:Translate Key=browse}"/>
 			</Grid>
 
-			<!-- Other settings can be added here -->
+
 
 		</VerticalStackLayout>
 	</ScrollView>

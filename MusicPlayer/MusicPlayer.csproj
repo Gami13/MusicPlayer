@@ -58,6 +58,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="IconPacks.Material" Version="1.0.8732.5-build" />
+		<PackageReference Include="IconPacks.MaterialCommunity" Version="1.0.8940.2-build" />
 		<PackageReference Include="Material.Components.Maui" Version="0.2.2-preview" />
 		<PackageReference Include="MaterialColorUtilities" Version="0.3.0" />
 		<PackageReference Include="MaterialColorUtilities.Maui" Version="0.3.0" />

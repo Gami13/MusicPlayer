@@ -86,4 +86,11 @@
   <data name="browse" xml:space="preserve">
     <value>Browse</value>
   </data>
+  <data name="selectLanguage" xml:space="preserve">
+    <value>Select Language</value>
+  </data>
+  <data name="home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+
 </root>

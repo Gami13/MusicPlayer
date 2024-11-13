@@ -8,7 +8,7 @@ public partial class App : Application
         InitializeComponent();
         colorService.Initialize(this.Resources);
 
-        MainPage = new AppShell();
+        MainPage = new WhereYouAreInator(new MainPage());
 
     }
 }

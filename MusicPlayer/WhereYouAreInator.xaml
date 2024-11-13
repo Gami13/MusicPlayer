@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
+			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:local="clr-namespace:MusicPlayer"
+			 x:Class="MusicPlayer.WhereYouAreInator">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<ContentView     BackgroundColor="{DynamicResource SurfaceColor}"
+						 x:Name="ContentView"
+						 Grid.Row="0"/>
+		<ContentView
+			Grid.Row="1">
+
+			<mdc:NavigationBar>
+				<mdc:NavigationBarItem
+					IconData="{Static icon:Material.Home}"
+					BindingContext="Home"
+					x:Name="HomeButton"
+					Text="{local:Translate Key=home}"
+					Clicked="NavigateClicked">
+
+
+				</mdc:NavigationBarItem>
+				<mdc:NavigationBarItem
+					IconData="{Static icon:Material.Settings}"
+					Text="{local:Translate Key=settings}"
+					BindingContext="Settings"
+					x:Name="SettingsButton"
+					Clicked="OnSettingsButtonClicked">
+
+				</mdc:NavigationBarItem>
+			</mdc:NavigationBar>
+		</ContentView>
+	</Grid>
+</ContentPage>
