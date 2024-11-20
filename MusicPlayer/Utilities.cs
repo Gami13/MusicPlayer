@@ -24,6 +24,28 @@ namespace MusicPlayer
             var parts = language.ToString().Split("_");
             return parts[0].ToLower() + "-" + parts[1];
         }
+
+        private static string getFormattedLanguageName(Code lang)
+
+        {
+            var code = lang.ToCultureCode();
+            var culture = new CultureInfo(code);
+            var codeParts = code.Split("-");
+            //Language name with brackets removed
+            string name = culture.NativeName.Split("(")[0].Trim().ToTitleCase();
+
+
+            if (codeParts[0].ToLower() != codeParts[1].ToLower())
+            {
+                //include code
+                name = name + " (" + codeParts[1] + ")";
+            }
+            return name;
+
+
+
+
+        }
         public static string Name(this Code language)
         => LanguageDisplayNames[language];
 
@@ -32,7 +54,7 @@ namespace MusicPlayer
                = Enum.GetValues<Code>()
                 .ToDictionary(
                     lang => lang,
-                    lang => new CultureInfo(lang.ToCultureCode()).NativeName.ToTitleCase()
+                    lang => getFormattedLanguageName(lang)
                 );
 
 

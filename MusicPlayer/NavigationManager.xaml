@@ -4,7 +4,7 @@
 			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:local="clr-namespace:MusicPlayer"
-			 x:Class="MusicPlayer.WhereYouAreInator">
+			 x:Class="MusicPlayer.NavigationManager">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
@@ -16,10 +16,9 @@
 		<ContentView
 			Grid.Row="1">
 
-			<mdc:NavigationBar>
+			<mdc:NavigationBar x:Name="NavigationDrawer">
 				<mdc:NavigationBarItem
-					IconData="{Static icon:Material.Home}"
-					BindingContext="Home"
+					BindingContext="{x:Static local:NavigationDestination.Home}"
 					x:Name="HomeButton"
 					Text="{local:Translate Key=home}"
 					Clicked="NavigateClicked">
@@ -27,11 +26,10 @@
 
 				</mdc:NavigationBarItem>
 				<mdc:NavigationBarItem
-					IconData="{Static icon:Material.Settings}"
 					Text="{local:Translate Key=settings}"
-					BindingContext="Settings"
+					BindingContext="{x:Static local:NavigationDestination.Settings}"
 					x:Name="SettingsButton"
-					Clicked="OnSettingsButtonClicked">
+					Clicked="NavigateClicked">
 
 				</mdc:NavigationBarItem>
 			</mdc:NavigationBar>

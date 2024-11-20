@@ -6,7 +6,7 @@ namespace MusicPlayer
 	[ContentProperty(nameof(Key))]
 	public class TranslateExtension : IMarkupExtension<BindingBase>
 	{
-		public required string Key { get; set; }
+		public LocalizationKeys Key { get; set; }
 
 		public BindingBase ProvideValue(IServiceProvider serviceProvider)
 		{
@@ -18,4 +18,6 @@ namespace MusicPlayer
 			return ProvideValue(serviceProvider);
 		}
 	}
+
 }
+

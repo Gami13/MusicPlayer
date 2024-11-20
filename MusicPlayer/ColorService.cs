@@ -29,3 +29,4 @@ public class CustomMaterialColorService : MaterialColorService<CorePalette, Sche
         base.Initialize(resourceDictionary);
     }
 }
+

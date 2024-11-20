@@ -8,7 +8,7 @@ public partial class App : Application
         InitializeComponent();
         colorService.Initialize(this.Resources);
 
-        MainPage = new WhereYouAreInator(new MainPage());
+        MainPage = new NavigationManager(new MainPage());
 
     }
 }

@@ -4,11 +4,6 @@ namespace MusicPlayer;
 
 public partial class SettingsPage : ContentPage
 {
-
-
-
-
-
 	public SettingsPage()
 	{
 		InitializeComponent();

@@ -5,36 +5,58 @@
 			 xmlns:local="clr-namespace:MusicPlayer"
 			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
-	<ScrollView>
-		<VerticalStackLayout Padding="16"
-							 Spacing="16">
-
-			<Label Text="{local:Translate Key=language}"
-				   FontSize="20"
-				   FontAttributes="Bold"/>
-			<mdc:ComboBox x:Name="LanguageSelector"
-						  LabelText="{local:Translate Key=selectLanguage}"
-						  Style="{DynamicResource FilledComboBoxStyle}"/>
+	<ScrollView Padding="8">
+		<mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
+				  HorizontalOptions="Fill">
+			<VerticalStackLayout>
 
 
-			<mdc:Button
-				Clicked="ChangeLanguage"
-				Text="{local:Translate Key=toggleLanguage}"/>
+				<Label Text="{local:Translate Key=generalSettings}"
+					   FontSize="24"
+					   TextColor="{DynamicResource PrimaryColor}"
+					   FontAttributes="Bold"/>
+				<Grid VerticalOptions="Center">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="163"/>
+					</Grid.ColumnDefinitions>
+					<VerticalStackLayout VerticalOptions="Center"
+										 Grid.Column="0">
+						<Label FontSize="20"
+							   FontAttributes="Bold"
+							   Text="Language"/>
+						<Label FontSize="14"
+							   Text="Changes the language used in the application's interface"/>
+
+					</VerticalStackLayout>
 
 
-			<Label Text="{local:Translate Key=musicDirectory}"
-				   FontSize="20"
-				   FontAttributes="Bold"/>
-			<Grid ColumnDefinitions="*,Auto">
-				<Label x:Name="DirectoryLabel"
-					   Text="{local:Translate Key=noDirectorySelected}"
-					   VerticalOptions="Center"/>
-				<mdc:Button Grid.Column="1"
-							Text="{local:Translate Key=browse}"/>
-			</Grid>
+					<mdc:ComboBox Grid.Column="1"
+								  Scale="0.9"
+								  x:Name="LanguageSelector"
+								  SelectedChanged="ChangeLanguage"
+								  LabelText="{local:Translate Key=selectLanguage}"
+								  Style="{DynamicResource FilledComboBoxStyle}"/>
 
 
 
-		</VerticalStackLayout>
+				</Grid>
+
+				<Label Text="{local:Translate Key=musicDirectory}"
+					   FontSize="20"
+					   FontAttributes="Bold"/>
+				<Grid ColumnDefinitions="*,Auto">
+					<Label x:Name="DirectoryLabel"
+						   Text="{local:Translate Key=noDirectorySelected}"
+						   VerticalOptions="Center"/>
+					<mdc:Button Grid.Column="1"
+								Text="{local:Translate Key=browse}"/>
+				</Grid>
+
+
+
+
+			</VerticalStackLayout>
+		</mdc:Card>
 	</ScrollView>
 </ContentPage>

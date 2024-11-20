@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Transform T4 Templates",
+      "type": "shell",
+
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "localize.ps1"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
