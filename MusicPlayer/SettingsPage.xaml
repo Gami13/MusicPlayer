@@ -5,7 +5,7 @@
 			 xmlns:local="clr-namespace:MusicPlayer"
 			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
-	<ScrollView Padding="8">
+	<VerticalStackLayout>
 		<mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
 				  HorizontalOptions="Fill">
 			<VerticalStackLayout>
@@ -42,21 +42,42 @@
 
 				</Grid>
 
-				<Label Text="{local:Translate Key=musicDirectory}"
-					   FontSize="20"
-					   FontAttributes="Bold"/>
-				<Grid ColumnDefinitions="*,Auto">
-					<Label x:Name="DirectoryLabel"
-						   Text="{local:Translate Key=noDirectorySelected}"
-						   VerticalOptions="Center"/>
-					<mdc:Button Grid.Column="1"
-								Text="{local:Translate Key=browse}"/>
+				<Grid VerticalOptions="Center">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<VerticalStackLayout VerticalOptions="Center"
+										 Grid.Column="0">
+						<Label FontSize="20"
+							   FontAttributes="Bold"
+							   Text="Music directory"/>
+						<Label FontSize="14"
+							   Text="Where the music will be downloaded to"/>
+
+					</VerticalStackLayout>
+
+
+					<VerticalStackLayout Grid.Column="1"
+										 HorizontalOptions="End">
+						<mdc:Button
+							Text="{local:Translate Key=browse}"
+							Clicked="SelectStorageLocation"/>
+
+						<Label x:Name="DirectoryLabel"
+							   Text="{local:Translate Key=noDirectorySelected}"
+							   VerticalOptions="Center"/>
+					</VerticalStackLayout>
+
+
 				</Grid>
+
+
 
 
 
 
 			</VerticalStackLayout>
 		</mdc:Card>
-	</ScrollView>
+	</VerticalStackLayout>
 </ContentPage>

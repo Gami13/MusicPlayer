@@ -4,15 +4,20 @@
 			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:local="clr-namespace:MusicPlayer"
-			 x:Class="MusicPlayer.NavigationManager">
+			 x:Class="MusicPlayer.NavigationManager"
+			 xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+			 droid:NavigationBar.Color="Transparent">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<ContentView     BackgroundColor="{DynamicResource SurfaceColor}"
-						 x:Name="ContentView"
-						 Grid.Row="0"/>
+
+		<ScrollView Padding="8"
+					VerticalOptions="Start"
+					BackgroundColor="{DynamicResource SurfaceColor}"
+					x:Name="NavigationDestinationContent"
+					Grid.Row="0"/>
 		<ContentView
 			Grid.Row="1">
 

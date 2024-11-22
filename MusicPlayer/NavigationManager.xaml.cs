@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Material.Components.Maui;
 
 namespace MusicPlayer;
@@ -31,17 +32,24 @@ public partial class NavigationManager : ContentPage
 	public NavigationManager(ContentPage initialPage)
 	{
 		InitializeComponent();
-		ContentView.Content = initialPage.Content;
+		LocalizationResourceManager.Instance.PropertyChanged += (_, _) => { };
+
+		NavigationDestinationContent.Content = initialPage.Content;
+
+		if (DeviceInfo.Platform == DevicePlatform.Android)
+		{
+			NavigationDrawer.Margin = new Thickness(0, 0, 0, 4);
+		}
 		FocusDestination(NavigationDestination.Home);
 	}
 
 	private void NavigateClicked(object sender, EventArgs e)
 	{
 		NavigationDestination destination = (NavigationDestination)((NavigationBarItem)sender).BindingContext;
+		Debug.WriteLine("NAVIGATING TO: " + destination.Value);
+
+		NavigationDestinationContent.Content = destination.ToPage().Content;
 		FocusDestination(destination);
-
-
-		ContentView.Content = destination.ToPage().Content;
 	}
 	private void FocusDestination(NavigationDestination destination)
 	{
