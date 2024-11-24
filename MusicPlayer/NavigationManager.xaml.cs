@@ -10,7 +10,7 @@ public sealed record NavigationDestination
 	public static NavigationDestination Home = new("Home");
 	public static NavigationDestination Settings = new("Settings");
 	public string Value { get; }
-	public ContentPage ToPage()
+	public ContentView ToView()
 	{
 		return Value switch
 		{
@@ -29,12 +29,12 @@ public partial class NavigationManager : ContentPage
 			NavigationDestination.Settings, (IconPacks.IconKind.MaterialCommunity.CogOutline, IconPacks.IconKind.MaterialCommunity.Cog)
 		}
 	};
-	public NavigationManager(ContentPage initialPage)
+	public NavigationManager(ContentView initialContent)
 	{
 		InitializeComponent();
 		LocalizationResourceManager.Instance.PropertyChanged += (_, _) => { };
 
-		NavigationDestinationContent.Content = initialPage.Content;
+		NavigationDestinationContent.Content = initialContent;
 
 		if (DeviceInfo.Platform == DevicePlatform.Android)
 		{
@@ -48,7 +48,7 @@ public partial class NavigationManager : ContentPage
 		NavigationDestination destination = (NavigationDestination)((NavigationBarItem)sender).BindingContext;
 		Debug.WriteLine("NAVIGATING TO: " + destination.Value);
 
-		NavigationDestinationContent.Content = destination.ToPage().Content;
+		NavigationDestinationContent.Content = destination.ToView().Content;
 		FocusDestination(destination);
 	}
 	private void FocusDestination(NavigationDestination destination)

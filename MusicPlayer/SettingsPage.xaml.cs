@@ -5,7 +5,7 @@ using CommunityToolkit.Maui.Storage;
 
 namespace MusicPlayer;
 
-public partial class SettingsPage : ContentPage
+public partial class SettingsPage : ContentView
 {
 	public SettingsPage()
 	{

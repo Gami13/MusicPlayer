@@ -13,11 +13,11 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<ScrollView Padding="8"
-					VerticalOptions="Start"
-					BackgroundColor="{DynamicResource SurfaceColor}"
-					x:Name="NavigationDestinationContent"
-					Grid.Row="0"/>
+		<ContentView Padding="8"
+					 VerticalOptions="Start"
+					 BackgroundColor="{DynamicResource SurfaceColor}"
+					 x:Name="NavigationDestinationContent"
+					 Grid.Row="0"/>
 		<ContentView
 			Grid.Row="1">
 
