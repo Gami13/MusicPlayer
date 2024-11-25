@@ -1,6 +1,6 @@
 namespace MusicPlayer
 {
-    public enum LocalizationKeys
+    public enum LocalizationKey
     {
         browse,
         generalSettings,
@@ -8,6 +8,7 @@ namespace MusicPlayer
         language,
         musicDirectory,
         noDirectorySelected,
+        selectedDirectory,
         selectLanguage,
         settings,
         steps,

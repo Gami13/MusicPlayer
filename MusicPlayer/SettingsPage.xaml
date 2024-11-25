@@ -1,83 +1,113 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView x:Class="MusicPlayer.SettingsPage"
 			 xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:local="clr-namespace:MusicPlayer"
-			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
+			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+			 xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity">
 
-	<ScrollView>
-		<mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
-				  HorizontalOptions="Fill">
-			<VerticalStackLayout>
+	<Grid>
+		<ScrollView>
+			<FlexLayout Direction="Column">
+
+				<mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
+						  HorizontalOptions="Fill">
+					<VerticalStackLayout Spacing="18">
 
 
-				<Label Text="{local:Translate Key=generalSettings}"
-					   FontSize="24"
-					   TextColor="{DynamicResource PrimaryColor}"
-					   FontAttributes="Bold"/>
-				<Grid VerticalOptions="Center">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="163"/>
-					</Grid.ColumnDefinitions>
-					<VerticalStackLayout VerticalOptions="Center"
-										 Grid.Column="0">
-						<Label FontSize="20"
-							   FontAttributes="Bold"
-							   Text="Language"/>
-						<Label FontSize="14"
-							   Text="Changes the language used in the application's interface"/>
+						<Label FontAttributes="Bold"
+							   FontSize="20"
+							   Text="{local:Translate Key=generalSettings}"
+							   TextColor="{DynamicResource PrimaryColor}"/>
+
+						<Grid VerticalOptions="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="164"/>
+							</Grid.ColumnDefinitions>
+							<VerticalStackLayout Grid.Column="0"
+												 VerticalOptions="Start">
+								<Label FontAttributes="Bold"
+									   FontSize="20"
+									   Text="Language"/>
+								<Label FontSize="14"
+									   Text="Changes the language used in the application's interface"/>
+
+							</VerticalStackLayout>
+							<Border Stroke="Red"
+									HeightRequest="54"
+									Scale="0.9"
+									Grid.Column="1"
+									StrokeShape="RoundRectangle 8,8,6,6"
+									Margin="0,0,-9,0"
+									StrokeThickness="0">
+
+
+								<mdc:ComboBox x:Name="LanguageSelector"
+											  HeightRequest="60"
+											  LabelText="{local:Translate Key=selectLanguage}"
+											  ScaleY="1.0"
+											  Margin="0,-8,0,0"
+											  SelectedChanged="ChangeLanguage"
+											  Style="{DynamicResource FilledComboBoxStyle}">
+
+
+								</mdc:ComboBox>
+							</Border>
+						</Grid>
+
+						<Grid VerticalOptions="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<VerticalStackLayout Grid.Column="0"
+												 Margin="0,0,4,0"
+												 VerticalOptions="Center">
+								<Label FontAttributes="Bold"
+									   FontSize="20"
+									   Text="Music directory"/>
+								<Label FontSize="14"
+									   Text="Sets the directory the application will use for storing the music files"/>
+
+							</VerticalStackLayout>
+
+
+							<VerticalStackLayout Grid.Column="1"
+												 VerticalOptions="Center"
+												 HorizontalOptions="End">
+								<mdc:Button Clicked="SelectStorageLocation"
+											IconData="{Static icon:MaterialCommunity.Folder}"
+											Text="{local:Translate Key=browse}"
+											HorizontalOptions="End"/>
+
+
+								<Label x:Name="DirectoryLabel"
+									   HorizontalTextAlignment="Center"
+									   FontSize="10"
+									   Text="{local:Translate Key=noDirectorySelected}"
+									   VerticalOptions="Center"/>
+							</VerticalStackLayout>
+
+
+						</Grid>
+
+
+
+
+
 
 					</VerticalStackLayout>
+				</mdc:Card>
+			</FlexLayout>
+		</ScrollView>
 
+		<mdc:FAB IconData="{Static icon:MaterialCommunity.ContentSave}"
+				 Style="{DynamicResource SurfaceFABStyle}"
+				 HorizontalOptions="End"
+				 VerticalOptions="End"
+				 Margin="0,0,0,0"
+				Clicked="Save"/>
+	</Grid>
 
-					<mdc:ComboBox Grid.Column="1"
-								  Scale="0.9"
-								  x:Name="LanguageSelector"
-								  SelectedChanged="ChangeLanguage"
-								  LabelText="{local:Translate Key=selectLanguage}"
-								  Style="{DynamicResource FilledComboBoxStyle}"/>
-
-
-
-				</Grid>
-
-				<Grid VerticalOptions="Center">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
-					<VerticalStackLayout VerticalOptions="Center"
-										 Grid.Column="0">
-						<Label FontSize="20"
-							   FontAttributes="Bold"
-							   Text="Music directory"/>
-						<Label FontSize="14"
-							   Text="Where the music will be downloaded to"/>
-
-					</VerticalStackLayout>
-
-
-					<VerticalStackLayout Grid.Column="1"
-										 HorizontalOptions="End">
-						<mdc:Button
-							Text="{local:Translate Key=browse}"
-							Clicked="SelectStorageLocation"/>
-
-						<Label x:Name="DirectoryLabel"
-							   Text="{local:Translate Key=noDirectorySelected}"
-							   VerticalOptions="Center"/>
-					</VerticalStackLayout>
-
-
-				</Grid>
-
-
-
-
-
-
-			</VerticalStackLayout>
-		</mdc:Card>
-	</ScrollView>
 </ContentView>

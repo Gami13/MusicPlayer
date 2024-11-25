@@ -1,72 +1,68 @@
-using System.Diagnostics;
 using Material.Components.Maui;
-
 namespace MusicPlayer;
 
-public sealed record NavigationDestination
+public struct Route()
 {
-	private NavigationDestination(string value) => Value = value;
+	public required ContentView View { get; set; }
+	public required string Icon { get; set; }
+	public required string IconFocused { get; set; }
+	public LocalizationKey LocalizationKey { get; set; }
+};
 
-	public static NavigationDestination Home = new("Home");
-	public static NavigationDestination Settings = new("Settings");
-	public string Value { get; }
-	public ContentView ToView()
-	{
-		return Value switch
-		{
-			"Home" => new MainPage(),
-			"Settings" => new SettingsPage(),
-			_ => throw new ArgumentException($"Unknown navigation destination: {Value}")
-		};
-	}
-}
 public partial class NavigationManager : ContentPage
-
 {
-	private static Dictionary<NavigationDestination, (string, string)> NavigationIcons = new Dictionary<NavigationDestination, (string, string)>{
-		{NavigationDestination.Home, (IconPacks.IconKind.MaterialCommunity.HomeOutline, IconPacks.IconKind.MaterialCommunity.Home) },
-		{
-			NavigationDestination.Settings, (IconPacks.IconKind.MaterialCommunity.CogOutline, IconPacks.IconKind.MaterialCommunity.Cog)
-		}
-	};
+	private static int lastFocusedViewIdx = 0;
+	private Stack<int> navigationStack = new();
+
 	public NavigationManager(ContentView initialContent)
 	{
 		InitializeComponent();
 		LocalizationResourceManager.Instance.PropertyChanged += (_, _) => { };
-
 		NavigationDestinationContent.Content = initialContent;
-
-		if (DeviceInfo.Platform == DevicePlatform.Android)
+		foreach (var route in Constants.Routes)
 		{
-			NavigationDrawer.Margin = new Thickness(0, 0, 0, 4);
+			var item = new NavigationBarItem
+			{
+				IconData = route.Icon,
+			};
+			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.LocalizationKey);
+			item.Clicked += (_, _) =>
+			{
+				var currentContent = NavigationDestinationContent.Content as ContentView;
+				var temp = Array.IndexOf(Constants.Routes, route);
+				if (temp != lastFocusedViewIdx)
+				{
+					navigationStack.Push(lastFocusedViewIdx);
+					NavigationDrawer.Items[lastFocusedViewIdx].IconData = Constants.Routes[lastFocusedViewIdx].Icon;
+					lastFocusedViewIdx = temp;
+				}
+				NavigationDestinationContent.Content = route.View.Content;
+				item.IconData = route.IconFocused;
+			};
+			NavigationDrawer.Items.Add(item);
 		}
-		FocusDestination(NavigationDestination.Home);
-	}
+		NavigationDrawer.Items[0].IconData = Constants.Routes[0].IconFocused;
+		AppState.Load();
 
-	private void NavigateClicked(object sender, EventArgs e)
-	{
-		NavigationDestination destination = (NavigationDestination)((NavigationBarItem)sender).BindingContext;
-		Debug.WriteLine("NAVIGATING TO: " + destination.Value);
-
-		NavigationDestinationContent.Content = destination.ToView().Content;
-		FocusDestination(destination);
 	}
-	private void FocusDestination(NavigationDestination destination)
+	protected override bool OnBackButtonPressed()
 	{
-		var children = NavigationDrawer.Items;
-		foreach (var c in children)
+		if (navigationStack.Count > 0)
 		{
-			NavigationDestination context = (NavigationDestination)c.BindingContext;
+			var previousIndex = navigationStack.Pop();
+			NavigationDestinationContent.Content = Constants.Routes[previousIndex].View.Content;
+			NavigationDrawer.Items[lastFocusedViewIdx].IconData = Constants.Routes[lastFocusedViewIdx].Icon;
+			NavigationDrawer.Items[lastFocusedViewIdx].IsActived = false;
+			NavigationDrawer.Items[previousIndex].IconData = Constants.Routes[previousIndex].IconFocused;
+			NavigationDrawer.Items[previousIndex].IsActived = true;
 
-			if (destination == context)
-			{
-				c.IconData = NavigationIcons[context].Item2;
-			}
-			else
-			{
-				c.IconData = NavigationIcons[context].Item1;
-			}
+			lastFocusedViewIdx = previousIndex;
+			return true;
 		}
-
+		return base.OnBackButtonPressed();
 	}
+
+
+
+
 }

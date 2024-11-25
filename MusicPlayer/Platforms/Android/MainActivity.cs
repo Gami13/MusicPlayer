@@ -13,14 +13,14 @@ public class MainActivity : MauiAppCompatActivity
 	{
 		base.OnCreate(savedInstanceState);
 
-		if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
-		{
-			SetStatusBarColorApi30();
-		}
-		else if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
-		{
-			SetStatusBarColorApi21();
-		}
+		// if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+		// {
+		// 	SetStatusBarColorApi30();
+		// }
+		// else if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+		// {
+		// 	SetStatusBarColorApi21();
+		// }
 
 	}
 

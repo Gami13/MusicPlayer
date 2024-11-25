@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Converters;
 using MaterialColorUtilities.Maui;
 using MaterialColorUtilities.Palettes;
 using MaterialColorUtilities.Schemes;
@@ -18,7 +17,6 @@ public class CustomMaterialColorService : MaterialColorService<CorePalette, Sche
 
         foreach (KeyValuePair<string, Color> color in SchemeMaui.Enumerate())
         {
-            Debug.WriteLine($"Applying {color.Key}Color");
             _appResources[color.Key + "Color"] = color.Value;
         }
 

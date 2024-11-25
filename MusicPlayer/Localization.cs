@@ -22,14 +22,4 @@ namespace MusicPlayer
 
 }
 
-// TranslateExtension.cs
 
-
-// In your XAML file (e.g., MainPage.xaml)
-/*
-xmlns:local="clr-namespace:MusicPlayer"
-
-<Label Text="{local:Translate MyLabelText}" />
-*/
-
-// In your ToggleLanguage method

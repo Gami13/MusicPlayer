@@ -6,7 +6,5 @@
     xmlns:local="clr-namespace:MusicPlayer">
 
 
-    <ScrollView>
-
-    </ScrollView>
+    <ScrollView />
 </ContentView>

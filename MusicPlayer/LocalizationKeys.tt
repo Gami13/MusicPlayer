@@ -7,7 +7,7 @@
 <#@ output extension=".cs" #>
 namespace MusicPlayer
 {
-    public enum LocalizationKeys
+    public enum LocalizationKey
     {
 <#
     string resxPath = Host.ResolvePath("Resources/AppResources.resx");

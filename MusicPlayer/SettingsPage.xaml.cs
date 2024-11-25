@@ -1,6 +1,3 @@
-
-
-using System.Diagnostics;
 using CommunityToolkit.Maui.Storage;
 
 namespace MusicPlayer;
@@ -16,7 +13,17 @@ public partial class SettingsPage : ContentView
 		}
 		LanguageSelector.SelectedIndex = (int)Language.GetCurrent();
 
+		if (AppState.MusicDirectory == "")
+		{
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.noDirectorySelected);
+		}
+		else
+		{
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.selectedDirectory, AppState.MusicDirectory.Split("/").Last());
+		}
+
 	}
+
 
 	private void ChangeLanguage(object sender, EventArgs e)
 	{
@@ -29,13 +36,14 @@ public partial class SettingsPage : ContentView
 		var result = await FolderPicker.Default.PickAsync();
 		if (result.IsSuccessful)
 		{
-			Debug.WriteLine($"The folder was picked: Name - {result.Folder.Name}, Path - {result.Folder.Path}");
+			AppState.MusicDirectory = result.Folder.Path;
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.selectedDirectory, result.Folder.Path.Split("/").Last());
 		}
-		else
-		{
-			Debug.WriteLine($"The folder was not picked with error: {result.Exception.Message}");
-		}
+	}
 
+	private void Save(object sender, TouchEventArgs e)
+	{
+		AppState.Save();
 	}
 
 }

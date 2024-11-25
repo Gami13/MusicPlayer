@@ -1,43 +1,43 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-			 xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
-			 xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:local="clr-namespace:MusicPlayer"
-			 x:Class="MusicPlayer.NavigationManager"
-			 xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
-			 droid:NavigationBar.Color="Transparent">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MusicPlayer.NavigationManager"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+    xmlns:local="clr-namespace:MusicPlayer"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+    droid:NavigationBar.Color="Transparent"
+    Padding="{OnPlatform Android='0,32,0,0', WinUI='0,0,0,0'}">
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{DynamicResource SurfaceColor}"/>
+    </ContentPage.Behaviors>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-		<ContentView Padding="8"
-					 VerticalOptions="Start"
-					 BackgroundColor="{DynamicResource SurfaceColor}"
-					 x:Name="NavigationDestinationContent"
-					 Grid.Row="0"/>
-		<ContentView
-			Grid.Row="1">
+        <ContentView
+            x:Name="NavigationDestinationContent"
+            Grid.Row="0"
+            Padding="8"
+            BackgroundColor="{DynamicResource SurfaceColor}"
+            VerticalOptions="Start"/>
+        <ContentView Grid.Row="1">
 
-			<mdc:NavigationBar x:Name="NavigationDrawer">
-				<mdc:NavigationBarItem
-					BindingContext="{x:Static local:NavigationDestination.Home}"
-					x:Name="HomeButton"
-					Text="{local:Translate Key=home}"
-					Clicked="NavigateClicked">
-
-
-				</mdc:NavigationBarItem>
-				<mdc:NavigationBarItem
-					Text="{local:Translate Key=settings}"
-					BindingContext="{x:Static local:NavigationDestination.Settings}"
-					x:Name="SettingsButton"
-					Clicked="NavigateClicked">
-
-				</mdc:NavigationBarItem>
-			</mdc:NavigationBar>
-		</ContentView>
-	</Grid>
+            <mdc:NavigationBar x:Name="NavigationDrawer">
+                <!-- <mdc:NavigationBarItem
+                    x:Name="HomeButton"
+                    BindingContext="{x:Static local:NavigationDestination.Home}"
+                    Clicked="NavigateClicked"
+                    Text="{local:Translate Key=home}"/>
+                <mdc:NavigationBarItem
+                    x:Name="SettingsButton"
+                    BindingContext="{x:Static local:NavigationDestination.Settings}"
+                    Clicked="NavigateClicked"
+                    Text="{local:Translate Key=settings}"/> -->
+            </mdc:NavigationBar>
+        </ContentView>
+    </Grid>
 </ContentPage>
