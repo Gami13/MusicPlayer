@@ -2,10 +2,18 @@ namespace MusicPlayer
 {
     public enum LocalizationKey
     {
+        ago,
         browse,
+        day,
+        days,
+        download,
         generalSettings,
         home,
+        hour,
+        hours,
         language,
+        month,
+        months,
         musicDirectory,
         noDirectorySelected,
         selectedDirectory,
@@ -13,6 +21,10 @@ namespace MusicPlayer
         settings,
         steps,
         test123,
-        toggleLanguage
+        toggleLanguage,
+        week,
+        weeks,
+        year,
+        years
     }
 }

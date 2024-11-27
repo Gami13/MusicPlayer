@@ -59,10 +59,7 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root"
-    xmlns=""
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -120,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ago" xml:space="preserve">
+    <value>{0}{1} Temu</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Przeglądaj</value>
+  </data>
+  <data name="day" xml:space="preserve">
+    <value>dzień</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>dni</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Pobieranie</value>
   </data>
   <data name="generalSettings" xml:space="preserve">
     <value>Ustawienia Ogólne</value>
@@ -129,8 +138,20 @@
   <data name="home" xml:space="preserve">
     <value>Główna</value>
   </data>
+  <data name="hour" xml:space="preserve">
+    <value>godzine</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>godzin</value>
+  </data>
   <data name="language" xml:space="preserve">
     <value>Język</value>
+  </data>
+  <data name="month" xml:space="preserve">
+    <value>miesiąc</value>
+  </data>
+  <data name="months" xml:space="preserve">
+    <value>miesięcy</value>
   </data>
   <data name="musicDirectory" xml:space="preserve">
     <value>Katalog muzyki</value>
@@ -155,5 +176,17 @@
   </data>
   <data name="toggleLanguage" xml:space="preserve">
     <value>Zmień język</value>
+  </data>
+  <data name="week" xml:space="preserve">
+    <value>wydzień</value>
+  </data>
+  <data name="weeks" xml:space="preserve">
+    <value>tygodni</value>
+  </data>
+  <data name="year" xml:space="preserve">
+    <value>rok</value>
+  </data>
+  <data name="years" xml:space="preserve">
+    <value>lat</value>
   </data>
 </root>

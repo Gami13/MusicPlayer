@@ -34,7 +34,7 @@
 									   Text="Changes the language used in the application's interface"/>
 
 							</VerticalStackLayout>
-							<Border Stroke="Red"
+							<Border Stroke="Transparent"
 									HeightRequest="54"
 									Scale="0.9"
 									Grid.Column="1"
@@ -107,7 +107,7 @@
 				 HorizontalOptions="End"
 				 VerticalOptions="End"
 				 Margin="0,0,0,0"
-				Clicked="Save"/>
+				 Clicked="Save"/>
 	</Grid>
 
 </ContentView>

@@ -64,9 +64,15 @@ namespace MusicPlayer
 			var extension = new TranslateExtension
 			{
 				Key = key,
-				Parameters = parameters
+				Parameters = new System.Collections.ObjectModel.Collection<object>(parameters)
 			};
 			element.SetBinding(property, extension.ProvideValue(serviceProvider: null!));
+		}
+
+		public static string Localize(LocalizationKey key, params object[] parameters)
+		{
+			string formatted = LocalizationResourceManager.Instance[key.ToString()];
+			return string.Format(formatted, parameters);
 		}
 
 	}

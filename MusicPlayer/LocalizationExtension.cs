@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace MusicPlayer
@@ -6,11 +7,31 @@ namespace MusicPlayer
 	public class TranslateExtension : IMarkupExtension<BindingBase>
 	{
 		public LocalizationKey Key { get; set; }
-		public object[] Parameters { get; set; } = Array.Empty<object>();
+		private Collection<object> _parameters;
 
+		public TranslateExtension()
+		{
+			_parameters = new Collection<object>();
+		}
+
+		public Collection<object> Parameters
+		{
+			get => _parameters;
+			set
+			{
+				if (value is IEnumerable<object> enumerable)
+				{
+					_parameters = new Collection<object>(enumerable.ToList());
+				}
+				else
+				{
+					_parameters = value;
+				}
+			}
+		}
 		public BindingBase ProvideValue(IServiceProvider serviceProvider)
 		{
-			if (Parameters.Length == 0)
+			if (Parameters.Count == 0)
 			{
 				return new Binding($"[{Key}]", source: LocalizationResourceManager.Instance);
 			}
