@@ -90,15 +90,9 @@
                                                       IconData="{Static icon:MaterialCommunity.Clock}"
                                                       Clicked="Chip_Clicked">
                                                 <mdc:Chip.Text>
-                                                    <!-- TODO:FIX RIGHT HERE -->
-                                                    <local:Translate Key="ago">
-                                                        <local:Translate.Parameters>
-                                                            <Binding Path="PublishTime.Value"/>
-                                                            <local:Translate Key="{Binding PublishTime.Unit}">
 
-                                                            </local:Translate>
-                                                        </local:Translate.Parameters>
-                                                    </local:Translate>
+                                                    <local:Translate Parameters="{Binding PublishTime.Value}"
+                                                                     Key="{Binding PublishTime.Unit}"/>
                                                 </mdc:Chip.Text>
                                             </mdc:Chip>
                                         </HorizontalStackLayout>

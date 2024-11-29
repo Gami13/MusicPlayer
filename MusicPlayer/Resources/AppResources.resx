@@ -120,17 +120,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ago" xml:space="preserve">
-    <value>{0}{1} Ago</value>
-  </data>
   <data name="browse" xml:space="preserve">
     <value>Browse</value>
   </data>
-  <data name="day" xml:space="preserve">
-    <value>day</value>
+  <data name="dayAgo" xml:space="preserve">
+    <value>{0} day ago</value>
   </data>
-  <data name="days" xml:space="preserve">
-    <value>days</value>
+  <data name="daysAgo" xml:space="preserve">
+    <value>{0} days ago</value>
   </data>
   <data name="download" xml:space="preserve">
     <value>Download</value>
@@ -141,20 +138,20 @@
   <data name="home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="hour" xml:space="preserve">
-    <value>hour</value>
+  <data name="hourAgo" xml:space="preserve">
+    <value>{0} hour ago</value>
   </data>
-  <data name="hours" xml:space="preserve">
-    <value>hours</value>
+  <data name="hoursAgo" xml:space="preserve">
+    <value>{0} hours ago</value>
   </data>
   <data name="language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="month" xml:space="preserve">
-    <value>month</value>
+  <data name="monthAgo" xml:space="preserve">
+    <value>{0} month ago</value>
   </data>
-  <data name="months" xml:space="preserve">
-    <value>months</value>
+  <data name="monthsAgo" xml:space="preserve">
+    <value>{0} months ago</value>
   </data>
   <data name="musicDirectory" xml:space="preserve">
     <value>Music Directory</value>
@@ -180,16 +177,16 @@
   <data name="toggleLanguage" xml:space="preserve">
     <value>Toggle Language</value>
   </data>
-  <data name="week" xml:space="preserve">
-    <value>week</value>
+  <data name="weekAgo" xml:space="preserve">
+    <value>{0} week ago</value>
   </data>
-  <data name="weeks" xml:space="preserve">
-    <value>weeks</value>
+  <data name="weeksAgo" xml:space="preserve">
+    <value>{0 }weeks ago</value>
   </data>
-  <data name="year" xml:space="preserve">
-    <value>year</value>
+  <data name="yearAgo" xml:space="preserve">
+    <value>{0} year ago</value>
   </data>
-  <data name="years" xml:space="preserve">
-    <value>years</value>
+  <data name="yearsAgo" xml:space="preserve">
+    <value>{0} years ago</value>
   </data>
 </root>

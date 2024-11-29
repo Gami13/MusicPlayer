@@ -7,7 +7,7 @@ namespace MusicPlayer
     public struct RelativeTime
     {
         public int Value { get; set; }
-        public string Unit { get; set; }
+        public LocalizationKey Unit { get; set; }
     }
 
     public static class Utilities
@@ -44,51 +44,51 @@ namespace MusicPlayer
             if (diff.TotalDays > 365 * 2)
             {
                 value = (int)(diff.TotalDays / 365);
-                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.year.ToString() : LocalizationKey.years.ToString() };
+                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.yearAgo : LocalizationKey.yearsAgo };
             }
             else if (diff.TotalDays > 365)
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.year.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.yearsAgo };
             }
             else if (diff.TotalDays > 30 * 2)
             {
                 value = (int)(diff.TotalDays / 30);
-                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.month.ToString() : LocalizationKey.months.ToString() };
+                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.monthAgo : LocalizationKey.monthsAgo };
             }
             else if (diff.TotalDays > 30)
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.month.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.monthAgo };
             }
             else if (diff.TotalDays > 7 * 2)
             {
                 value = (int)(diff.TotalDays / 7);
-                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.week.ToString() : LocalizationKey.weeks.ToString() };
+                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.weekAgo : LocalizationKey.weeksAgo };
             }
             else if (diff.TotalDays > 7)
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.week.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.weekAgo };
             }
             else if (diff.TotalDays > 2)
             {
                 value = (int)diff.TotalDays;
-                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.day.ToString() : LocalizationKey.days.ToString() };
+                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.dayAgo : LocalizationKey.daysAgo };
             }
             else if (diff.TotalDays > 1)
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.day.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.dayAgo };
             }
             else if (diff.TotalHours > 2)
             {
                 value = (int)diff.TotalHours;
-                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.hour.ToString() : LocalizationKey.hours.ToString() };
+                return new RelativeTime { Value = value, Unit = value == 1 ? LocalizationKey.hourAgo : LocalizationKey.hoursAgo };
             }
             else if (diff.TotalHours > 1)
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.hour.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.hourAgo };
             }
             else
             {
-                return new RelativeTime { Value = 1, Unit = LocalizationKey.hour.ToString() };
+                return new RelativeTime { Value = 1, Unit = LocalizationKey.hourAgo };
             }
 
 

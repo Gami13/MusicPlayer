@@ -6,7 +6,7 @@ namespace MusicPlayer
 	[ContentProperty(nameof(Key))]
 	public class TranslateExtension : IMarkupExtension<BindingBase>
 	{
-		public LocalizationKey Key { get; set; }
+		public object? Key { get; set; }
 		private Collection<object> _parameters;
 
 		public TranslateExtension()
@@ -29,33 +29,57 @@ namespace MusicPlayer
 				}
 			}
 		}
+
 		public BindingBase ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (Parameters.Count == 0)
 			{
+				if (Key is Binding keyBinding)
+				{
+					var binding = new MultiBinding
+					{
+						Converter = new LocalizationKeyConverter(),
+					};
+					binding.Bindings.Add(keyBinding);
+					return binding;
+				}
 				return new Binding($"[{Key}]", source: LocalizationResourceManager.Instance);
 			}
 
-			var binding = new MultiBinding
+			var formatBinding = new MultiBinding
 			{
 				Converter = new LocalizationFormatConverter(),
-				Bindings = { new Binding($"[{Key}]", source: LocalizationResourceManager.Instance) }
 			};
+
+			// Add translation string
+			if (Key is Binding keyBinding2)
+			{
+				var translationBinding = new MultiBinding
+				{
+					Converter = new LocalizationKeyConverter(),
+				};
+				translationBinding.Bindings.Add(keyBinding2);
+				formatBinding.Bindings.Add(translationBinding);
+			}
+			else
+			{
+				formatBinding.Bindings.Add(new Binding($"[{Key}]", source: LocalizationResourceManager.Instance));
+			}
 
 			// Add parameter bindings
 			foreach (var parameter in Parameters)
 			{
 				if (parameter is Binding parameterBinding)
 				{
-					binding.Bindings.Add(parameterBinding);
+					formatBinding.Bindings.Add(parameterBinding);
 				}
 				else
 				{
-					binding.Bindings.Add(new Binding { Source = parameter });
+					formatBinding.Bindings.Add(new Binding { Source = parameter });
 				}
 			}
 
-			return binding;
+			return formatBinding;
 		}
 
 		object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
@@ -64,6 +88,24 @@ namespace MusicPlayer
 		}
 
 	}
+
+	public class LocalizationKeyConverter : IMultiValueConverter
+	{
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (values.Length == 0 || values[0] == null)
+				return string.Empty;
+
+			var key = values[0].ToString();
+			return key is null ? string.Empty : LocalizationResourceManager.Instance[key];
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
 	public class LocalizationFormatConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -72,6 +114,7 @@ namespace MusicPlayer
 				return string.Empty;
 
 			string format = values[0]?.ToString() ?? string.Empty;
+
 			var parameters = values.Skip(1).ToArray();
 			return string.Format(format, parameters);
 		}
