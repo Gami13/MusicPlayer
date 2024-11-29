@@ -7,122 +7,58 @@ namespace MusicPlayer
 	public class TranslateExtension : IMarkupExtension<BindingBase>
 	{
 		public object? Key { get; set; }
-		private Collection<object> _parameters;
-
-		public TranslateExtension()
-		{
-			_parameters = new Collection<object>();
-		}
-
-		public Collection<object> Parameters
-		{
-			get => _parameters;
-			set
-			{
-				if (value is IEnumerable<object> enumerable)
-				{
-					_parameters = new Collection<object>(enumerable.ToList());
-				}
-				else
-				{
-					_parameters = value;
-				}
-			}
-		}
+		public Collection<object> Parameters { get; set; } = new();
 
 		public BindingBase ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (Parameters.Count == 0)
 			{
-				if (Key is Binding keyBinding)
-				{
-					var binding = new MultiBinding
-					{
-						Converter = new LocalizationKeyConverter(),
-					};
-					binding.Bindings.Add(keyBinding);
-					return binding;
-				}
-				return new Binding($"[{Key}]", source: LocalizationResourceManager.Instance);
+				return Key is Binding keyBinding
+					? new MultiBinding { Converter = new LocalizationKeyConverter(), Bindings = { keyBinding } }
+					: new Binding($"[{Key}]", source: LocalizationResourceManager.Instance);
 			}
 
 			var formatBinding = new MultiBinding
 			{
 				Converter = new LocalizationFormatConverter(),
+				Bindings =
+				{
+					Key is Binding keyBinding2
+						? new MultiBinding { Converter = new LocalizationKeyConverter(), Bindings = { keyBinding2 } }
+						: new Binding($"[{Key}]", source: LocalizationResourceManager.Instance)
+				}
 			};
 
-			// Add translation string
-			if (Key is Binding keyBinding2)
-			{
-				var translationBinding = new MultiBinding
-				{
-					Converter = new LocalizationKeyConverter(),
-				};
-				translationBinding.Bindings.Add(keyBinding2);
-				formatBinding.Bindings.Add(translationBinding);
-			}
-			else
-			{
-				formatBinding.Bindings.Add(new Binding($"[{Key}]", source: LocalizationResourceManager.Instance));
-			}
-
-			// Add parameter bindings
 			foreach (var parameter in Parameters)
 			{
-				if (parameter is Binding parameterBinding)
-				{
-					formatBinding.Bindings.Add(parameterBinding);
-				}
-				else
-				{
-					formatBinding.Bindings.Add(new Binding { Source = parameter });
-				}
+				formatBinding.Bindings.Add(parameter is Binding paramBinding ? paramBinding : new Binding { Source = parameter });
 			}
 
 			return formatBinding;
 		}
 
-		object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
-		{
-			return ProvideValue(serviceProvider);
-		}
-
+		object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
 	}
 
 	public class LocalizationKeyConverter : IMultiValueConverter
 	{
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (values.Length == 0 || values[0] == null)
-				return string.Empty;
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
+			(values.Length > 0 && values[0] != null)
+				? LocalizationResourceManager.Instance[values[0].ToString() ?? string.Empty]
+				: string.Empty;
 
-			var key = values[0].ToString();
-			return key is null ? string.Empty : LocalizationResourceManager.Instance[key];
-		}
-
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-		{
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 			throw new NotImplementedException();
-		}
 	}
 
 	public class LocalizationFormatConverter : IMultiValueConverter
 	{
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (values.Length < 2 || values[0] == null)
-				return string.Empty;
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
+			(values.Length >= 2 && values[0] != null)
+				? string.Format(values[0].ToString() ?? string.Empty, values.Skip(1).ToArray())
+				: string.Empty;
 
-			string format = values[0]?.ToString() ?? string.Empty;
-
-			var parameters = values.Skip(1).ToArray();
-			return string.Format(format, parameters);
-		}
-
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-		{
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 			throw new NotImplementedException();
-		}
-
 	}
 }
