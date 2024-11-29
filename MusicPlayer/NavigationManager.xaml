@@ -23,21 +23,10 @@
             Grid.Row="0"
             Padding="8"
             BackgroundColor="{DynamicResource SurfaceColor}"
-            VerticalOptions="Start"/>
+            VerticalOptions="Fill"/>
         <ContentView Grid.Row="1">
 
-            <mdc:NavigationBar x:Name="NavigationDrawer">
-                <!-- <mdc:NavigationBarItem
-                    x:Name="HomeButton"
-                    BindingContext="{x:Static local:NavigationDestination.Home}"
-                    Clicked="NavigateClicked"
-                    Text="{local:Translate Key=home}"/>
-                <mdc:NavigationBarItem
-                    x:Name="SettingsButton"
-                    BindingContext="{x:Static local:NavigationDestination.Settings}"
-                    Clicked="NavigateClicked"
-                    Text="{local:Translate Key=settings}"/> -->
-            </mdc:NavigationBar>
+            <mdc:NavigationBar x:Name="NavigationDrawer"/>
         </ContentView>
     </Grid>
 </ContentPage>

@@ -71,8 +71,8 @@ namespace MusicPlayer
 
 		public static string Localize(LocalizationKey key, params object[] parameters)
 		{
-			string formatted = LocalizationResourceManager.Instance[key.ToString()];
-			return string.Format(formatted, parameters);
+
+			return string.Format(LocalizationResourceManager.Instance[key.ToString()], parameters);
 		}
 
 	}
