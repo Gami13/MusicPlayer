@@ -7,6 +7,7 @@ public static class AppState
 	public static Language.Code PreferredLanguage = Language.Code.EN_US;
 	public static string MusicDirectory = "";
 
+	public static SearchResultItem? SelectedForDownload { get; set; } = null;
 	public static void Save()
 	{
 		try

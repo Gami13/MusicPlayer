@@ -72,7 +72,7 @@
                                                  Orientation="Vertical">
 
                                         <Label MaxLines="3"
-                                               HeightRequest="40"
+                                               HeightRequest="43"
                                                FontSize="12"
                                                Text="{Binding Description}"/>
                                         <HorizontalStackLayout Scale="0.8"
