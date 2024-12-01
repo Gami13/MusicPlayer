@@ -1,62 +1,83 @@
 using Material.Components.Maui;
 namespace MusicPlayer;
 
-public struct Route()
-{
-	public required ContentView View { get; set; }
-	public required string Icon { get; set; }
-	public required string IconFocused { get; set; }
-	public TranslationKey TranslationKey { get; set; }
-};
+
 
 public partial class NavigationManager : ContentPage
 {
-	private static int lastFocusedViewIdx = 0;
-	private Stack<int> navigationStack = new();
+	private static RouteKey lastFocusedView = RouteKey.Home;
+	private Stack<RouteKey> navigationStack = new();
 
 	public NavigationManager(ContentView initialContent)
 	{
 		InitializeComponent();
 		LocalizationResourceManager.Instance.PropertyChanged += (_, _) => { };
 		NavigationDestinationContent.Content = initialContent;
+
+
 		foreach (var route in Constants.Routes)
 		{
+			if (!route.Value.IsVisible)
+			{
+				continue;
+			}
 			var item = new NavigationBarItem
 			{
-				IconData = route.Icon,
+				IconData = route.Value.Icon,
 			};
-			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.TranslationKey);
-			item.Clicked += (_, _) =>
-			{
-				var currentContent = NavigationDestinationContent.Content as ContentView;
-				var temp = Array.IndexOf(Constants.Routes, route);
-				if (temp != lastFocusedViewIdx)
-				{
-					navigationStack.Push(lastFocusedViewIdx);
-					NavigationDrawer.Items[lastFocusedViewIdx].IconData = Constants.Routes[lastFocusedViewIdx].Icon;
-					lastFocusedViewIdx = temp;
-				}
-				NavigationDestinationContent.Content = route.View.Content;
-				item.IconData = route.IconFocused;
-			};
+			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.Value.TranslationKey);
+			item.BindingContext = route.Key;
+			item.Clicked += Navigate;
+
 			NavigationDrawer.Items.Add(item);
 		}
-		NavigationDrawer.Items[0].IconData = Constants.Routes[0].IconFocused;
+		NavigationDrawer.Items[(int)RouteKey.Home].IconData = Constants.Routes[RouteKey.Home].IconFocused;
 		AppState.Load();
+		AppState.NavigationManager = this;
+	}
+	private void Navigate(object? sender, EventArgs e)
+	{
+		if (sender is NavigationBarItem item && item.BindingContext is RouteKey routeKey)
+		{
+			NavigateTo(routeKey);
+		}
 
+	}
+	public void NavigateTo(RouteKey routeKey)
+	{
+		if (routeKey != lastFocusedView)
+		{
+			navigationStack.Push(lastFocusedView);
+			NavigationDrawer.Items[(int)lastFocusedView].IconData = Constants.Routes[lastFocusedView].Icon;
+			NavigationDrawer.Items[(int)lastFocusedView].IsActived = false;
+			lastFocusedView = routeKey;
+		}
+		NavigationDestinationContent.Content = Constants.Routes[routeKey].View.Content;
+		if (Constants.Routes[routeKey].IsVisible)
+		{
+			NavigationDrawer.Items[(int)routeKey].IconData = Constants.Routes[routeKey].IconFocused;
+		}
 	}
 	protected override bool OnBackButtonPressed()
 	{
 		if (navigationStack.Count > 0)
 		{
-			var previousIndex = navigationStack.Pop();
-			NavigationDestinationContent.Content = Constants.Routes[previousIndex].View.Content;
-			NavigationDrawer.Items[lastFocusedViewIdx].IconData = Constants.Routes[lastFocusedViewIdx].Icon;
-			NavigationDrawer.Items[lastFocusedViewIdx].IsActived = false;
-			NavigationDrawer.Items[previousIndex].IconData = Constants.Routes[previousIndex].IconFocused;
-			NavigationDrawer.Items[previousIndex].IsActived = true;
+			var previousRoute = navigationStack.Pop();
+			NavigationDestinationContent.Content = Constants.Routes[previousRoute].View.Content;
+			if (Constants.Routes[lastFocusedView].IsVisible)
+			{
+				NavigationDrawer.Items[(int)lastFocusedView].IconData = Constants.Routes[lastFocusedView].Icon;
+				NavigationDrawer.Items[(int)lastFocusedView].IsActived = false;
+			}
 
-			lastFocusedViewIdx = previousIndex;
+			if (Constants.Routes[previousRoute].IsVisible)
+			{
+				NavigationDrawer.Items[(int)previousRoute].IconData = Constants.Routes[previousRoute].IconFocused;
+				NavigationDrawer.Items[(int)previousRoute].IsActived = true;
+			}
+
+
+			lastFocusedView = previousRoute;
 			return true;
 		}
 		return base.OnBackButtonPressed();

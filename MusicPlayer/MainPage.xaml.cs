@@ -17,6 +17,11 @@ public partial class MainPage : ContentView
 
     }
 
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        AppState.NavigationManager.NavigateTo(RouteKey.Download);
+    }
+
 
 
 

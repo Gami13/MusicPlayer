@@ -6,5 +6,13 @@
     xmlns:local="clr-namespace:MusicPlayer">
 
 
-    <ScrollView />
+    <ScrollView>
+        <FlexLayout Direction="Column">
+            <Label Text="Hello, world!"/>
+            <Button Text="To Download Page"
+                    Clicked="Button_Clicked">
+
+            </Button>
+        </FlexLayout>
+    </ScrollView>
 </ContentView>
