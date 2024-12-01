@@ -59,7 +59,7 @@ namespace MusicPlayer
 			CultureInfo.CurrentUICulture = culture;
 			LocalizationResourceManager.Instance.SetCulture(culture);
 		}
-		public static void SetLocalizedBinding(VisualElement element, BindableProperty property, LocalizationKey key, params object[] parameters)
+		public static void SetLocalizedBinding(VisualElement element, BindableProperty property, TranslationKey key, params object[] parameters)
 		{
 			var extension = new TranslateExtension
 			{
@@ -69,7 +69,7 @@ namespace MusicPlayer
 			element.SetBinding(property, extension.ProvideValue(serviceProvider: null!));
 		}
 
-		public static string Localize(LocalizationKey key, params object[] parameters)
+		public static string Localize(TranslationKey key, params object[] parameters)
 		{
 
 			return string.Format(LocalizationResourceManager.Instance[key.ToString()], parameters);

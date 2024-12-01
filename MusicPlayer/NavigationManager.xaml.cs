@@ -6,7 +6,7 @@ public struct Route()
 	public required ContentView View { get; set; }
 	public required string Icon { get; set; }
 	public required string IconFocused { get; set; }
-	public LocalizationKey LocalizationKey { get; set; }
+	public TranslationKey TranslationKey { get; set; }
 };
 
 public partial class NavigationManager : ContentPage
@@ -25,7 +25,7 @@ public partial class NavigationManager : ContentPage
 			{
 				IconData = route.Icon,
 			};
-			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.LocalizationKey);
+			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.TranslationKey);
 			item.Clicked += (_, _) =>
 			{
 				var currentContent = NavigationDestinationContent.Content as ContentView;

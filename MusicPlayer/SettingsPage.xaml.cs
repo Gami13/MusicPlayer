@@ -15,11 +15,11 @@ public partial class SettingsPage : ContentView
 
 		if (AppState.MusicDirectory == "")
 		{
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.noDirectorySelected);
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.noDirectorySelected);
 		}
 		else
 		{
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.selectedDirectory, AppState.MusicDirectory.Split("/").Last());
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.selectedDirectory, AppState.MusicDirectory.Split("/").Last());
 		}
 
 	}
@@ -37,7 +37,7 @@ public partial class SettingsPage : ContentView
 		if (result.IsSuccessful)
 		{
 			AppState.MusicDirectory = result.Folder.Path;
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, LocalizationKey.selectedDirectory, result.Folder.Path.Split("/").Last());
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.selectedDirectory, result.Folder.Path.Split("/").Last());
 		}
 	}
 

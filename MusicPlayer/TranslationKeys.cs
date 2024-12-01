@@ -1,6 +1,6 @@
 namespace MusicPlayer
 {
-    public enum LocalizationKey
+    public enum TranslationKey
     {
         browse,
         dayAgo,

@@ -13,21 +13,21 @@ public struct Constants
         View = new MainPage(),
         Icon = IconPacks.IconKind.MaterialCommunity.HomeOutline,
         IconFocused = IconPacks.IconKind.MaterialCommunity.Home,
-        LocalizationKey = LocalizationKey.home
+        TranslationKey = TranslationKey.home
     },
     new Route
     {
         View = new DownloadPage(),
         Icon = IconPacks.IconKind.MaterialCommunity.DownloadOutline,
         IconFocused = IconPacks.IconKind.MaterialCommunity.Download,
-        LocalizationKey = LocalizationKey.download
+        TranslationKey = TranslationKey.download
         },
     new Route
     {
         View = new SettingsPage(),
         Icon = IconPacks.IconKind.MaterialCommunity.CogOutline,
         IconFocused = IconPacks.IconKind.MaterialCommunity.Cog,
-        LocalizationKey = LocalizationKey.settings
+        TranslationKey = TranslationKey.settings
     },
 
     ];
