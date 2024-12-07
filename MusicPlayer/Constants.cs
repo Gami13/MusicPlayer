@@ -8,7 +8,9 @@ public enum RouteKey
     Download
 }
 
-public struct Route()
+
+
+public struct Route
 {
     public required ContentView View { get; set; }
     public string? Icon { get; set; }

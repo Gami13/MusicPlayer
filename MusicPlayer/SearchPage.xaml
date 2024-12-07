@@ -6,6 +6,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
     xmlns:local="clr-namespace:MusicPlayer">
+    <ContentView.Resources>
+        <local:ChipPaddingConverter x:Key="ChipPaddingConverter"/>
+    </ContentView.Resources>
     <ScrollView>
         <FlexLayout Direction="Column">
             <mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
@@ -29,7 +32,8 @@
                       Padding="4">
 
 
-                <ListView x:Name="DownloadList"
+                <ListView SelectionMode="None"
+                          x:Name="DownloadList"
                           RowHeight="108">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -39,7 +43,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="64"/>
 
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
@@ -65,46 +69,45 @@
                                            FontAttributes="Bold"
                                            Text="{Binding Title}"/>
                                     <StackLayout Grid.Column="1"
-                                                 VerticalOptions="End"
-                                                 Spacing="4"
+                                                 TranslationX="-8"
+                                                 VerticalOptions="Center"
+                                                 Spacing="8"
+                                                 Scale="0.9"
                                                  Grid.RowSpan="1"
                                                  Grid.Row="1"
                                                  Orientation="Vertical">
 
-                                        <Label MaxLines="3"
-                                               HeightRequest="43"
-                                               FontSize="12"
-                                               Text="{Binding Description}"/>
-                                        <HorizontalStackLayout Scale="0.8"
-                                                               TranslationX="-20"
-                                                               Spacing="8">
 
 
-                                            <mdc:Chip HorizontalOptions="Start"
-                                                      IconData="{Static icon:MaterialCommunity.Account}"
-                                                      Clicked="Chip_Clicked"
-                                                      MaximumWidthRequest="164"
-                                                      Text="{Binding ChannelTitle}"/>
 
-                                            <mdc:Chip HorizontalOptions="Start"
-                                                      IconData="{Static icon:MaterialCommunity.Clock}"
-                                                      Clicked="Chip_Clicked">
-                                                <mdc:Chip.Text>
+                                        <mdc:Chip HorizontalOptions="Start"
+                                                  IconData="{Static icon:MaterialCommunity.Account}"
+                                                  Clicked="Chip_Clicked"
+                                                  WidthRequest="164"
+                                                  Text="{Binding ChannelTitle, Converter={StaticResource ChipPaddingConverter}}"/>
 
-                                                    <local:Translate Parameters="{Binding PublishTime.Value}"
-                                                                     Key="{Binding PublishTime.Unit}"/>
-                                                </mdc:Chip.Text>
-                                            </mdc:Chip>
-                                        </HorizontalStackLayout>
+                                        <mdc:Chip HorizontalOptions="Start"
+                                                  WidthRequest="164"
+                                                  FontFamily="RobotoMonoRegular"
+                                                  IconData="{Static icon:MaterialCommunity.Clock}"
+                                                  Clicked="Chip_Clicked">
+                                            <mdc:Chip.Text>
+
+                                                <local:Translate Parameters="{Binding PublishTime.Value}"
+                                                                 Key="{Binding PublishTime.Unit}"/>
+                                            </mdc:Chip.Text>
+                                        </mdc:Chip>
 
                                     </StackLayout>
 
                                     <mdc:IconButton Grid.Column="2"
                                                     Grid.RowSpan="2"
-                                                    VerticalOptions="Center"
+                                                    VerticalOptions="End"
+                                                    Margin="0,0,0,4"
                                                     Grid.Row="1"
-                                                    TranslationY="-10"
-                                                    HeightRequest="38"
+                                                    Clicked="DownloadSong"
+                                                    BindingContext="{Binding VideoId}"
+                                                    HeightRequest="35"
                                                     IconData="{Static icon:MaterialCommunity.Download}"
                                                     Style="{DynamicResource FilledButtonStyle}"/>
                                 </Grid>

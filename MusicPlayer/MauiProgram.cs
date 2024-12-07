@@ -9,7 +9,6 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-
         var builder = MauiApp.CreateBuilder();
         builder.UseMaterialComponents()
             .UseMauiApp<App>()
@@ -19,12 +18,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
-
-
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
+            })
+            .Logging.AddDebug();
 
         return builder.Build();
     }

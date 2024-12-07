@@ -3,6 +3,7 @@
 
 
 using System.Diagnostics;
+using CommunityToolkit.Maui.Converters;
 using Material.Components.Maui;
 
 namespace MusicPlayer;
@@ -22,6 +23,7 @@ public class SearchListItem()
 public partial class SearchPage : ContentView
 {
     private List<SearchListItem> SearchResultsList = new List<SearchListItem>();
+    private string lastSearchTerm = "";
 
 
 
@@ -38,10 +40,11 @@ public partial class SearchPage : ContentView
     private async void Search(object sender, EventArgs e)
     {
         string searchTerm = SearchField.Text;
-        if (string.IsNullOrWhiteSpace(searchTerm))
+        if (string.IsNullOrWhiteSpace(searchTerm) || searchTerm == lastSearchTerm)
         {
             return;
         }
+        lastSearchTerm = searchTerm;
         SearchResultItem[] searchResults = await Utilities.SearchYoutube(searchTerm);
 
         List<SearchListItem> searchResultItems = new List<SearchListItem>();
@@ -77,6 +80,26 @@ public partial class SearchPage : ContentView
     {
         var chip = (Chip)sender;
         chip.IsSelected = false;
+    }
+
+    private void DownloadSong(object sender, TouchEventArgs e)
+    {
+        var item = SearchResultsList.Find(x => x.VideoId == (string)((IconButton)sender).BindingContext);
+        if (item == null)
+        {
+            return;
+        }
+        Debug.WriteLine("Downloading " + item.Title);
+        AppState.SelectedForDownload = item;
+        if (AppState.NavigationManager != null)
+        {
+
+            AppState.NavigationManager.NavigateTo(RouteKey.Download);
+        }
+        else
+        {
+            Debug.WriteLine("NavigationManager is null");
+        }
     }
 
 

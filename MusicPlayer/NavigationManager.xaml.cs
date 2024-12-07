@@ -1,7 +1,15 @@
+using System.Diagnostics;
 using Material.Components.Maui;
 namespace MusicPlayer;
 
 
+public struct NavigationSubscription
+{
+	public RouteKey RouteKey;
+	public Action OnNavigate;
+
+
+}
 
 public partial class NavigationManager : ContentPage
 {
@@ -10,6 +18,8 @@ public partial class NavigationManager : ContentPage
 
 	public NavigationManager(ContentView initialContent)
 	{
+		AppState.Load();
+
 		InitializeComponent();
 		LocalizationResourceManager.Instance.PropertyChanged += (_, _) => { };
 		NavigationDestinationContent.Content = initialContent;
@@ -24,6 +34,7 @@ public partial class NavigationManager : ContentPage
 			var item = new NavigationBarItem
 			{
 				IconData = route.Value.Icon,
+
 			};
 			Language.SetLocalizedBinding(item, NavigationBarItem.TextProperty, route.Value.TranslationKey);
 			item.BindingContext = route.Key;
@@ -32,31 +43,49 @@ public partial class NavigationManager : ContentPage
 			NavigationDrawer.Items.Add(item);
 		}
 		NavigationDrawer.Items[(int)RouteKey.Home].IconData = Constants.Routes[RouteKey.Home].IconFocused;
-		AppState.Load();
 		AppState.NavigationManager = this;
 	}
 	private void Navigate(object? sender, EventArgs e)
 	{
-		if (sender is NavigationBarItem item && item.BindingContext is RouteKey routeKey)
+		if (sender is NavigationBarItem item && item.BindingContext is RouteKey routeKey && lastFocusedView != routeKey)
 		{
 			NavigateTo(routeKey);
 		}
 
 	}
+
 	public void NavigateTo(RouteKey routeKey)
 	{
-		if (routeKey != lastFocusedView)
+
+		navigationStack.Push(lastFocusedView);
+		if (Constants.Routes[lastFocusedView].IsVisible)
 		{
-			navigationStack.Push(lastFocusedView);
+
 			NavigationDrawer.Items[(int)lastFocusedView].IconData = Constants.Routes[lastFocusedView].Icon;
 			NavigationDrawer.Items[(int)lastFocusedView].IsActived = false;
-			lastFocusedView = routeKey;
 		}
-		NavigationDestinationContent.Content = Constants.Routes[routeKey].View.Content;
+
 		if (Constants.Routes[routeKey].IsVisible)
 		{
 			NavigationDrawer.Items[(int)routeKey].IconData = Constants.Routes[routeKey].IconFocused;
 		}
+		lastFocusedView = routeKey;
+		NavigationDestinationContent.Content = Constants.Routes[routeKey].View.Content;
+
+		executeSubscription(routeKey);
+
+
+	}
+	private void executeSubscription(RouteKey route)
+	{
+		foreach (var subscription in AppState.NavigationSubscriptions)
+		{
+			if (subscription.RouteKey == route)
+			{
+				subscription.OnNavigate();
+			}
+		}
+
 	}
 	protected override bool OnBackButtonPressed()
 	{
@@ -75,6 +104,7 @@ public partial class NavigationManager : ContentPage
 				NavigationDrawer.Items[(int)previousRoute].IconData = Constants.Routes[previousRoute].IconFocused;
 				NavigationDrawer.Items[(int)previousRoute].IsActived = true;
 			}
+
 
 
 			lastFocusedView = previousRoute;

@@ -58,6 +58,7 @@ namespace MusicPlayer
 			CultureInfo.CurrentCulture = culture;
 			CultureInfo.CurrentUICulture = culture;
 			LocalizationResourceManager.Instance.SetCulture(culture);
+			AppState.PreferredLanguage = language;
 		}
 		public static void SetLocalizedBinding(VisualElement element, BindableProperty property, TranslationKey key, params object[] parameters)
 		{

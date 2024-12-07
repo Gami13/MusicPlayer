@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:MusicPlayer">
     <ScrollView>
         <FlexLayout Direction="Column">
-            <Label>Hello</Label>
+            <Label x:Name="SongTitle">Hello</Label>
         </FlexLayout>
     </ScrollView>
 </ContentView>
