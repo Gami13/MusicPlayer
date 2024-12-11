@@ -21,6 +21,7 @@ public struct Route
 
 public struct Constants
 {
+    public const int MUSIC_DIRECTORY_REQUEST_CODE = 1;
     public const string DatabaseFile = "MusicPlayer.db3";
     public const bool IsDebug = true;
     public static string YoutubeSearchUrl(string q) => $"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key={Secrets.YoutubeApiKey}&q={q}&type=video";

@@ -1,26 +1,38 @@
+using System.Diagnostics;
+using Android.App;
+using Android.Content;
+using Android.Provider;
+using AndroidX.DocumentFile.Provider;
 using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace MusicPlayer;
-
+public class SelectedDirectoryChanged : ValueChangedMessage<string>
+{
+	public SelectedDirectoryChanged(string value) : base(value)
+	{
+	}
+}
 public partial class SettingsPage : ContentView
 {
 	public SettingsPage()
 	{
 		InitializeComponent();
+
 		foreach (Language.Code lang in Language.Codes)
 		{
 			LanguageSelector.Items.Add(new Material.Components.Maui.MenuItem { Text = lang.Name() });
 		}
 		LanguageSelector.SelectedIndex = (int)Language.GetCurrent();
 
-		if (AppState.MusicDirectory == "")
-		{
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.noDirectorySelected);
-		}
-		else
-		{
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.selectedDirectory, AppState.MusicDirectory.Split("/").Last());
-		}
+		WeakReferenceMessenger.Default.Register<SelectedDirectoryChanged>(this, (recipient, uri) =>
+			{
+				AppState.MusicDirectory = uri.Value.ToString();
+				UpdateDirectoryLabel();
+			});
+		UpdateDirectoryLabel();
+
 
 	}
 
@@ -33,13 +45,63 @@ public partial class SettingsPage : ContentView
 	}
 	private async void SelectStorageLocation(object sender, EventArgs e)
 	{
-		var result = await FolderPicker.Default.PickAsync();
-		if (result.IsSuccessful)
+
+		if (OperatingSystem.IsWindows())
 		{
-			AppState.MusicDirectory = result.Folder.Path;
-			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.selectedDirectory, result.Folder.Path.Split("/").Last());
+			var result = await FolderPicker.Default.PickAsync();
+			if (result.IsSuccessful && result.Folder?.Path != null)
+			{
+				var uri = Android.Net.Uri.Parse(result.Folder.Path);
+				AppState.MusicDirectory = uri?.ToString() ?? string.Empty;
+				Debug.WriteLine($"Selected directory: {AppState.MusicDirectory}");
+				AppState.MusicDirectory = result.Folder.Path;
+				UpdateDirectoryLabel();
+
+
+			}
+
+		}
+		if (OperatingSystem.IsAndroid())
+		{
+			//Get the directory with correct authority
+
+			var intent = new Intent(Intent.ActionOpenDocumentTree);
+			intent.AddFlags(ActivityFlags.GrantPersistableUriPermission |
+					  ActivityFlags.GrantReadUriPermission |
+					  ActivityFlags.GrantWriteUriPermission);
+
+
+			if (Platform.CurrentActivity != null)
+			{
+				Platform.CurrentActivity.StartActivityForResult(intent, Constants.MUSIC_DIRECTORY_REQUEST_CODE);
+			}
+
+
+
+
+
+
+
+
+		}
+
+
+	}
+
+
+	private void UpdateDirectoryLabel()
+	{
+		if (AppState.MusicDirectory == "")
+		{
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.noDirectorySelected);
+		}
+		else
+		{
+			Language.SetLocalizedBinding(DirectoryLabel, Label.TextProperty, TranslationKey.selectedDirectory, AppState.MusicDirectory.Split("%3A").Last());
 		}
 	}
+
+
 
 	private void Save(object sender, TouchEventArgs e)
 	{

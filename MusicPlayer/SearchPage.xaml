@@ -34,11 +34,13 @@
 
                 <ListView SelectionMode="None"
                           x:Name="DownloadList"
-                          RowHeight="108">
+                          RowHeight="116">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid Padding="6,4"
+                                <Grid Padding="6,6"
+                                      Margin="0,4"
+                                      RowSpacing="6"
                                       ColumnSpacing="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100"/>
@@ -77,9 +79,6 @@
                                                  Grid.Row="1"
                                                  Orientation="Vertical">
 
-
-
-
                                         <mdc:Chip HorizontalOptions="Start"
                                                   IconData="{Static icon:MaterialCommunity.Account}"
                                                   Clicked="Chip_Clicked"
@@ -111,17 +110,6 @@
                                                     IconData="{Static icon:MaterialCommunity.Download}"
                                                     Style="{DynamicResource FilledButtonStyle}"/>
                                 </Grid>
-                                <!-- <StackLayout Orientation="Horizontal">
-                                <Image Source="{Binding ThumbnailUrl}"
-                                       WidthRequest="160"
-                                       HeightRequest="90"/>
-                                <Label Text=""/>
-                                <Label Text="{Binding Description}"/>
-                                <Label Text="{Binding ChannelTitle}"/>
-                                <Label Text="Binding PublishTime"/>
-                                <mdc:Button Text="Download"
-                                            Style="{DynamicResource FilledButtonStyle}"/>
-                            </StackLayout> -->
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>

@@ -7,8 +7,21 @@
     xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
     xmlns:local="clr-namespace:MusicPlayer">
     <ScrollView>
+        <!-- //Title, Album, Artist, Genre, Year -->
         <FlexLayout Direction="Column">
-            <Label x:Name="SongTitle">Hello</Label>
+            <Image x:Name="CoverImage"
+                   Aspect="AspectFill"
+                   HeightRequest="200"/>
+
+            <mdc:TextField x:Name="TitleField"/>
+            <mdc:TextField x:Name="AlbumField"/>
+            <mdc:TextField x:Name="ArtistField"/>
+            <mdc:TextField x:Name="GenreField"/>
+            <mdc:TextField x:Name="YearField"/>
+
+            <mdc:Button x:Name="DownloadButton"
+                        Text="Download"
+                        Clicked="DownloadSong"/>
         </FlexLayout>
     </ScrollView>
 </ContentView>
