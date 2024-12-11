@@ -45,7 +45,7 @@ public class MainActivity : MauiAppCompatActivity
 			WeakReferenceMessenger.Default.Send(new SelectedDirectoryChanged(uri.ToString()));
 		}
 
-		//Get current page
+
 
 	}
 }

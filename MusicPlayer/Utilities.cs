@@ -18,19 +18,26 @@ namespace MusicPlayer
         {
             string url = Constants.YoutubeSearchUrl(searchTerm);
             Debug.WriteLine(url);
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            using (HttpClient client = new HttpClient())
             {
-                string json = await response.Content.ReadAsStringAsync();
-                YouTubeSearchResponse? searchResponse = JsonSerializer.Deserialize<YouTubeSearchResponse>(json);
 
-                if (searchResponse?.Items != null && searchResponse.Items.Count > 0)
+                using (HttpResponseMessage response = await client.GetAsync(url))
                 {
-                    return searchResponse.Items.ToArray();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string json = await response.Content.ReadAsStringAsync();
+                        YouTubeSearchResponse? searchResponse = JsonSerializer.Deserialize<YouTubeSearchResponse>(json);
+
+                        if (searchResponse?.Items != null && searchResponse.Items.Count > 0)
+                        {
+                            return searchResponse.Items.ToArray();
+                        }
+                        return Array.Empty<SearchResultItem>();
+                    }
                 }
-                return Array.Empty<SearchResultItem>();
             }
+
             return [];
 
         }
