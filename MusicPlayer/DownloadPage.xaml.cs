@@ -9,6 +9,7 @@ using Android.Content;
 using Android.Net;
 using Android.Provider;
 using AndroidX.DocumentFile.Provider;
+using Plugin.Maui.Audio;
 using VideoLibrary;
 using static MusicPlayer.Database;
 
@@ -19,12 +20,17 @@ public partial class DownloadPage : ContentView
 
     private HttpClient _client = new HttpClient();
 
+    private byte[] _coverImageBytes;
     public DownloadPage()
     {
         InitializeComponent();
 
         AppState.SubscribeToNavigation(RouteKey.Download, () =>
         {
+
+            _coverImageBytes = _client.GetByteArrayAsync(AppState.SelectedForDownload?.ThumbnailUrl).Result;
+
+
             Debug.WriteLine("DownloadPage: OnNavigate");
             Debug.WriteLine($"SelectedForDownload: {AppState.SelectedForDownload?.Title}");
             TitleField.Text = AppState.SelectedForDownload?.Title ?? "";
@@ -32,15 +38,8 @@ public partial class DownloadPage : ContentView
             AlbumField.Text = "";
             GenreField.Text = "";
             YearField.Text = "";
-            CoverImage.Source = AppState.SelectedForDownload?.ThumbnailUrl ?? "";
+            CoverImage.Source = ImageSource.FromStream(() => new MemoryStream(_coverImageBytes));
         });
-
-
-
-
-
-
-
 
     }
     private async void DownloadSong(object sender, EventArgs e)
@@ -49,20 +48,57 @@ public partial class DownloadPage : ContentView
 
         var youtube = YouTube.Default;
         var song = AppState.SelectedForDownload;
+        if (song == null)
+
+        {
+            return;
+        }
         var video = youtube.GetAllVideos("https://youtube.com/watch?v=" + song.VideoId)
             .First(v => v.AudioFormat == AudioFormat.Aac);
 
         if (OperatingSystem.IsAndroid())
         {
-            var songPath = await CreateDownloadAsync(video, new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
+            var songPath = await DownloadSongAsync(video, new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
              {
                  var percent = (int)(v.Item1 * 100 / v.Item2);
                  Debug.WriteLine(string.Format("Downloading.. ( % {0} )", percent));
              }));
             if (songPath != null)
             {
-                //TODO: ADD TO DATABASE
+                var songStream = Android.App.Application.Context.ContentResolver.OpenInputStream(songPath);
+                var songDuration = (int)AudioManager.Current.CreatePlayer(songStream).Duration;
+                Debug.WriteLine("Song Duration: " + songDuration);
+                //TODO: ADD TO DATABASE, crashes for some reason
+
+                Debug.WriteLine("Title: " + TitleField.Text);
+                Debug.WriteLine("Song Path: " + songPath);
+                Debug.WriteLine("Duration: " + songDuration);
+                Debug.WriteLine("Album: " + AlbumField.Text);
+                Debug.WriteLine("Artist: " + ArtistField.Text);
+                Debug.WriteLine("Genre: " + GenreField.Text);
+                Debug.WriteLine("Year: " + YearField.Text);
+                Debug.WriteLine("Cover bytes: " + Convert.ToBase64String(_coverImageBytes));
+                Database.AddSong(new Song
+                {
+                    Title = TitleField.Text ?? song.Title,
+                    StoragePath = songPath.ToString() ?? "",
+                    Duration = songDuration,
+                    // Album = AlbumField.Text ?? "",
+                    // Artist = ArtistField.Text ?? "",
+                    // Genre = GenreField.Text ?? "",
+                    // Year = int.Parse(YearField.Text ?? "0"),
+                    Cover = "test",
+                    IsFavorite = false
+                });
+
+
             }
+        }
+        var allSongs = Database.GetSongs();
+        Debug.WriteLine("All Songs:");
+        foreach (var s in allSongs)
+        {
+            Debug.WriteLine(s);
         }
     }
 
@@ -70,7 +106,7 @@ public partial class DownloadPage : ContentView
     private long _fileSize = 0L;
 
 
-    public async Task<string> CreateDownloadAsync(YouTubeVideo video, IProgress<Tuple<long, long>> progress)
+    private async Task<Android.Net.Uri> DownloadSongAsync(YouTubeVideo video, IProgress<Tuple<long, long>> progress)
     {
         var uri = new System.Uri(video.Uri);
         var path = Android.Net.Uri.Parse(AppState.MusicDirectory.Replace("%3A", ":"));

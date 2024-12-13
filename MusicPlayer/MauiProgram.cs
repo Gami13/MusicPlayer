@@ -2,6 +2,7 @@
 using Material.Components.Maui.Extensions;
 using MaterialColorUtilities.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 
 namespace MusicPlayer;
 
@@ -11,7 +12,7 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         builder.UseMaterialComponents()
-            .UseMauiApp<App>()
+            .UseMauiApp<App>().AddAudio()
             .UseMauiCommunityToolkit()
             .UseMaterialColors<CustomMaterialColorService>()
             .ConfigureFonts(fonts =>

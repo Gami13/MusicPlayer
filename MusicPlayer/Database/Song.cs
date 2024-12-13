@@ -1,9 +1,11 @@
+using System.Diagnostics;
 using SQLite;
 
 namespace MusicPlayer
 {
 	public static partial class Database
 	{
+
 		public class Song
 		{
 
@@ -27,6 +29,7 @@ namespace MusicPlayer
 
 		public static void AddSong(Song song)
 		{
+			Debug.WriteLine("adding");
 			if (database == null)
 			{
 				createDatabase();
@@ -34,6 +37,7 @@ namespace MusicPlayer
 				return;
 			}
 
+			Debug.WriteLine(song);
 			database.Insert(song);
 
 		}
