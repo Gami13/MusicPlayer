@@ -4,6 +4,8 @@ using System.Text.Json;
 namespace MusicPlayer;
 public static class AppState
 {
+	public static HttpClient httpClient = new HttpClient();
+
 	public static NavigationManager? NavigationManager { get; set; } = null;
 	public static Language.Code PreferredLanguage = Language.Code.EN_US;
 	public static string MusicDirectory = "";

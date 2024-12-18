@@ -47,6 +47,17 @@
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+  <!-- Android -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+    <Compile Remove="**\*.android.cs" />
+    <None Include="**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <!-- Windows -->
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
+    <Compile Remove="**\*.windows.cs" />
+    <None Include="**\*.windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
@@ -56,6 +67,7 @@
     <PackageReference Include="Material.Components.Maui" Version="0.2.2-preview" />
     <PackageReference Include="MaterialColorUtilities" Version="0.3.0" />
     <PackageReference Include="MaterialColorUtilities.Maui" Version="0.3.0" />
+    <PackageReference Include="MediaTypeMap" Version="2.1.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

@@ -1,8 +1,5 @@
 using System.Diagnostics;
-using Android.App;
-using Android.Content;
-using Android.Provider;
-using AndroidX.DocumentFile.Provider;
+
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -51,8 +48,8 @@ public partial class SettingsPage : ContentView
 			var result = await FolderPicker.Default.PickAsync();
 			if (result.IsSuccessful && result.Folder?.Path != null)
 			{
-				var uri = Android.Net.Uri.Parse(result.Folder.Path);
-				AppState.MusicDirectory = uri?.ToString() ?? string.Empty;
+
+				AppState.MusicDirectory = result.Folder.Path.ToString() ?? string.Empty;
 				Debug.WriteLine($"Selected directory: {AppState.MusicDirectory}");
 				AppState.MusicDirectory = result.Folder.Path;
 				UpdateDirectoryLabel();
@@ -61,6 +58,7 @@ public partial class SettingsPage : ContentView
 			}
 
 		}
+#if ANDROID
 		if (OperatingSystem.IsAndroid())
 		{
 			//Get the directory with correct authority
@@ -85,6 +83,7 @@ public partial class SettingsPage : ContentView
 
 		}
 
+#endif
 
 	}
 
