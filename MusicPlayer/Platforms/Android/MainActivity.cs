@@ -18,31 +18,34 @@ public class MainActivity : MauiAppCompatActivity
 	{
 		base.OnCreate(savedInstanceState);
 
-		// if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
-		// {
-		// 	SetStatusBarColorApi30();
-		// }
-		// else if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
-		// {
-		// 	SetStatusBarColorApi21();
-		// }
+
 
 	}
-	protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+	protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
 	{
 		base.OnActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == Constants.MUSIC_DIRECTORY_REQUEST_CODE && resultCode == Result.Ok)
 		{
-			var uri = data.Data;
-			if (uri == null)
+			if (data?.Data == null)
 			{
 				return;
 			}
-			ContentResolver.TakePersistableUriPermission(uri, data.Flags & (ActivityFlags.GrantReadUriPermission | ActivityFlags.GrantWriteUriPermission));
+			var uri = data.Data;
+			if (ContentResolver != null)
+			{
+				ContentResolver.TakePersistableUriPermission(uri, data.Flags & (ActivityFlags.GrantReadUriPermission | ActivityFlags.GrantWriteUriPermission));
+			}
 
 			System.Diagnostics.Debug.WriteLine("Selected directory: " + uri);
-			WeakReferenceMessenger.Default.Send(new SelectedDirectoryChanged(uri.ToString()));
+			if (uri != null)
+			{
+				var uriString = uri?.ToString();
+				if (uriString != null)
+				{
+					WeakReferenceMessenger.Default.Send(new SelectedDirectoryChanged(uriString));
+				}
+			}
 		}
 
 

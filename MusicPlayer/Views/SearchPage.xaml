@@ -14,14 +14,24 @@
             <mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
                       HorizontalOptions="Fill"
                       Margin="0,0,0,4">
-                <HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="8">
 
-                    <mdc:TextField x:Name="SearchField"
-                                   IconData="{Static icon:MaterialCommunity.SearchWeb}"
-                                   Style="{DynamicResource FilledTextFieldStyle}"
-                                   SupportingText=""
-                                   WidthRequest="300"/>
+                    <Border
+                        Stroke="Transparent"
+                        WidthRequest="254"
+                        HeightRequest="64"
+                        StrokeShape="RoundRectangle 8,8,6,6">
+
+                        <mdc:TextField x:Name="SearchField"
+                                       Margin="{OnPlatform  WinUI='0,-8,0,0', Android='0,0,0,-12'}"
+                                       LabelText="Search for a song"
+                                       HeightRequest="88"
+                                       IconData="{Static icon:MaterialCommunity.MusicNote}"
+                                       Style="{DynamicResource FilledTextFieldStyle}"
+                                       WidthRequest="250"/>
+                    </Border>
                     <mdc:Button Text="Search"
+                                IconData="{Static icon:MaterialCommunity.SearchWeb}"
                                 Style="{DynamicResource FilledButtonStyle}"
                                 WidthRequest="100"
                                 Clicked="Search"/>
@@ -100,13 +110,14 @@
                                     </StackLayout>
 
                                     <mdc:IconButton Grid.Column="2"
-                                                    Grid.RowSpan="2"
-                                                    VerticalOptions="End"
-                                                    Margin="0,0,0,4"
                                                     Grid.Row="1"
+                                                    TranslationX="{OnPlatform  WinUI='-4', Android='0'}"
+                                                    WidthRequest="80"
+                                                    VerticalOptions="End"
+                                                    HorizontalOptions="End"
                                                     Clicked="DownloadSong"
                                                     BindingContext="{Binding VideoId}"
-                                                    HeightRequest="35"
+                                                    HeightRequest="36"
                                                     IconData="{Static icon:MaterialCommunity.Download}"
                                                     Style="{DynamicResource FilledButtonStyle}"/>
                                 </Grid>

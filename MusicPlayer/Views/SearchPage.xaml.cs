@@ -45,6 +45,7 @@ public partial class SearchPage : ContentView
             return;
         }
         lastSearchTerm = searchTerm;
+        Debug.WriteLine("Searching for " + searchTerm);
         SearchResultItem[] searchResults = await Utilities.SearchYoutube(searchTerm);
 
         List<SearchListItem> searchResultItems = new List<SearchListItem>();

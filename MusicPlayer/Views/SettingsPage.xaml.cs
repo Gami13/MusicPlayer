@@ -43,48 +43,7 @@ public partial class SettingsPage : ContentView
 	private async void SelectStorageLocation(object sender, EventArgs e)
 	{
 
-		if (OperatingSystem.IsWindows())
-		{
-			var result = await FolderPicker.Default.PickAsync();
-			if (result.IsSuccessful && result.Folder?.Path != null)
-			{
-
-				AppState.MusicDirectory = result.Folder.Path.ToString() ?? string.Empty;
-				Debug.WriteLine($"Selected directory: {AppState.MusicDirectory}");
-				AppState.MusicDirectory = result.Folder.Path;
-				UpdateDirectoryLabel();
-
-
-			}
-
-		}
-#if ANDROID
-		if (OperatingSystem.IsAndroid())
-		{
-			//Get the directory with correct authority
-
-			var intent = new Intent(Intent.ActionOpenDocumentTree);
-			intent.AddFlags(ActivityFlags.GrantPersistableUriPermission |
-					  ActivityFlags.GrantReadUriPermission |
-					  ActivityFlags.GrantWriteUriPermission);
-
-
-			if (Platform.CurrentActivity != null)
-			{
-				Platform.CurrentActivity.StartActivityForResult(intent, Constants.MUSIC_DIRECTORY_REQUEST_CODE);
-			}
-
-
-
-
-
-
-
-
-		}
-
-#endif
-
+		await Utilities.UpdateStorageLocation();
 	}
 
 

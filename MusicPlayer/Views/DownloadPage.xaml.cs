@@ -19,7 +19,7 @@ public partial class DownloadPage : ContentView
 {
 
 
-    private byte[] _coverImageBytes;
+    private byte[]? _coverImageBytes;
     public DownloadPage()
     {
         InitializeComponent();
@@ -69,7 +69,7 @@ public partial class DownloadPage : ContentView
             Artist = ArtistField.Text ?? "",
             Genre = GenreField.Text ?? "",
             Year = songYear,
-            Cover = Convert.ToBase64String(_coverImageBytes),
+            Cover = _coverImageBytes != null ? Convert.ToBase64String(_coverImageBytes) : string.Empty,
             IsFavorite = false
         });
         var allSongs = Database.GetSongs();
