@@ -3,6 +3,7 @@
 
 
 
+using CommunityToolkit.Maui.Alerts;
 using Plugin.Maui.Audio;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -18,6 +19,8 @@ using Android;
 public partial class DownloadPage : ContentView
 {
 
+
+    private bool _isDownloading = false;
 
     private byte[]? _coverImageBytes;
     public DownloadPage()
@@ -44,13 +47,26 @@ public partial class DownloadPage : ContentView
     private async void DownloadSong(object sender, EventArgs e)
     {
 
+        if (string.IsNullOrEmpty(AppState.MusicDirectory))
+        {
+            await Toast.Make("Music Directory not set").Show();
+            return;
+        }
+
+        if (_isDownloading)
+        {
+            return;
+        }
+        _isDownloading = true;
 
         var youtube = YouTube.Default;
         var song = AppState.SelectedForDownload;
         if (song == null)
 
         {
+            _isDownloading = false;
             return;
+
         }
         var video = youtube.GetAllVideos("https://youtube.com/watch?v=" + song.VideoId)
             .First(v => v.AudioFormat == AudioFormat.Aac);
@@ -71,13 +87,21 @@ public partial class DownloadPage : ContentView
             Year = songYear,
             Cover = _coverImageBytes != null ? Convert.ToBase64String(_coverImageBytes) : string.Empty,
             IsFavorite = false
-        });
+        }, new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
+         {
+             var percent = v.Item1 * 100 / v.Item2;
+             ProgressIndicator.Percent = percent;
+             ProgressLabel.Text = (int)percent + "%";
+             Debug.WriteLine(string.Format("Downloading.. ( % {0} )", percent));
+         }));
         var allSongs = Database.GetSongs();
         Debug.WriteLine("All Songs:");
         foreach (var s in allSongs)
         {
             Debug.WriteLine(s.Title + " " + s.Artist + " " + s.Album + " " + s.Genre + " " + s.Year + " " + s.Duration);
         }
+        _isDownloading = false;
+        AppState.NavigationManager.NavigateTo(RouteKey.Home);
     }
 
 

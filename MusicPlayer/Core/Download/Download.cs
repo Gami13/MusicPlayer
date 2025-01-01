@@ -21,15 +21,11 @@ public static partial class Download
 			return response.Content.Headers.ContentLength;
 		}
 	}
-	public static async Task SaveSong(YouTubeVideo video, Song song)
+	public static async Task SaveSong(YouTubeVideo video, Song song, Progress<Tuple<long, long>> progress)
 	{
 
 
-		var (songPath, songLength) = await DownloadSongAsync(video, new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
-		 {
-			 var percent = (int)(v.Item1 * 100 / v.Item2);
-			 Debug.WriteLine(string.Format("Downloading.. ( % {0} )", percent));
-		 }));
+		var (songPath, songLength) = await DownloadSongAsync(video, progress);
 		if (songPath != null)
 		{
 

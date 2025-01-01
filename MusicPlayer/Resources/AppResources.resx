@@ -156,6 +156,9 @@
   <data name="noDirectorySelected" xml:space="preserve">
     <value>No directory selected</value>
   </data>
+  <data name="player" xml:space="preserve">
+    <value>Player</value>
+  </data>
   <data name="selectLanguage" xml:space="preserve">
     <value>Select Language</value>
   </data>

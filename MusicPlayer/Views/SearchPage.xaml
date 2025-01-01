@@ -37,6 +37,11 @@
                                 Clicked="Search"/>
                 </HorizontalStackLayout>
             </mdc:Card >
+            <Label VerticalOptions="Center"
+                   BackgroundColor="Transparent"
+                   FontSize="16"
+                   Margin="4,0,0,4"
+                   Text="Songs you search for will show up here!"/>
             <mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
                       HorizontalOptions="Fill"
                       Padding="4">

@@ -156,6 +156,9 @@
   <data name="noDirectorySelected" xml:space="preserve">
     <value>Nie wybrano katalogu</value>
   </data>
+  <data name="player" xml:space="preserve">
+    <value>Odtwarzacz</value>
+  </data>
   <data name="selectLanguage" xml:space="preserve">
     <value>Wybierz Język</value>
   </data>

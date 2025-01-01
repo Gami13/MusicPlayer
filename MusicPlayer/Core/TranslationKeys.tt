@@ -10,7 +10,7 @@ namespace MusicPlayer
     public enum TranslationKey
     {
 <#
-    string resxPath = Host.ResolvePath("Resources/AppResources.resx");
+    string resxPath = Host.ResolvePath("../Resources/AppResources.resx");
     XmlDocument doc = new XmlDocument();
     doc.Load(resxPath);
     

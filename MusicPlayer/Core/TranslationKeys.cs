@@ -15,6 +15,7 @@ namespace MusicPlayer
         monthsAgo,
         musicDirectory,
         noDirectorySelected,
+        player,
         selectedDirectory,
         selectLanguage,
         settings,

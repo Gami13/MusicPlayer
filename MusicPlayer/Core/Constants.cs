@@ -2,10 +2,11 @@
 
 public enum RouteKey
 {
-    Home,
-    Search,
-    Settings,
-    Download
+    Home = 0,
+    Player = 1,
+    Search = 2,
+    Settings = 3,
+    Download = 4
 }
 
 
@@ -33,6 +34,14 @@ public struct Constants
             Icon = IconPacks.IconKind.MaterialCommunity.HomeOutline,
             IconFocused = IconPacks.IconKind.MaterialCommunity.Home,
             TranslationKey = TranslationKey.home,
+            IsVisible = true
+        },
+        [RouteKey.Player] = new Route
+        {
+            View = new PlayerPage(),
+            Icon = IconPacks.IconKind.MaterialCommunity.PlayCircleOutline,
+            IconFocused = IconPacks.IconKind.MaterialCommunity.PlayCircle,
+            TranslationKey = TranslationKey.player,
             IsVisible = true
         },
         [RouteKey.Search] = new Route
