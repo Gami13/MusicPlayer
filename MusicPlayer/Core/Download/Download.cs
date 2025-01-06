@@ -4,30 +4,25 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using VideoLibrary;
 using static MusicPlayer.Database;
-public static partial class Download
-{
+public static partial class Download {
 	private static long chunkSize = 10_485_760;
 	private static long _fileSize = 0L;
 
 
 
-	private static async Task<long?> GetContentLengthAsync(string requestUri, bool ensureSuccess = true)
-	{
-		using (var request = new HttpRequestMessage(HttpMethod.Head, requestUri))
-		{
+	private static async Task<long?> GetContentLengthAsync(string requestUri, bool ensureSuccess = true) {
+		using (var request = new HttpRequestMessage(HttpMethod.Head, requestUri)) {
 			var response = await AppState.httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 			if (ensureSuccess)
 				response.EnsureSuccessStatusCode();
 			return response.Content.Headers.ContentLength;
 		}
 	}
-	public static async Task SaveSong(YouTubeVideo video, Song song, Progress<Tuple<long, long>> progress)
-	{
+	public static async Task SaveSong(YouTubeVideo video, Song song, Progress<(long, long)> progress) {
 
 
 		var (songPath, songLength) = await DownloadSongAsync(video, progress);
-		if (songPath != null)
-		{
+		if (songPath != null) {
 
 			song.StoragePath = songPath.ToString();
 			song.Duration = songLength;
