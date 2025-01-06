@@ -1,17 +1,10 @@
 using System.Diagnostics;
 using SQLite;
 
-namespace MusicPlayer
-{
-	public static partial class Database
-	{
+namespace MusicPlayer {
+	public static partial class Database {
 
-		public class Song
-		{
-
-
-
-
+		public class Song {
 
 			[PrimaryKey, AutoIncrement]
 			public int Id { get; set; }
@@ -27,68 +20,27 @@ namespace MusicPlayer
 
 		}
 
-		public static void AddSong(Song song)
-		{
-			Debug.WriteLine("adding");
-			if (database == null)
-			{
-				createDatabase();
-				AddSong(song);
-				return;
-			}
-
+		public static void AddSong(Song song) {
 			Debug.WriteLine(song);
 			database.Insert(song);
-
+			AppState.hasUpdatedMusic = true;
 		}
 
-		public static Song GetSong(int id)
-		{
-			if (database == null)
-			{
-				createDatabase();
-				return GetSong(id);
-
-			}
-
+		public static Song GetSong(int id) {
 			return database.Get<Song>(id);
-
 		}
 
-		public static void UpdateSong(Song song)
-		{
-			if (database == null)
-			{
-				createDatabase();
-				UpdateSong(song);
-				return;
-			}
-
+		public static void UpdateSong(Song song) {
 			database.Update(song);
-
+			AppState.hasUpdatedMusic = true;
 		}
 
-		public static void DeleteSong(Song song)
-		{
-			if (database == null)
-			{
-				createDatabase();
-				DeleteSong(song);
-				return;
-			}
-
+		public static void DeleteSong(Song song) {
 			database.Delete(song);
-
+			AppState.hasUpdatedMusic = true;
 		}
 
-		public static List<Song> GetSongs()
-		{
-			if (database == null)
-			{
-				createDatabase();
-				return GetSongs();
-			}
-
+		public static List<Song> GetSongs() {
 			return database.Table<Song>().ToList();
 
 		}
