@@ -1,5 +1,7 @@
 ﻿
 
+using System.ComponentModel;
+using System.Diagnostics;
 using Material.Components.Maui;
 
 namespace MusicPlayer;
@@ -13,14 +15,13 @@ public partial class MainPage : ContentView {
 	public MainPage() {
 		InitializeComponent();
 
-		musicList = Database.GetSongs();
+
 		AppState.SubscribeToNavigation(RouteKey.Home, () => {
 			if (AppState.hasUpdatedMusic) {
-				musicList = Database.GetSongs();
-				AppState.hasUpdatedMusic = false;
+				updateList();
 			}
 		});
-		SongsList.ItemsSource = musicList;
+		updateList();
 	}
 
 
@@ -29,6 +30,32 @@ public partial class MainPage : ContentView {
 		var chip = (Chip)sender;
 		chip.IsSelected = false;
 	}
+
+	private void Favorite(object sender, TouchEventArgs e) {
+		var button = (IconButton)sender;
+		var song = (Database.Song)button.BindingContext;
+		song.IsFavorite = !song.IsFavorite;
+
+		Database.UpdateSong(song);
+
+	}
+	private void updateList() {
+		musicList = Database.GetSongs();
+		SongsList.ItemsSource = musicList;
+		AppState.hasUpdatedMusic = false;
+	}
+
+	private void SongsList_ItemSelected(object sender, SelectedItemChangedEventArgs e) {
+		var x = (ListView)sender;
+		x.SelectedItem = null;
+		Debug.WriteLine("Selected: " + e.SelectedItemIndex + "  " + e.SelectedItem);
+		if (e.SelectedItemIndex == -1) return;
+
+		//play song here ig
+
+
+	}
+
 
 
 }

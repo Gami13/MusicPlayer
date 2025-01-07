@@ -52,21 +52,30 @@ public partial class NavigationManager : ContentPage {
 		if (navigationStack.Count == 0) {
 			navigationStack.Push(destination);
 			SetIcon(destination, true);
+			Debug.WriteLine("here");
 			return;
 		}
 		var current = navigationStack.Pop();
 		var previous = navigationStack.Count > 0 ? navigationStack.Peek() : current;
+		Debug.WriteLine("here2");
 		if (current == destination) {
 			navigationStack.Push(current);
 		}
 		else if (previous != destination) {
+			Debug.WriteLine("here3");
 			navigationStack.Push(current);
 			navigationStack.Push(destination);
 		}
 		//if previous == destination, do nothing
+		Debug.WriteLine("here4");
+		if (Constants.Routes[current].IsVisible) {
 
-		SetIcon(current, false);
-		SetIcon(destination, true);
+			SetIcon(current, false);
+		}
+		if (Constants.Routes[destination].IsVisible) {
+
+			SetIcon(destination, true);
+		}
 
 		//Notify subscriptions
 		foreach (var subscription in AppState.NavigationSubscriptions)

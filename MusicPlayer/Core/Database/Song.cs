@@ -1,10 +1,12 @@
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using SQLite;
 
 namespace MusicPlayer {
 	public static partial class Database {
 
-		public class Song {
+		public class Song : INotifyPropertyChanged {
 
 			[PrimaryKey, AutoIncrement]
 			public int Id { get; set; }
@@ -16,9 +18,25 @@ namespace MusicPlayer {
 			public string Genre { get; set; } = "";
 			public int Year { get; set; }
 			public string Cover { get; set; } = "";
-			public bool IsFavorite { get; set; }
+			private bool _isFavorite;
+
+			public bool IsFavorite {
+				get { return _isFavorite; }
+				set {
+					if (_isFavorite != value) {
+						_isFavorite = value;
+						OnPropertyChanged();
+					}
+				}
+			}
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
 
 		}
+
 
 		public static void AddSong(Song song) {
 			Debug.WriteLine(song);

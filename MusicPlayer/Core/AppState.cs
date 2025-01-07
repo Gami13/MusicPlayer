@@ -2,12 +2,20 @@ using System.Diagnostics;
 using System.Text.Json;
 
 namespace MusicPlayer;
+
+public struct PlayerState {
+	Database.Song currentSong;
+	int currentTime;
+	bool isPlaying;
+
+}
 public static class AppState {
 	public static HttpClient httpClient = new HttpClient();
 	public static bool hasUpdatedMusic = true;
 	public static NavigationManager? NavigationManager { get; set; } = null;
 	public static Language.Code PreferredLanguage = Language.Code.EN_US;
 	public static string MusicDirectory = "";
+	public static PlayerState PlayerState = new();
 	public static List<NavigationSubscription> NavigationSubscriptions = new();
 	public static void SubscribeToNavigation(RouteKey routeKey, Action onNavigate) {
 		Debug.WriteLine($"Subscribing to navigation for {routeKey}");

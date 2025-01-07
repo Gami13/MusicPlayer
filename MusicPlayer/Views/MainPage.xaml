@@ -8,68 +8,113 @@
 	xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
 
-	<ScrollView>
+	<ContentView.Resources>
+		<local:Base64ToImageSource x:Key="Base64ToImageSource"/>
+		<local:TimeConverter x:Key="TimeConverter"/>
+		<local:TitleConverter x:Key="TitleConverter"/>
+	</ContentView.Resources>
+	<ScrollView VerticalOptions="Start">
 
 		<mdc:Card BackgroundColor="{DynamicResource SurfaceContainerColor}"
 				  HorizontalOptions="Fill"
 				  Padding="4">
 
 
-			<ListView SelectionMode="None"
+			<ListView SelectionMode="Single"
+					ItemSelected="SongsList_ItemSelected"
 					  x:Name="SongsList"
-					  RowHeight="116">
+					  RowHeight="68">
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell>
-							<Grid Padding="6,6"
+
+							<Grid Padding="0"
+								  BackgroundColor="Transparent"
+								  HeightRequest="60"
 								  Margin="0,4"
 								  RowSpacing="6"
-								  ColumnSpacing="8">
+								  ColumnSpacing="0">
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="100"/>
+									<ColumnDefinition Width="60"/>
 									<ColumnDefinition Width="*"/>
 									<ColumnDefinition Width="64"/>
 
 								</Grid.ColumnDefinitions>
 								<Grid.RowDefinitions>
-									<RowDefinition Height="20"/>
 									<RowDefinition Height="*"/>
 
 								</Grid.RowDefinitions>
 								<Border Grid.Column="0"
-										Grid.RowSpan="2"
+										HeightRequest="60"
+										WidthRequest="60"
 										Stroke="Transparent"
-										StrokeShape="RoundRectangle 12"
+										StrokeShape="RoundRectangle 8"
 										Margin="0,0,0,0"
 										StrokeThickness="0">
-									<Image
-										WidthRequest="100"
-										Aspect="AspectFill"
-										HeightRequest="100"/>
+									<Image Source="{Binding Cover, Converter={StaticResource Base64ToImageSource}}"
+										   Aspect="AspectFill"/>
 								</Border>
-								<Label Grid.Column="1"
-									   TextColor="{DynamicResource PrimaryColor}"
-									   Grid.ColumnSpan="2"
-									   FontSize="18"
-									   FontAttributes="Bold"
-									   Text="{Binding Title}"/>
+
+
+
+
+
 								<StackLayout Grid.Column="1"
-											 TranslationX="-8"
 											 VerticalOptions="Center"
-											 Spacing="8"
+											 Spacing="4"
 											 Scale="0.9"
 											 Grid.RowSpan="1"
 											 Grid.Row="1"
 											 Orientation="Vertical">
 
+									<Label Grid.Column="1"
+										   TextColor="{DynamicResource PrimaryColor}"
+										   Grid.ColumnSpan="2"
+										   FontSize="18"
+										   FontAttributes="Bold"
+										   Text="{Binding Title,Converter={StaticResource TitleConverter}}"/>
+									<HorizontalStackLayout Spacing="4">
 
+										<Label Text="{Binding Artist}"
+											   FontSize="16"/>
+										<Label Text="•"
+											   FontSize="16"
+											   FontFamily="monospace"
+											   FontAttributes="Bold"/>
+										<Label Text="{Binding Duration,Converter={StaticResource TimeConverter}}"
+											   FontSize="16"/>
+
+									</HorizontalStackLayout>
 
 								</StackLayout>
+								<mdc:IconButton Grid.Column="2"
+												Clicked="Favorite"
+												BindingContext="{Binding .}"
+												Style="{DynamicResource StandardIconButtonStyle}"
+												IconData="{x:Static icon:MaterialCommunity.HeartOutline}">
+									<mdc:IconButton.Triggers>
+										<DataTrigger TargetType="mdc:IconButton"
+													 Binding="{Binding IsFavorite}"
+													 Value="True">
+											<Setter Property="IconData"
+													Value="{x:Static icon:MaterialCommunity.Heart}"/>
+
+										</DataTrigger>
+										<DataTrigger TargetType="mdc:IconButton"
+													 Binding="{Binding IsFavorite}"
+													 Value="False">
+											<Setter Property="IconData"
+													Value="{x:Static icon:MaterialCommunity.HeartOutline}"/>
+
+										</DataTrigger>
+									</mdc:IconButton.Triggers>
+								</mdc:IconButton>
 
 							</Grid>
 						</ViewCell>
 					</DataTemplate>
 				</ListView.ItemTemplate>
+
 			</ListView>
 		</mdc:Card>
 	</ScrollView>
