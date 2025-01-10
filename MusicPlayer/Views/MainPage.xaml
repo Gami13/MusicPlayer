@@ -5,6 +5,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
 	xmlns:local="clr-namespace:MusicPlayer"
+	x:Name="mainPage"
+	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 	xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
 
@@ -20,9 +22,9 @@
 				  Padding="4">
 
 
-			<ListView SelectionMode="Single"
-					ItemSelected="SongsList_ItemSelected"
+			<ListView SelectionMode="None"
 					  x:Name="SongsList"
+					  x:DataType="{x:Type local:Database.Song}"
 					  RowHeight="68">
 				<ListView.ItemTemplate>
 					<DataTemplate>
@@ -34,6 +36,19 @@
 								  Margin="0,4"
 								  RowSpacing="6"
 								  ColumnSpacing="0">
+
+								<Grid.Behaviors>
+									<toolkit:TouchBehavior Command="{Binding Source={x:Reference mainPage},Path=TapCommand}"
+														   LongPressCommand="{Binding Source={x:Reference mainPage},Path=LongPressCommand}"
+														   PressedOpacity="0.5"
+														   CommandParameter="{Binding .}"
+														   LongPressCommandParameter="{Binding .}"
+														   DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+														   DefaultAnimationDuration="100"
+														   LongPressDuration="500"/>
+
+
+								</Grid.Behaviors>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="60"/>
 									<ColumnDefinition Width="*"/>
@@ -44,6 +59,7 @@
 									<RowDefinition Height="*"/>
 
 								</Grid.RowDefinitions>
+
 								<Border Grid.Column="0"
 										HeightRequest="60"
 										WidthRequest="60"

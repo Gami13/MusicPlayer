@@ -10,20 +10,26 @@ public partial class MainPage : ContentView {
 
 	private static List<Database.Song> musicList = new List<Database.Song>();
 
-
+	public Command<Database.Song> LongPressCommand = new Command<Database.Song>((Database.Song song) => {
+		Debug.WriteLine("Long Pressed " + song.Title);
+	});
+	public Command<Database.Song> TapCommand = new Command<Database.Song>((Database.Song song) => {
+		Debug.WriteLine("Tapped " + song.Title);
+	});
 
 	public MainPage() {
 		InitializeComponent();
 
+		BindingContext = this;
 
 		AppState.SubscribeToNavigation(RouteKey.Home, () => {
 			if (AppState.hasUpdatedMusic) {
 				updateList();
 			}
 		});
+
 		updateList();
 	}
-
 
 
 	private void Chip_Clicked(object sender, TouchEventArgs e) {
@@ -45,15 +51,9 @@ public partial class MainPage : ContentView {
 		AppState.hasUpdatedMusic = false;
 	}
 
-	private void SongsList_ItemSelected(object sender, SelectedItemChangedEventArgs e) {
-		var x = (ListView)sender;
-		x.SelectedItem = null;
-		Debug.WriteLine("Selected: " + e.SelectedItemIndex + "  " + e.SelectedItem);
-		if (e.SelectedItemIndex == -1) return;
-
-		//play song here ig
-
-
+	private void SongTapped(object sender, TappedEventArgs e) {
+		var song = (Database.Song)((Grid)sender).BindingContext;
+		Debug.WriteLine(song.Title);
 	}
 
 

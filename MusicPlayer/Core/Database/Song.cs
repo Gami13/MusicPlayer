@@ -54,8 +54,11 @@ namespace MusicPlayer {
 		}
 
 		public static void DeleteSong(Song song) {
+			//TODO: Delete the file from storage
+
 			database.Delete(song);
 			AppState.hasUpdatedMusic = true;
+
 		}
 
 		public static List<Song> GetSongs() {
