@@ -14,7 +14,6 @@
 		<ResourceDictionary>
 			<toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
 		</ResourceDictionary>
-		<local:TouchParametersConverter x:Key="TouchParametersConverter"/>
 		<local:TimeConverter x:Key="TimeConverter"/>
 		<local:TitleConverter x:Key="TitleConverter"/>
 	</ContentView.Resources>
@@ -40,24 +39,26 @@
 								  ColumnSpacing="0">
 
 								<Grid.Behaviors>
-									<toolkit:TouchBehavior Command="{Binding Source={x:Reference mainPage},Path=TapCommand}"
-														   LongPressCommand="{Binding Source={x:Reference mainPage},Path=LongPressCommand}"
-														   PressedOpacity="0.5"
-														   LongPressCommandParameter="{Binding .}"
-														   DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
-														   DefaultAnimationDuration="100"
-														   LongPressDuration="500">
-										<toolkit:TouchBehavior.CommandParameter>
-											<MultiBinding Converter="{StaticResource TouchParametersConverter}">
-												<Binding Path="."/>
-												<Binding Source="{RelativeSource Self}"
-														 Path="TouchPoints"/>
-											</MultiBinding>
-										</toolkit:TouchBehavior.CommandParameter>
+									<!-- Command="{Binding Source={x:Reference mainPage},Path=TapCommand}" -->
+									<!-- CommandParameter="{Binding .}" -->
+
+									<toolkit:TouchBehavior
+										LongPressCommand="{Binding Source={x:Reference mainPage},Path=LongPressCommand}"
+										PressedOpacity="0.5"
+										LongPressCommandParameter="{Binding .}"
+										DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+										DefaultAnimationDuration="100"
+										LongPressDuration="500">
+
 									</toolkit:TouchBehavior>
 
 
 								</Grid.Behaviors>
+								<Grid.GestureRecognizers>
+									<TapGestureRecognizer Tapped="SongTapped"
+														  BindingContext="{Binding .}"/>
+
+								</Grid.GestureRecognizers>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="60"/>
 									<ColumnDefinition Width="*"/>

@@ -11,13 +11,7 @@ public partial class MainPage : ContentView {
 	private static List<Database.Song> musicList = new List<Database.Song>();
 
 	public Command<Database.Song> LongPressCommand { get; set; } = new Command<Database.Song>((song) => Debug.WriteLine("Long Pressed " + song.Title));
-	public Command<TouchParameters> TapCommand { get; set; } = new Command<TouchParameters>((TouchParameters parameters) => {
-		var song = parameters.Song;
-		Debug.WriteLine("Tapped " + song.Title);
-		var points = parameters.TouchPoints;
-		Debug.WriteLine(points);
-		// Debug.WriteLine($"Touch point X: {points[0].X} Y: {points[0].Y}");
-	});
+
 
 	public MainPage() {
 		InitializeComponent();
@@ -56,9 +50,24 @@ public partial class MainPage : ContentView {
 	}
 
 	private void SongTapped(object sender, TappedEventArgs e) {
+		var button = (Grid)sender;
+		var song = (Database.Song)button.BindingContext;
+		var position = e.GetPosition(button);
+		if (position == null) {
+			return;
+		}
+		var point = position.Value;
+		if (point.X > 340 && point.X < 368) {
+			song.IsFavorite = !song.IsFavorite;
+			Debug.WriteLine("Point X: " + point.X + " Y: " + point.Y);
+			Debug.WriteLine("Favorite status: " + song.IsFavorite);
 
-		var song = (Database.Song)((Grid)sender).BindingContext;
-		Debug.WriteLine(song.Title);
+			Database.UpdateSong(song);
+			return;
+		}
+
+		//do the other stuff here
+
 	}
 
 
