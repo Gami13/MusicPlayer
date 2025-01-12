@@ -11,7 +11,10 @@
 
 
 	<ContentView.Resources>
-		<local:Base64ToImageSource x:Key="Base64ToImageSource"/>
+		<ResourceDictionary>
+			<toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+		</ResourceDictionary>
+		<local:TouchParametersConverter x:Key="TouchParametersConverter"/>
 		<local:TimeConverter x:Key="TimeConverter"/>
 		<local:TitleConverter x:Key="TitleConverter"/>
 	</ContentView.Resources>
@@ -24,7 +27,6 @@
 
 			<ListView SelectionMode="None"
 					  x:Name="SongsList"
-					  x:DataType="{x:Type local:Database.Song}"
 					  RowHeight="68">
 				<ListView.ItemTemplate>
 					<DataTemplate>
@@ -41,11 +43,18 @@
 									<toolkit:TouchBehavior Command="{Binding Source={x:Reference mainPage},Path=TapCommand}"
 														   LongPressCommand="{Binding Source={x:Reference mainPage},Path=LongPressCommand}"
 														   PressedOpacity="0.5"
-														   CommandParameter="{Binding .}"
 														   LongPressCommandParameter="{Binding .}"
 														   DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
 														   DefaultAnimationDuration="100"
-														   LongPressDuration="500"/>
+														   LongPressDuration="500">
+										<toolkit:TouchBehavior.CommandParameter>
+											<MultiBinding Converter="{StaticResource TouchParametersConverter}">
+												<Binding Path="."/>
+												<Binding Source="{RelativeSource Self}"
+														 Path="TouchPoints"/>
+											</MultiBinding>
+										</toolkit:TouchBehavior.CommandParameter>
+									</toolkit:TouchBehavior>
 
 
 								</Grid.Behaviors>
@@ -67,7 +76,7 @@
 										StrokeShape="RoundRectangle 8"
 										Margin="0,0,0,0"
 										StrokeThickness="0">
-									<Image Source="{Binding Cover, Converter={StaticResource Base64ToImageSource}}"
+									<Image Source="{Binding Cover, Converter={StaticResource ByteArrayToImageSourceConverter}}"
 										   Aspect="AspectFill"/>
 								</Border>
 

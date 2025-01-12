@@ -46,7 +46,7 @@ public partial class DownloadPage : ContentView {
 			Artist = ArtistField.Text ?? "",
 			Genre = GenreField.Text ?? "",
 			Year = songYear,
-			Cover = _coverImageBytes != null ? Convert.ToBase64String(_coverImageBytes) : "",
+			Cover = _coverImageBytes ?? new byte[0],
 			IsFavorite = false
 		};
 		await Task.Run(() => downloadSong(newSong, song.VideoId));

@@ -17,7 +17,7 @@ namespace MusicPlayer {
 			public string Artist { get; set; } = "";
 			public string Genre { get; set; } = "";
 			public int Year { get; set; }
-			public string Cover { get; set; } = "";
+			public byte[] Cover { get; set; } = new byte[0];
 			private bool _isFavorite;
 
 			public bool IsFavorite {
@@ -29,9 +29,9 @@ namespace MusicPlayer {
 					}
 				}
 			}
-			public event PropertyChangedEventHandler PropertyChanged;
+			public event PropertyChangedEventHandler? PropertyChanged;
 
-			protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+			protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 			}
 

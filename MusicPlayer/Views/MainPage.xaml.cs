@@ -10,11 +10,13 @@ public partial class MainPage : ContentView {
 
 	private static List<Database.Song> musicList = new List<Database.Song>();
 
-	public Command<Database.Song> LongPressCommand = new Command<Database.Song>((Database.Song song) => {
-		Debug.WriteLine("Long Pressed " + song.Title);
-	});
-	public Command<Database.Song> TapCommand = new Command<Database.Song>((Database.Song song) => {
+	public Command<Database.Song> LongPressCommand { get; set; } = new Command<Database.Song>((song) => Debug.WriteLine("Long Pressed " + song.Title));
+	public Command<TouchParameters> TapCommand { get; set; } = new Command<TouchParameters>((TouchParameters parameters) => {
+		var song = parameters.Song;
 		Debug.WriteLine("Tapped " + song.Title);
+		var points = parameters.TouchPoints;
+		Debug.WriteLine(points);
+		// Debug.WriteLine($"Touch point X: {points[0].X} Y: {points[0].Y}");
 	});
 
 	public MainPage() {
@@ -23,6 +25,7 @@ public partial class MainPage : ContentView {
 		BindingContext = this;
 
 		AppState.SubscribeToNavigation(RouteKey.Home, () => {
+			Debug.WriteLine("MainPage: OnNavigate " + AppState.hasUpdatedMusic);
 			if (AppState.hasUpdatedMusic) {
 				updateList();
 			}
@@ -41,6 +44,7 @@ public partial class MainPage : ContentView {
 		var button = (IconButton)sender;
 		var song = (Database.Song)button.BindingContext;
 		song.IsFavorite = !song.IsFavorite;
+		Debug.WriteLine("Favorite status: " + song.IsFavorite);
 
 		Database.UpdateSong(song);
 
@@ -52,6 +56,7 @@ public partial class MainPage : ContentView {
 	}
 
 	private void SongTapped(object sender, TappedEventArgs e) {
+
 		var song = (Database.Song)((Grid)sender).BindingContext;
 		Debug.WriteLine(song.Title);
 	}
