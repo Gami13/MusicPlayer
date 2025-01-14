@@ -50,18 +50,17 @@ public partial class MainPage : ContentView {
 	}
 
 	private void SongTapped(object sender, TappedEventArgs e) {
-		var button = (Grid)sender;
-		var song = (Database.Song)button.BindingContext;
-		var position = e.GetPosition(button);
+		var songElement = (Grid)sender;
+		var song = (Database.Song)songElement.BindingContext;
+		var position = e.GetPosition(songElement);
 		if (position == null) {
 			return;
 		}
 		var point = position.Value;
-		if (point.X > 340 && point.X < 368) {
+		Debug.WriteLine("Tapped at " + point.X + " " + point.Y);
+		//if point is in the favorite button
+		if (point.X > songElement.Width - 48 && point.X < songElement.Width - 16) {
 			song.IsFavorite = !song.IsFavorite;
-			Debug.WriteLine("Point X: " + point.X + " Y: " + point.Y);
-			Debug.WriteLine("Favorite status: " + song.IsFavorite);
-
 			Database.UpdateSong(song);
 			return;
 		}

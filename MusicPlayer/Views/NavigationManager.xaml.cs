@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Material.Components.Maui;
+using Microsoft.Maui.Layouts;
 namespace MusicPlayer;
 
 
@@ -10,6 +11,7 @@ public struct NavigationSubscription {
 
 public partial class NavigationManager : ContentPage {
 	private readonly Stack<RouteKey> navigationStack = new();
+	private Card popUp;
 
 	public NavigationManager(ContentView initialContent) {
 		AppState.Load();
@@ -29,6 +31,8 @@ public partial class NavigationManager : ContentPage {
 		SetIcon(RouteKey.Home, true);
 		navigationStack.Push(RouteKey.Home);
 		AppState.NavigationManager = this;
+
+		AddPopUp(new Label { Text = "Hello" });
 
 	}
 
@@ -89,4 +93,55 @@ public partial class NavigationManager : ContentPage {
 			: Constants.Routes[route].Icon;
 		NavigationDrawer.Items[(int)route].IsActived = focused;
 	}
+	public void AddPopUp(View view) {
+		var grid = new Grid();
+
+		// Add row definitions
+		grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+		grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+		// Create FlexLayout
+		var flexLayout = new FlexLayout {
+			Direction = FlexDirection.Column
+		};
+
+		// Create Card
+		var card = new Card {
+			VerticalOptions = LayoutOptions.End,
+			HorizontalOptions = LayoutOptions.Fill,
+			Margin = new Thickness(0),
+			Padding = new Thickness(16),
+			MinimumHeightRequest = 128,
+			BackgroundColor = (Color)Application.Current.Resources["SurfaceColor"],
+			Elevation = Material.Components.Maui.Tokens.Elevation.Level5,
+			Content = flexLayout
+		};
+
+		// Set Grid.Row for card
+		Grid.SetRow(card, 1);
+
+		// Add card to grid
+		grid.Children.Add(card);
+
+		//Replace PopUpLayer Content
+		PopUpLayer.Content = grid;
+
+		popUp = card;
+
+	}
+	public void RemovePopUp() {
+		PopUpLayer.Content = null;
+	}
+	private void PopUpLayerTap(object sender, TappedEventArgs e) {
+
+
+		if (e.GetPosition(popUp)?.Y < 0) // Check if tap was above the card
+		{
+			RemovePopUp();
+		}
+	}
+
+
+
+
 }
