@@ -102,12 +102,15 @@
 									<HorizontalStackLayout Spacing="4">
 
 										<Label Text="{Binding Artist}"
+											   TextColor="{DynamicResource OnSurfaceColor}"
 											   FontSize="16"/>
 										<Label Text="•"
 											   FontSize="16"
+											   TextColor="{DynamicResource OnSurfaceColor}"
 											   FontFamily="monospace"
 											   FontAttributes="Bold"/>
 										<Label Text="{Binding Duration,Converter={StaticResource TimeConverter}}"
+											   TextColor="{DynamicResource OnSurfaceColor}"
 											   FontSize="16"/>
 
 									</HorizontalStackLayout>

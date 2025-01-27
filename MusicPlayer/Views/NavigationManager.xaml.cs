@@ -11,8 +11,8 @@ public struct NavigationSubscription {
 
 public partial class NavigationManager : ContentPage {
 	private readonly Stack<RouteKey> navigationStack = new();
-	private Card popUp;
-
+	private Card? popUp;
+	public Command PressCommand { get; set; } = new Command(() => Debug.WriteLine("Pressed "));
 	public NavigationManager(ContentView initialContent) {
 		AppState.Load();
 		InitializeComponent();
@@ -32,7 +32,7 @@ public partial class NavigationManager : ContentPage {
 		navigationStack.Push(RouteKey.Home);
 		AppState.NavigationManager = this;
 
-		AddPopUp(new Label { Text = "Hello" });
+		// AddPopUp(new Label { Text = "Hello" });
 
 	}
 
@@ -94,6 +94,7 @@ public partial class NavigationManager : ContentPage {
 		NavigationDrawer.Items[(int)route].IsActived = focused;
 	}
 	public void AddPopUp(View view) {
+		PopUpLayer.InputTransparent = false;
 		var grid = new Grid();
 
 		// Add row definitions
@@ -112,7 +113,7 @@ public partial class NavigationManager : ContentPage {
 			Margin = new Thickness(0),
 			Padding = new Thickness(16),
 			MinimumHeightRequest = 128,
-			BackgroundColor = (Color)Application.Current.Resources["SurfaceColor"],
+			BackgroundColor = Application.Current?.Resources["SurfaceColor"] is Color surfaceColor ? surfaceColor : Color.FromRgba(255, 255, 255, 0.9),
 			Elevation = Material.Components.Maui.Tokens.Elevation.Level5,
 			Content = flexLayout
 		};
@@ -127,12 +128,16 @@ public partial class NavigationManager : ContentPage {
 		PopUpLayer.Content = grid;
 
 		popUp = card;
+		PopUpLayer.BackgroundColor = Color.FromRgba(0, 0, 0, 0.5);
 
 	}
 	public void RemovePopUp() {
 		PopUpLayer.Content = null;
+		PopUpLayer.InputTransparent = true;
+		PopUpLayer.BackgroundColor = Colors.Transparent;
 	}
 	private void PopUpLayerTap(object sender, TappedEventArgs e) {
+		Debug.WriteLine("Tapped on PopUpLayer");
 
 
 		if (e.GetPosition(popUp)?.Y < 0) // Check if tap was above the card

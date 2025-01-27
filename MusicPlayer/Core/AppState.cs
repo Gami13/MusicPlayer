@@ -9,6 +9,12 @@ public struct PlayerState {
 	bool isPlaying;
 
 }
+
+public struct PopUpItem {
+	public string Title;
+	public string Icon;
+	public Action OnClick;
+}
 public static class AppState {
 	public static HttpClient httpClient = new HttpClient();
 	public static bool hasUpdatedMusic = true;
@@ -71,6 +77,13 @@ public static class AppState {
 			Debug.WriteLine($"Failed to load app state: {ex.Message}");
 
 		}
+	}
+	public static void ShowPopUp(Database.Song song, List<PopUpItem> items) {
+		if (NavigationManager == null) {
+			Debug.WriteLine("NavigationManager is null");
+			return;
+		}
+		NavigationManager.AddPopUp(new Label { Text = "Hello" });
 	}
 }
 

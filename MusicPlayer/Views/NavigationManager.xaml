@@ -3,6 +3,7 @@
 	x:Class="MusicPlayer.NavigationManager"
 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
 	xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
 	xmlns:local="clr-namespace:MusicPlayer"
 	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -36,10 +37,138 @@
 				<mdc:NavigationBar x:Name="NavigationDrawer"/>
 			</ContentView>
 		</Grid>
-		<ContentView x:Name="PopUpLayer">
+		<!-- TODO: Change InputTransparent -->
+		<ContentView x:Name="PopUpLayer"
+					 InputTransparent="False">
 			<ContentView.GestureRecognizers>
 				<TapGestureRecognizer Tapped="PopUpLayerTap"/>
 			</ContentView.GestureRecognizers>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<mdc:Card VerticalOptions="End"
+						  HorizontalOptions="Fill"
+						  Margin="0"
+						  Padding="0"
+						  MinimumHeightRequest="128"
+						  BackgroundColor="{DynamicResource SurfaceContainerLowColor}"
+						  Grid.Row="1">
+
+
+
+					<StackLayout Padding="8"
+								 Spacing="8"
+								 Orientation="Vertical">
+						<Grid
+							HorizontalOptions="Fill"
+							Padding="0"
+							HeightRequest="60"
+							RowSpacing="6"
+							ColumnSpacing="8">
+
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="60"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="64"/>
+
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="*"/>
+
+							</Grid.RowDefinitions>
+
+							<Border Grid.Column="0"
+									HeightRequest="60"
+									WidthRequest="60"
+									Stroke="Transparent"
+									StrokeShape="RoundRectangle 8"
+									Margin="0,0,0,0"
+									StrokeThickness="0">
+								<Image Source="https://i1.sndcdn.com/artworks-mnk5VVgL4ZTg-0-t500x500.jpg"
+									   Aspect="AspectFill"/>
+							</Border>
+
+
+
+
+
+							<StackLayout Grid.Column="1"
+										 VerticalOptions="Center"
+										 Spacing="0"
+										 Scale="0.9"
+										 Grid.RowSpan="1"
+										 Grid.Row="1"
+										 Orientation="Vertical">
+
+								<Label Grid.Column="1"
+									   TextColor="{DynamicResource PrimaryColor}"
+									   Grid.ColumnSpan="2"
+									   FontSize="18"
+									   FontAttributes="Bold"
+									   Text="Till I Collapse"/>
+								<HorizontalStackLayout Spacing="4">
+
+									<Label Text="Eminem"
+										   TextColor="{DynamicResource OnSurfaceColor}"
+										   FontSize="16"/>
+									<Label Text="•"
+										   FontSize="16"
+										   TextColor="{DynamicResource OnSurfaceColor}"
+										   FontFamily="monospace"
+										   FontAttributes="Bold"/>
+									<Label Text="4:58"
+										   TextColor="{DynamicResource OnSurfaceColor}"
+										   FontSize="16"/>
+
+								</HorizontalStackLayout>
+
+							</StackLayout>
+							<mdc:IconButton Grid.Column="2"
+											Style="{DynamicResource FilledTonalIconButtonStyle}"
+											IconData="{x:Static icon:MaterialCommunity.Play}"/>
+
+
+
+						</Grid>
+						<!-- Separator line -->
+						<BoxView HeightRequest="1"
+								 BackgroundColor="{DynamicResource OutlineVariantColor}"
+								 Margin="8,0"/>
+
+						<StackLayout
+							Spacing="8"
+							HorizontalOptions="Fill"
+							Orientation="Horizontal"
+							VerticalOptions="Center">
+							<StackLayout.Behaviors>
+								<toolkit:TouchBehavior PressedOpacity="0.7"/>
+							</StackLayout.Behaviors>
+
+							<mdc:IconButton IconData="{x:Static icon:MaterialCommunity.PlaylistPlay}"
+											Style="{DynamicResource StandardIconButtonStyle}"
+											InputTransparent="True"
+											HeightRequest="48"/>
+							<Label Text="Play Next"
+								   VerticalTextAlignment="Center"
+								   TextColor="{DynamicResource OnSurfaceColor}"
+								   FontSize="18"/>
+						</StackLayout>
+
+						<!-- Play Next -->
+						<!-- Add to queue -->
+						<!-- Add to playlist -->
+						<!-- Other songs from {Artist} -->
+						<!-- Open in Youtube -->
+						<!-- Share (if i manage to get it to work) -->
+
+
+					</StackLayout>
+				</mdc:Card>
+			</Grid>
+
 
 		</ContentView>
 	</Grid>
