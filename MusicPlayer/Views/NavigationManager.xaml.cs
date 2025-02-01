@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
+using CommunityToolkit.Maui.Extensions;
 using Material.Components.Maui;
 using MauiContentButton;
 
@@ -15,7 +17,7 @@ public struct NavigationSubscription {
 
 public partial class NavigationManager : ContentPage {
 	private readonly Stack<RouteKey> navigationStack = new();
-	private Card? popUpCard;
+
 	public Command PressCommand { get; set; } = new Command(() => Debug.WriteLine("Pressed "));
 	public NavigationManager(ContentView initialContent) {
 		AppState.Load();
@@ -36,8 +38,6 @@ public partial class NavigationManager : ContentPage {
 		SetIcon(RouteKey.Home, true);
 		navigationStack.Push(RouteKey.Home);
 		AppState.NavigationManager = this;
-
-		// AddPopUp(new Label { Text = "Hello" });
 
 	}
 
@@ -98,146 +98,15 @@ public partial class NavigationManager : ContentPage {
 			: Constants.Routes[route].Icon;
 		NavigationDrawer.Items[(int)route].IsActived = focused;
 	}
-	public void AddPopUp(View view) {
+	public async Task AddPopUp(View view) {
+
 		PopUpLayer.InputTransparent = false;
+		PopUpLayer.BackgroundColor = Color.FromRgba(0, 0, 0, 0);
 
-		var mainGrid = new Grid {
-			RowDefinitions =
-					{
-				new RowDefinition { Height = GridLength.Star },
-				new RowDefinition { Height = GridLength.Auto }
-			}
-		};
+		view.TranslationY = PopUpLayer.Height;
+		PopUpLayer.Content = view;
 
-		var card = new Card {
-			VerticalOptions = LayoutOptions.End,
-			HorizontalOptions = LayoutOptions.Fill,
-			Margin = new Thickness(0),
-			Padding = new Thickness(0),
-			MinimumHeightRequest = 128,
-			BackgroundColor = (Color)Application.Current.Resources["SurfaceContainerLowColor"]
-
-		}
-		;
-		Grid.SetRow(card, 1);
-
-		var stackLayout = new StackLayout {
-			Padding = 8,
-			Spacing = 8,
-			Orientation = StackOrientation.Vertical
-		};
-
-		var innerGrid = new Grid {
-			HorizontalOptions = LayoutOptions.Fill,
-			Padding = 0,
-			HeightRequest = 60,
-			RowSpacing = 6,
-			ColumnSpacing = 8,
-			ColumnDefinitions = {
-				new ColumnDefinition { Width = 60 },
-				new ColumnDefinition { Width = GridLength.Star },
-				new ColumnDefinition { Width = 64 }
-			},
-			RowDefinitions = { new RowDefinition { Height = GridLength.Star } }
-		};
-
-		var imageBorder = new Border {
-			HeightRequest = 60,
-			WidthRequest = 60,
-			Stroke = Colors.Transparent,
-			StrokeShape = new RoundRectangle { CornerRadius = 8 },
-			Margin = 0,
-			StrokeThickness = 0,
-			Content = new Image {
-				Source = "https://i1.sndcdn.com/artworks-mnk5VVgL4ZTg-0-t500x500.jpg",
-				Aspect = Aspect.AspectFill
-			}
-		};
-		Grid.SetColumn(imageBorder, 0);
-		innerGrid.Children.Add(imageBorder);
-
-		var textStack = new StackLayout {
-			VerticalOptions = LayoutOptions.Center,
-			Spacing = 0,
-			Scale = 0.9,
-			Orientation = StackOrientation.Vertical
-		};
-
-		var titleLabel = new Label {
-			Text = "Till I Collapse",
-			TextColor = (Color)Application.Current.Resources["PrimaryColor"],
-			FontSize = 18,
-			FontAttributes = FontAttributes.Bold
-		};
-		textStack.Children.Add(titleLabel);
-
-		var artistRow = new HorizontalStackLayout { Spacing = 4 };
-		artistRow.Children.Add(new Label {
-			Text = "Eminem" + " • " + "4:58",
-			TextColor = (Color)Application.Current.Resources["OnSurfaceColor"],
-			FontSize = 16
-		});
-
-		textStack.Children.Add(artistRow);
-
-		Grid.SetColumn(textStack, 1);
-		innerGrid.Children.Add(textStack);
-
-		var playButton = new IconButton {
-			IconData = IconPacks.IconKind.MaterialCommunity.Play,
-			Style = (Style)Application.Current.Resources["FilledTonalIconButtonStyle"]
-
-		}
-		;
-		Grid.SetColumn(playButton, 2);
-		innerGrid.Children.Add(playButton);
-
-		stackLayout.Children.Add(innerGrid);
-
-		stackLayout.Children.Add(new BoxView {
-			HeightRequest = 1,
-			BackgroundColor = (Color)Application.Current.Resources["OutlineVariantColor"],
-			Margin = new Thickness(8, 0)
-		});
-
-		var contentButton = new ContentButton {
-			BackgroundColor = Colors.Transparent,
-			Content = new StackLayout {
-				Spacing = 8,
-				HorizontalOptions = LayoutOptions.Fill,
-				Orientation = StackOrientation.Horizontal,
-				VerticalOptions = LayoutOptions.Center,
-				Children =
-				{
-					new IconButton
-
-					{
-						IconData = IconPacks.IconKind.MaterialCommunity.PlaylistPlay,
-						Style = (Style)Application.Current.Resources["StandardIconButtonStyle"],
-						InputTransparent = true,
-						HeightRequest = 48
-					},
-					new Label
-					{
-						Text = "Play Next",
-						VerticalTextAlignment = TextAlignment.Center,
-						TextColor = (Color)Application.Current.Resources["OnSurfaceColor"],
-						FontSize = 18
-					}
-				}
-			}
-
-		}
-		;
-		stackLayout.Children.Add(contentButton);
-
-		card.Content = stackLayout;
-		mainGrid.Children.Add(card);
-
-		popUpCard = card;
-
-		PopUpLayer.Content = mainGrid;
-		PopUpLayer.BackgroundColor = Color.FromRgba(0, 0, 0, 0.5);
+		await Task.WhenAll(view.TranslateTo(0, 0, 250, Easing.CubicInOut), PopUpLayer.BackgroundColorTo(Color.FromRgba(0, 0, 0, 0.5), 125));
 
 	}
 	public void RemovePopUp() {

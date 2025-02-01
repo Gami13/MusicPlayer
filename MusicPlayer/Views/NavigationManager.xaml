@@ -37,9 +37,10 @@
 				<mdc:NavigationBar x:Name="NavigationDrawer"/>
 			</ContentView>
 		</Grid>
-		<!-- TODO: Change InputTransparent -->
+
 		<ContentView x:Name="PopUpLayer"
-					 InputTransparent="False">
+					 InputTransparent="True"
+				BackgroundColor="Transparent">
 			<ContentView.GestureRecognizers>
 				<TapGestureRecognizer Tapped="PopUpLayerTap"/>
 			</ContentView.GestureRecognizers>

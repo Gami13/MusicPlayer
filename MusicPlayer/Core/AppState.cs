@@ -1,5 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Material.Components.Maui;
+using MauiContentButton;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace MusicPlayer;
 
@@ -10,11 +14,7 @@ public struct PlayerState {
 
 }
 
-public struct PopUpItem {
-	public string Title;
-	public string Icon;
-	public Action OnClick;
-}
+
 public static class AppState {
 	public static HttpClient httpClient = new HttpClient();
 	public static bool hasUpdatedMusic = true;
@@ -35,7 +35,7 @@ public static class AppState {
 	public static void Save() {
 		try {
 			string appDataPath = FileSystem.AppDataDirectory;
-			string filePath = Path.Combine(appDataPath, "appstate.json");
+			string filePath = System.IO.Path.Combine(appDataPath, "appstate.json");
 
 			Debug.WriteLine($"Saving app state to: {filePath}");
 			Debug.WriteLine($"AppState: {PreferredLanguage}, {MusicDirectory}");
@@ -56,7 +56,7 @@ public static class AppState {
 	public static void Load() {
 		try {
 			string appDataPath = FileSystem.AppDataDirectory;
-			string filePath = Path.Combine(appDataPath, "appstate.json");
+			string filePath = System.IO.Path.Combine(appDataPath, "appstate.json");
 
 			Debug.WriteLine($"Loading app state from: {filePath}");
 
@@ -78,12 +78,63 @@ public static class AppState {
 
 		}
 	}
-	public static void ShowPopUp(Database.Song song, List<PopUpItem> items) {
+
+	public static async void ShowSongMenu(Database.Song song) {
 		if (NavigationManager == null) {
 			Debug.WriteLine("NavigationManager is null");
 			return;
 		}
-		NavigationManager.AddPopUp(new Label { Text = "Hello" });
+
+		var mainGrid = new Grid {
+			RowDefinitions =
+					{
+				new RowDefinition { Height = GridLength.Star },
+				new RowDefinition { Height = GridLength.Auto }
+			}
+		};
+
+		var card = new Card {
+			VerticalOptions = LayoutOptions.End,
+			HorizontalOptions = LayoutOptions.Fill,
+			Margin = new Thickness(0),
+			Padding = new Thickness(0),
+			MinimumHeightRequest = 128,
+			BackgroundColor = MDColor.SurfaceContainerLowColor.GetColor(),
+
+		}
+		;
+		Grid.SetRow(card, 1);
+
+		var stackLayout = new StackLayout {
+			Padding = 8,
+			Spacing = 8,
+			Orientation = StackOrientation.Vertical
+		};
+
+		var innerGrid = Components.CreateSongHeader(song);
+
+
+		stackLayout.Children.Add(innerGrid);
+
+		stackLayout.Children.Add(new BoxView {
+			HeightRequest = 1,
+			BackgroundColor = MDColor.OutlineVariantColor.GetColor(),
+			Margin = new Thickness(8, 0)
+		});
+
+		foreach (var item in Constants.songMenuItems) {
+			var contentButton = Components.CreateSongMenuListItem(item, song);
+			stackLayout.Children.Add(contentButton);
+		}
+		stackLayout.Margin = new Thickness(0, 0, 0, 16);
+
+
+
+		card.Content = stackLayout;
+		mainGrid.Children.Add(card);
+
+
+		await NavigationManager.AddPopUp(mainGrid);
 	}
 }
 

@@ -10,7 +10,7 @@ public partial class MainPage : ContentView {
 
 	private static List<Database.Song> musicList = new List<Database.Song>();
 
-	public Command<Database.Song> LongPressCommand { get; set; } = new Command<Database.Song>((song) => Debug.WriteLine("Long Pressed " + song.Title));
+	public Command<Database.Song> LongPressCommand { get; set; } = new Command<Database.Song>(AppState.ShowSongMenu);
 
 
 	public MainPage() {
