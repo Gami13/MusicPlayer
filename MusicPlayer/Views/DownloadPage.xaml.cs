@@ -35,12 +35,15 @@ public partial class DownloadPage : ContentView {
 		if (song == null) {
 			return;
 		}
-		if (!int.TryParse(YearField.Text, out int songYear)) {
+		int songYear = 0;
+		if (!int.TryParse(YearField.Text, out int year)) {
 			_isDownloading = false;
+			songYear = year;
 			await Toast.Make("Invalid year").Show();
 			return;
 		}
 		var newSong = new Database.Song {
+			YoutubeId = song.VideoId,
 			Title = TitleField.Text ?? song.Title,
 			Album = AlbumField.Text ?? "",
 			Artist = ArtistField.Text ?? "",
@@ -49,6 +52,7 @@ public partial class DownloadPage : ContentView {
 			Cover = _coverImageBytes ?? new byte[0],
 			IsFavorite = false
 		};
+
 		await Task.Run(() => downloadSong(newSong, song.VideoId));
 	}
 	private async Task downloadSong(Database.Song song, string videoId) {
@@ -72,6 +76,7 @@ public partial class DownloadPage : ContentView {
 			foreach (var s in allSongs) {
 				Debug.WriteLine($"{s.Title} {s.Artist} {s.Album} {s.Genre} {s.Year} {s.Duration}");
 			}
+
 			await MainThread.InvokeOnMainThreadAsync(() => {
 				_isDownloading = false;
 				AppState.NavigationManager?.NavigateTo(RouteKey.Home);

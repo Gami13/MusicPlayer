@@ -10,6 +10,7 @@ namespace MusicPlayer {
 
 			[PrimaryKey, AutoIncrement]
 			public int Id { get; set; }
+			public string YoutubeId { get; set; } = "";
 			public string Title { get; set; } = "";
 			public string StoragePath { get; set; } = "";
 			public int Duration { get; set; }
@@ -39,9 +40,9 @@ namespace MusicPlayer {
 
 
 		public static void AddSong(Song song) {
-			Debug.WriteLine(song);
+			Debug.WriteLine("Added: " + song);
 			database.Insert(song);
-			AppState.hasUpdatedMusic = true;
+			AppState.SongsList.Add(song);
 		}
 
 		public static Song GetSong(int id) {
@@ -50,18 +51,17 @@ namespace MusicPlayer {
 
 		public static void UpdateSong(Song song) {
 			database.Update(song);
-			AppState.hasUpdatedMusic = true;
 		}
 
 		public static void DeleteSong(Song song) {
 			//TODO: Delete the file from storage
 
 			database.Delete(song);
-			AppState.hasUpdatedMusic = true;
 
 		}
 
 		public static List<Song> GetSongs() {
+			Debug.WriteLine("Getting songs");
 			return database.Table<Song>().ToList();
 
 		}

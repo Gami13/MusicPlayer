@@ -72,7 +72,7 @@ public static partial class Download {
 				}
 			}
 		}
-		return (docFile.Uri.ToString() ?? string.Empty, video.Info.LengthSeconds.GetValueOrDefault(0));
+		return (docFile.Uri.ToString() ?? string.Empty, video.Info.LengthSeconds);
 	}
 
 

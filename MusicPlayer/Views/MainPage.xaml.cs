@@ -1,5 +1,6 @@
 ﻿
 
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using Material.Components.Maui;
@@ -8,32 +9,20 @@ namespace MusicPlayer;
 
 public partial class MainPage : ContentView {
 
-	private static List<Database.Song> musicList = new List<Database.Song>();
-
 	public Command<Database.Song> LongPressCommand { get; set; } = new Command<Database.Song>(AppState.ShowSongMenu);
 
 
 	public MainPage() {
-		InitializeComponent();
 
+		InitializeComponent();
 		BindingContext = this;
 
-		AppState.SubscribeToNavigation(RouteKey.Home, () => {
-			Debug.WriteLine("MainPage: OnNavigate " + AppState.hasUpdatedMusic);
-			if (AppState.hasUpdatedMusic) {
-				updateList();
-			}
-		});
 
-		updateList();
+		foreach (var s in Database.GetSongs()) {
+			AppState.SongsList.Add(s);
+		}
+
 	}
-
-
-	private void Chip_Clicked(object sender, TouchEventArgs e) {
-		var chip = (Chip)sender;
-		chip.IsSelected = false;
-	}
-
 	private void Favorite(object sender, TouchEventArgs e) {
 		var button = (IconButton)sender;
 		var song = (Database.Song)button.BindingContext;
@@ -42,11 +31,6 @@ public partial class MainPage : ContentView {
 
 		Database.UpdateSong(song);
 
-	}
-	private void updateList() {
-		musicList = Database.GetSongs();
-		SongsList.ItemsSource = musicList;
-		AppState.hasUpdatedMusic = false;
 	}
 
 	private void SongTapped(object sender, TappedEventArgs e) {

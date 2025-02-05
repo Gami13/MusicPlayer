@@ -102,7 +102,9 @@ public struct Constants {
 		new SongMenuItem {
 			Title = "Open in Youtube",
 			Icon = IconPacks.IconKind.MaterialCommunity.Youtube,
-			OnClick = (e) => Debug.WriteLine("Open in Youtube"),
+			OnClick = (e) => {
+   Browser.Default.OpenAsync(new Uri($"vnd.youtube://watch/{e.YoutubeId}"), BrowserLaunchMode.SystemPreferred);
+			},
 			Color = MDColor.OnSurfaceColor
 		},
 		new SongMenuItem {
