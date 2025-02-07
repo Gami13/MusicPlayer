@@ -148,12 +148,6 @@
 
 			</ListView>
 		</mdc:Card>
-		<mdc:FAB IconData="{Static icon:MaterialCommunity.Refresh}"
-				 Style="{DynamicResource SurfaceFABStyle}"
-				 HorizontalOptions="End"
-				 x:Name="RefreshButton"
-				 VerticalOptions="End"
-				 Margin="0,0,0,0"
-				 Clicked="Refresh"/>
+
 	</Grid>
 </ContentView>

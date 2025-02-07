@@ -58,7 +58,7 @@ public static partial class Download {
 				}
 			}
 		}
-		return (path, video.Info.LengthSeconds.GetValueOrDefault(0));
+		return (path, video.Info.LengthSeconds);
 	}
 
 
