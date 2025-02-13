@@ -13,10 +13,12 @@ namespace MusicPlayer;
 public static class MauiProgram {
 	public static MauiApp CreateMauiApp() {
 		var builder = MauiApp.CreateBuilder();
-		builder.UseMaterialComponents()
+		builder
+			.UseMaterialComponents()
+			.UseMauiCommunityToolkitMediaElement()
 			.UseMauiApp<App>()
-			.AddAudio().AddMauiContentButtonHandler()
-			// .AddMauiContentButtonHandler()
+			.AddAudio()
+			.AddMauiContentButtonHandler()
 			.UseMauiCommunityToolkit()
 			.UseMaterialColors<CustomMaterialColorService>()
 			.ConfigureFonts(fonts => {

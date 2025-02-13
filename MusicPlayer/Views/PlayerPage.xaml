@@ -1,15 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-    x:Class="MusicPlayer.PlayerPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
-    xmlns:local="clr-namespace:MusicPlayer"
-    xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
+	x:Class="MusicPlayer.PlayerPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.MaterialCommunity"
+	xmlns:local="clr-namespace:MusicPlayer"
+	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+	xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
 
-    <ScrollView>
+	<ScrollView>
 
-
-    </ScrollView>
+		<!-- <toolkit:MediaElement Source="https://ia801700.us.archive.org/5/items/polish-cow-full-version/Polish%20Cow%20Full%20Version.mp3"
+							  HeightRequest="240"
+							  WidthRequest="240"
+							  BackgroundColor="Red"
+							  MetadataTitle="Polish Cow"
+							  MetadataArtist="Cow"
+							  MetadataArtworkUrl="https://ih1.redbubble.net/image.2979106994.7811/st,small,507x507-pad,600x600,f8f8f8.jpg"
+							  ShouldShowPlaybackControls="False"
+							   
+							  Aspect="AspectFill"/> -->
+		<mdc:Button Text="Test"
+					Clicked="Button_Clicked"/>
+	</ScrollView>
 </ContentView>

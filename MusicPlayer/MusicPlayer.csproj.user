@@ -3,7 +3,8 @@
   <PropertyGroup>
     <ActiveDebugFramework>net8.0-android</ActiveDebugFramework>
     <IsFirstTimeProjectOpen>False</IsFirstTimeProjectOpen>
-    <ActiveDebugProfile>Windows Subsystem for Android (Android 13.0 - API 33)</ActiveDebugProfile>
+    <ActiveDebugProfile>Xiaomi 2311DRK48G (Android 14.0 - API 34)</ActiveDebugProfile>
     <SelectedPlatformGroup>PhysicalDevice</SelectedPlatformGroup>
+    <DefaultDevice>Windows Subsystem for Android</DefaultDevice>
   </PropertyGroup>
 </Project>

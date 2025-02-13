@@ -62,7 +62,13 @@
 		<NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Resources\Images\play_circle.png" />
+	  <None Remove="Resources\Images\skip_next.png" />
+	  <None Remove="Resources\Images\skip_previous.png" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="IconPacks.Material" Version="1.0.8732.5-build" />
 		<PackageReference Include="IconPacks.MaterialCommunity" Version="1.0.8940.2-build" />
