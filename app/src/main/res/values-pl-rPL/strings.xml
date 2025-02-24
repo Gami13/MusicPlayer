@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MusicPlayer</string>
+    <string name="route_home">Główna</string>
+    <string name="route_settings">Ustawienia</string>
+    <string name="route_player">Odtwarzacz</string>
+    <string name="route_download">Pobieranie</string>
+</resources>
