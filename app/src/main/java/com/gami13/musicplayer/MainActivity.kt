@@ -55,13 +55,8 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun App(modifier: Modifier = Modifier) {
 
-
   val navController = rememberNavController()
   var selectedRoute: RouteKey by remember { mutableStateOf(RouteKey.Home) }
-
-
-
-
 
   MusicPlayerTheme {
     Scaffold(bottomBar = {

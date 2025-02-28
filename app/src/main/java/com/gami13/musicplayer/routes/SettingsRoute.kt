@@ -33,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gami13.musicplayer.Container
+import com.gami13.musicplayer.LocaleCode
+import com.gami13.musicplayer.LocaleToDisplayName
 import com.gami13.musicplayer.MainActivity
 
 private val CategoryHeaderSize = 24.sp
@@ -42,83 +44,82 @@ private val CategoryHeaderWeight = FontWeight.Bold
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
 fun SettingsRoute(modifier: Modifier = Modifier) {
-    Column(
-        modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        Container(Modifier.fillMaxWidth())
-        {
-            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+  Column(
+    modifier
+      .fillMaxSize()
+      .padding(8.dp)
+  ) {
+    Container(Modifier.fillMaxWidth()) {
+      Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-                Text(
-                    text = "General Settings",
-                    fontSize = CategoryHeaderSize,
-                    fontWeight = CategoryHeaderWeight,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                LanguageSettings()
-                MusicDirectory()
+        Text(
+          text = "General Settings",
+          fontSize = CategoryHeaderSize,
+          fontWeight = CategoryHeaderWeight,
+          color = MaterialTheme.colorScheme.primary
+        )
+        LanguageSettings()
+        MusicDirectory()
 
-            }
-        }
+      }
     }
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LanguageSettings() {
 //TODO: Add language settings not just design
-    var isExpanded by remember { mutableStateOf(false) }
-    var value by remember { mutableStateOf("English") }
-    val languageList = listOf("English", "Polish")
+  var isExpanded by remember { mutableStateOf(false) }
+  val currentLocale = LocaleCode.valueOf(LocaleList.getDefault()[0].toLanguageTag())
+  var selectedLocale by remember { mutableStateOf(currentLocale) }
+  var value by remember { mutableStateOf("English") }
+
+  val languageList = LocaleCode.entries
 
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
-    ) {
-        Body(header = "Language", "Changes the language used in the application's interface")
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
+  ) {
+    Body(header = "Language", "Changes the language used in the application's interface")
 
-        ExposedDropdownMenuBox(
+    ExposedDropdownMenuBox(
 
 
-            expanded = isExpanded,
-            onExpandedChange = {
-                isExpanded = !isExpanded
-            }
-        ) {
+      expanded = isExpanded, onExpandedChange = {
+        isExpanded = !isExpanded
+      }) {
 
-            TextField(
-                readOnly = true,
-                modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
-                value = value,
-                onValueChange = { newValue ->
-                    value = newValue
-                },
-                label = { Text("Select") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
+      TextField(
+        readOnly = true,
+        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
+        value = value,
+        onValueChange = { newValue ->
+          value = newValue
+        },
+        label = { Text("Select") },
+        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
 
-                )
-            ExposedDropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false },
-            ) {
-                languageList.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(item) },
-                        onClick = {
-                            value = item
-                            isExpanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
-            }
-
+        )
+      ExposedDropdownMenu(
+        expanded = isExpanded,
+        onDismissRequest = { isExpanded = false },
+      ) {
+        languageList.forEach { item ->
+          DropdownMenuItem(
+            text = { Text(LocaleToDisplayName(item)) },
+            onClick = {
+              value = LocaleToDisplayName(item)
+              selectedLocale = item
+              isExpanded = false
+            },
+            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+          )
         }
+      }
+
     }
+  }
 }
 
 
@@ -126,55 +127,51 @@ private fun LanguageSettings() {
 private fun MusicDirectory() {
 //TODO: Add directory settings not just design
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
-    ) {
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
+  ) {
 
 
-        Body(
-            "Music directory",
-            "Sets the directory the application will use for storing the music files",
-        )
+    Body(
+      "Music directory",
+      "Sets the directory the application will use for storing the music files",
+    )
 
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy((-2).dp)
-            ) {
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy((-2).dp)
+      ) {
 
-                Button(
-                    onClick = {
-                        val languageList = LocaleList.getDefault()
+        Button(
+          onClick = {
+            val languageList = LocaleList.getDefault()
 
-                        Log.d(
-                            "test",
-                            MainActivity.appContext.resources.configuration.locales.toString()
-                        )
-                        Log.d("test", languageList.toString())
-                        Log.d("test", AppCompatDelegate.getApplicationLocales().toString())
+            Log.d(
+              "test", MainActivity.appContext.resources.configuration.locales.toString()
+            )
+            Log.d("test", languageList.toString())
+            Log.d("test", AppCompatDelegate.getApplicationLocales().toString())
 
-                    },
-                ) {
-                    Icon(Icons.Default.Folder, contentDescription = null)
-                    Text(text = "Browse")
-                }
-                Text("No directory selected", fontSize = 10.sp)
-            }
+          },
+        ) {
+          Icon(Icons.Default.Folder, contentDescription = null)
+          Text(text = "Browse")
         }
-
+        Text("No directory selected", fontSize = 10.sp)
+      }
     }
+
+  }
 }
 
 @Composable
 private fun Body(header: String, description: String) {
-    Column(Modifier.fillMaxWidth(0.55f)) {
-        Text(text = header, fontSize = 18.sp, fontWeight = FontWeight.Bold, lineHeight = 18.sp)
-        Text(
-            text = description,
-            fontSize = 12.sp,
-            lineHeight = 14.sp
-        )
-    }
+  Column(Modifier.fillMaxWidth(0.55f)) {
+    Text(text = header, fontSize = 18.sp, fontWeight = FontWeight.Bold, lineHeight = 18.sp)
+    Text(
+      text = description, fontSize = 12.sp, lineHeight = 14.sp
+    )
+  }
 }
