@@ -1,7 +1,9 @@
 package com.gami13.musicplayer.routes
 
+import android.content.Intent
 import android.os.LocaleList
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
@@ -28,22 +32,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.os.LocaleListCompat
 import com.gami13.musicplayer.Container
-import com.gami13.musicplayer.LocaleCode
-import com.gami13.musicplayer.LocaleToDisplayName
 import com.gami13.musicplayer.MainActivity
+import com.gami13.musicplayer.locales.LocaleCode
+import com.gami13.musicplayer.locales.formatName
+import com.gami13.musicplayer.locales.new
+import com.gami13.musicplayer.locales.toListCompat
 
 private val CategoryHeaderSize = 24.sp
 private val CategoryHeaderWeight = FontWeight.Bold
 
+private data class Settings(
+  var language: LocaleListCompat = LocaleListCompat.getDefault()
+)
+
+private val desiredSettings = Settings()
 
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
 fun SettingsRoute(modifier: Modifier = Modifier) {
+  Log.d("test", "SettingsRoute")
+
+
+  MainActivity.FAB = @Composable {
+    FloatingActionButton(onClick = {
+      AppCompatDelegate.setApplicationLocales(desiredSettings.language)
+
+    }) {
+      Icon(Icons.Default.Save, "Save")
+    }
+  }
+
   Column(
     modifier
       .fillMaxSize()
@@ -62,7 +88,10 @@ fun SettingsRoute(modifier: Modifier = Modifier) {
         MusicDirectory()
 
       }
+
     }
+
+
   }
 }
 
@@ -71,11 +100,12 @@ fun SettingsRoute(modifier: Modifier = Modifier) {
 private fun LanguageSettings() {
 //TODO: Add language settings not just design
   var isExpanded by remember { mutableStateOf(false) }
-  val currentLocale = LocaleCode.valueOf(LocaleList.getDefault()[0].toLanguageTag())
+  val currentLocale = LocaleCode.new(LocaleList.getDefault()[0].toLanguageTag())
   var selectedLocale by remember { mutableStateOf(currentLocale) }
-  var value by remember { mutableStateOf("English") }
+  var value by remember { mutableStateOf(currentLocale.formatName()) }
 
-  val languageList = LocaleCode.entries
+  val languageList = LocaleCode.entries.sortedBy { it.formatName() }
+
 
 
   Row(
@@ -107,11 +137,12 @@ private fun LanguageSettings() {
       ) {
         languageList.forEach { item ->
           DropdownMenuItem(
-            text = { Text(LocaleToDisplayName(item)) },
+            text = { Text((item.formatName())) },
             onClick = {
-              value = LocaleToDisplayName(item)
+              value = item.formatName()
               selectedLocale = item
               isExpanded = false
+              desiredSettings.language = item.toListCompat()
             },
             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
           )
@@ -119,6 +150,7 @@ private fun LanguageSettings() {
       }
 
     }
+
   }
 }
 
@@ -126,6 +158,7 @@ private fun LanguageSettings() {
 @Composable
 private fun MusicDirectory() {
 //TODO: Add directory settings not just design
+  val localContext = LocalContext.current
 
   Row(
     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
@@ -146,13 +179,16 @@ private fun MusicDirectory() {
 
         Button(
           onClick = {
-            val languageList = LocaleList.getDefault()
 
-            Log.d(
-              "test", MainActivity.appContext.resources.configuration.locales.toString()
-            )
-            Log.d("test", languageList.toString())
-            Log.d("test", AppCompatDelegate.getApplicationLocales().toString())
+//            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+//              addFlags(
+//                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+//                        Intent.FLAG_GRANT_READ_URI_PERMISSION or
+//                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+//              )
+//            }
+//TODO
+//            MainActivity().openDocumentTree
 
           },
         ) {

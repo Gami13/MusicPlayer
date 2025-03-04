@@ -48,7 +48,7 @@ android {
 
 val localeTask: TaskProvider<GenerateLocaleCodeEnumTask> = tasks.register<GenerateLocaleCodeEnumTask>("generateLanguageList") {
   resourcesDir.set(project.file("./src/main/res"))
-  outputFile.set(project.file("./src/main/java/com/gami13/musicplayer/LanguageList.kt"))
+  outputFile.set(project.file("./src/main/java/com/gami13/musicplayer/locales/LanguageList.kt"))
 }
 
 

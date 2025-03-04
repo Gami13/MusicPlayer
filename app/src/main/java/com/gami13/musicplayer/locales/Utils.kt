@@ -1,21 +1,44 @@
-package com.gami13.musicplayer.utils
+package com.gami13.musicplayer.locales
 
+import android.util.Log
 import androidx.core.os.LocaleListCompat
-import com.gami13.musicplayer.LocaleCode
+
 import java.util.Locale
 
-fun localeToDisplayName(localeCode: LocaleCode): String {
-  return Locale.forLanguageTag(localeCode.code).displayName
+
+
+fun LocaleCode.toListCompat(): LocaleListCompat{
+  return LocaleListCompat.forLanguageTags(this.code)
 }
 
-fun localeToLocale(localeCode: LocaleCode): Locale {
-  return Locale.forLanguageTag(localeCode.code)
+fun LocaleCode.formatName():String{
+
+  val code = this.code
+  val locale = Locale.forLanguageTag(code)
+
+  val codeParts = code.split("-")
+  var name = locale.getDisplayLanguage(locale).toTitleCase()
+
+  if (codeParts.size > 1 && codeParts[0].lowercase() != codeParts[1].lowercase()) {
+    name = "$name (${codeParts[1]})"
+  }
+
+  return name
+
+
+
 }
 
-fun localeToLocaleListCompat(localeCode: LocaleCode): LocaleListCompat{
-  return LocaleListCompat.forLanguageTags(localeCode.code)
-}
-
-fun stringToLocaleCode(code: String): LocaleCode{
+fun LocaleCode.Companion.new(code: String): LocaleCode {
   return LocaleCode.valueOf(code.uppercase().replace("-","_"))
+
+}
+
+
+ fun String.toTitleCase(): String {
+  return this.split(" ")
+    .joinToString(" ") { word ->
+      if (word.isNotEmpty()) word[0].uppercase() + word.substring(1).lowercase()
+      else word
+    }
 }

@@ -28,15 +28,18 @@ abstract class GenerateLocaleCodeEnumTask : DefaultTask() {
       }?.toMutableList()
     languages?.add("values-en-rUS")
 
-    val finals = languages?.map {
-      it.replace("values-", "").replace("-r", "-").replace("-", "_")
+    val finals = (languages?.map {
+      it.replace("values-", "").replace("-r", "-")
+      //        .replace("-", "_")
     }?.joinToString("") {
-      it.uppercase() + "(\"" + it + "\"),\n"
-    } ?: ""
+      it.uppercase().replace("-", "_") + "(\"" + it + "\"),\n"
+    }?.dropLast(2) + ";") ?: ""
     outputDir.mkdirs()
 
+
     outputFile.get().asFile.writeText(
-      "package com.gami13.musicplayer\nenum class LocaleCode(val code: String){\n$finals}"
+      "package com.gami13.musicplayer.locales\nenum class LocaleCode(val code: String)" +
+              "{\n$finals \ncompanion object { }}"
     )
   }
 }

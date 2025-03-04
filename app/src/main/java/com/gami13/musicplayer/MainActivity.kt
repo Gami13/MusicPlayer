@@ -1,11 +1,21 @@
 package com.gami13.musicplayer
 
+import android.app.ComponentCaller
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -33,18 +43,40 @@ import com.gami13.musicplayer.ui.theme.MusicPlayerTheme
 
 
 class MainActivity : AppCompatActivity() {
-  companion object {
-    lateinit var appContext: Context
+  val openDocumentTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
+    uri: Uri? ->
+    // 'ActivityResultCallback': Handle the returned Uri
+    Log.d("test", "onActivityResult: $uri")
   }
 
+  companion object {
+    lateinit var appContext: Context
+    var FAB: @Composable () -> Unit by mutableStateOf({})
+
+  }
+
+
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?,
+    caller: ComponentCaller
+  ) {
+    super.onActivityResult(requestCode, resultCode, data, caller)
+    if (requestCode == GET_STORAGE_CODE){
+      Log.d("test", "onActivityResult: $data")
+    }
+  }
   override fun onCreate(savedInstanceState: Bundle?) {
 
-    MainActivity.appContext = applicationContext
+    appContext = applicationContext
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     setContent {
-      App()
+      App(fab = FAB
+      )
     }
+
 
 
   }
@@ -53,38 +85,41 @@ class MainActivity : AppCompatActivity() {
 
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
-fun App(modifier: Modifier = Modifier) {
+fun App(modifier: Modifier = Modifier, fab: @Composable () -> Unit = {}) {
+
 
   val navController = rememberNavController()
   var selectedRoute: RouteKey by remember { mutableStateOf(RouteKey.Home) }
 
   MusicPlayerTheme {
-    Scaffold(bottomBar = {
-      NavigationBar {
+    Scaffold(
+      bottomBar = {
+        NavigationBar {
 
-        Routes.forEach { (routeKey, route) ->
-          if (route.isVisible)
-            NavigationBarItem(
-              icon = {
-                Icon(
-                  (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
-                  contentDescription = stringResource(route.translationKey)
-                )
+          Routes.forEach { (routeKey, route) ->
+            if (route.isVisible)
+              NavigationBarItem(
+                icon = {
+                  Icon(
+                    (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
+                    contentDescription = stringResource(route.translationKey)
+                  )
 
-              },
-              label = { Text(stringResource(route.translationKey)) },
+                },
+                label = { Text(stringResource(route.translationKey)) },
 
 
-              selected = selectedRoute == routeKey,
-              onClick = {
-                selectedRoute = routeKey
-                navController.navigate(routeKey)
-              }, alwaysShowLabel = true
-            )
+                selected = selectedRoute == routeKey,
+                onClick = {
+                  selectedRoute = routeKey
+                  MainActivity.FAB = {}
+                  navController.navigate(routeKey)
+                }, alwaysShowLabel = true
+              )
+          }
         }
-      }
 
-    }) {
+      }, floatingActionButton = { fab() }) {
       NavHost(
         navController = navController,
         startDestination = RouteKey.Home,
