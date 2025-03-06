@@ -1,15 +1,12 @@
 package com.gami13.musicplayer.routes
 
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -46,13 +43,7 @@ val Routes: Map<RouteKey, Route> = mapOf(
         translationKey = R.string.route_home,
         isVisible = true
     ),
-    RouteKey.Player to Route(
-        view = { PlayerRoute() },
-        icon = Icons.Outlined.PlayCircle,
-        iconSelected = Icons.Rounded.PlayCircle,
-        translationKey = R.string.route_player,
-        isVisible = true
-    ),
+
     RouteKey.Search to Route(
         view = { SearchRoute() },
         icon = Icons.Outlined.Download,
@@ -67,12 +58,12 @@ val Routes: Map<RouteKey, Route> = mapOf(
         translationKey = R.string.route_settings,
         isVisible = true
     ),
-//    RouteKey.Download to Route(
-//        view = { DownloadRoute() },
-//        icon = null,
-//        iconSelected = null,
-//        translationKey = R.string.route_download,
-//        isVisible = false
-//
-//    )
+    RouteKey.Download to Route(
+        view = { DownloadRoute() },
+        icon = null,
+        iconSelected = null,
+        translationKey = R.string.route_download,
+        isVisible = false
+
+    )
 )

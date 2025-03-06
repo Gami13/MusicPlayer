@@ -78,4 +78,7 @@ dependencies {
   debugImplementation(libs.androidx.ui.test.manifest)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.appcompat.resources)
+  implementation(libs.androidx.datastore.preferences)
+  implementation(libs.ktor.client.core)
+  implementation(libs.ktor.client.cio)
 }
