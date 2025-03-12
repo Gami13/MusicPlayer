@@ -13,10 +13,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.launch
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var appContext: Context
     var FAB: @Composable () -> Unit by mutableStateOf({})
     var TopAppBar: @Composable () -> Unit by mutableStateOf({})
-
+    lateinit var db: AppDatabase
     lateinit var openDocumentTree: ActivityResultLauncher<Uri?>
     val settingsRepository by lazy {
       SettingsRepository(
@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
         topAppBar = TopAppBar
       )
     }
+    db = Room.databaseBuilder(
+      applicationContext, AppDatabase::class.java, "music-player"
+    ).build()
+
     openDocumentTree =
       registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
         if (uri != null) {

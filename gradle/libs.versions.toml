@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.2"
 appcompatResources = "1.7.0"
+coilCompose = "2.5.0"
 datastorePreferences = "1.1.3"
 jetbrainsKotlinxSerializationJson = "1.8.0"
 kotlin = "2.0.0"
@@ -14,6 +15,8 @@ composeBom = "2025.02.00"
 navigationComposeVersion = "2.8.8"
 material3ver = "1.4.0-alpha09"
 
+roomVer = "2.6.1"
+
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatResources" }
@@ -21,6 +24,9 @@ androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resource
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVer" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVer" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -3,6 +3,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+  id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+
   kotlin("plugin.serialization") version "2.1.0"
 }
 
@@ -81,4 +83,6 @@ dependencies {
   implementation(libs.androidx.datastore.preferences)
   implementation(libs.ktor.client.core)
   implementation(libs.ktor.client.cio)
+  implementation(libs.androidx.room.runtime)
+  ksp(libs.androidx.room.compiler)
 }
