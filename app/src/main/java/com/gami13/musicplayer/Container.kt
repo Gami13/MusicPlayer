@@ -34,7 +34,6 @@ fun Container(
     border: BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
-    // Provide the new elevation level to children
     CompositionLocalProvider(LocalElevationLevel provides elevationLevel) {
         Surface(
             modifier = modifier,

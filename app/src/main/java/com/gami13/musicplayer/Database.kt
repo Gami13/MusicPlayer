@@ -21,7 +21,8 @@ data class Song(
   var genre: String = "",
   var year: Int = 0,
   var cover: ByteArray = ByteArray(0),
-  var isFavorite: Boolean = false
+  var isFavorite: Boolean = false,
+  var publishedAt: String
 )
 
 

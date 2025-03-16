@@ -1,11 +1,10 @@
-
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.kotlin.compose)
   id("com.google.devtools.ksp") version "2.1.0-1.0.29"
 
   kotlin("plugin.serialization") version "2.1.0"
+  alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -46,12 +45,11 @@ android {
 }
 
 
-
-
-val localeTask: TaskProvider<GenerateLocaleCodeEnumTask> = tasks.register<GenerateLocaleCodeEnumTask>("generateLanguageList") {
-  resourcesDir.set(project.file("./src/main/res"))
-  outputFile.set(project.file("./src/main/java/com/gami13/musicplayer/locales/LanguageList.kt"))
-}
+val localeTask: TaskProvider<GenerateLocaleCodeEnumTask> =
+  tasks.register<GenerateLocaleCodeEnumTask>("generateLanguageList") {
+    resourcesDir.set(project.file("./src/main/res"))
+    outputFile.set(project.file("./src/main/java/com/gami13/musicplayer/locales/LanguageList.kt"))
+  }
 
 
 
@@ -84,5 +82,6 @@ dependencies {
   implementation(libs.ktor.client.core)
   implementation(libs.ktor.client.cio)
   implementation(libs.androidx.room.runtime)
+  implementation(libs.kotlinx.datetime)
   ksp(libs.androidx.room.compiler)
 }
