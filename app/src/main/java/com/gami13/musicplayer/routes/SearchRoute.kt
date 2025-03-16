@@ -313,13 +313,8 @@ fun SearchResults(
           .padding(16.dp)
       ) {}
     } else {
-      LazyColumn(
-        modifier = Modifier.fillMaxSize()
-      ) {
-
-        items(searchResults) { song ->
-          SongItem(song = song)
-        }
+      LazyColumn(Modifier.fillMaxSize()) {
+        items(searchResults) { song -> SongItem(song) }
       }
     }
   }
@@ -328,37 +323,28 @@ fun SearchResults(
 @Preview
 @Composable
 fun SongPreview() {
-
-
-  SongItem(
-    RickAstley
-  )
+  SongItem(RickAstley)
 }
 
 @Composable
 fun SearchSuggestions(
-  suggestions: MutableState<List<String>>, textFieldState: TextFieldState, doSearch: () -> Unit
+  suggestions: MutableState<List<String>>, 
+  textFieldState: TextFieldState, 
+  doSearch: () -> Unit
 ) {
   Column(Modifier.verticalScroll(rememberScrollState())) {
     suggestions.value.forEach { suggestion ->
-      SuggestionItem(suggestion = suggestion, onClick = {
-        textFieldState.setTextAndPlaceCursorAtEnd(suggestion)
-        doSearch()
-      })
+      ListItem(
+        headlineContent = { Text(suggestion) },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
+        modifier = Modifier
+          .clickable {
+            textFieldState.setTextAndPlaceCursorAtEnd(suggestion)
+            doSearch()
+          }
+          .fillMaxWidth()
+      )
     }
   }
-}
-
-@Composable
-fun SuggestionItem(
-  suggestion: String, onClick: () -> Unit
-) {
-  ListItem(
-    headlineContent = { Text(suggestion) },
-    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-    leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
-    modifier = Modifier
-      .clickable(onClick = onClick)
-      .fillMaxWidth()
-  )
 }
