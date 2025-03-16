@@ -191,7 +191,8 @@ fun DownloadButton() {
 @Preview(showBackground = true)
 @Composable
 fun SearchRoute(modifier: Modifier = Modifier) {
-  var searchResults by remember { mutableStateOf<List<Song>>(listOf(RickAstley)) }
+//  var searchResults by remember { mutableStateOf<List<Song>>(listOf(RickAstley)) }
+  var searchResults by remember { mutableStateOf<List<Song>>(listOf()) }
   val scope = rememberCoroutineScope()
   val textFieldState = rememberTextFieldState()
   var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -200,18 +201,22 @@ fun SearchRoute(modifier: Modifier = Modifier) {
   val suggestions = remember { mutableStateOf(ExampleSuggestions) }
 
   LaunchedEffect(textFieldState.text) {
-    if (textFieldState.text.isNotEmpty()) {
-      delay(300)
-      scope.launch(Dispatchers.IO) {
-        try {
-          val result = autoCompleteSearch(textFieldState.text.toString())
-          val parsedSuggestions = parseYouTubeSuggestions(result)
-          withContext(Dispatchers.Main) {
-            suggestions.value = parsedSuggestions
-          }
-        } catch (e: Exception) {
-          Log.e("SearchRoute", "Error fetching suggestions", e)
+    if (textFieldState.text.isEmpty()) {
+      suggestions.value = ExampleSuggestions
+      return@LaunchedEffect
+    }
+    
+    delay(300) // Debounce delay
+    
+    scope.launch(Dispatchers.IO) {
+      try {
+        val result = autoCompleteSearch(textFieldState.text.toString())
+        val parsedSuggestions = parseYouTubeSuggestions(result)
+        withContext(Dispatchers.Main) {
+          suggestions.value = parsedSuggestions
         }
+      } catch (e: Exception) {
+        Log.e("SearchRoute", "Error fetching suggestions", e)
       }
     }
   }
@@ -245,7 +250,18 @@ fun SearchRoute(modifier: Modifier = Modifier) {
       isLoading = isSearchLoading,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 64.dp)
+        .padding(top = 64.dp),
+      searchQuery = textFieldState.text.toString(),
+      onRetry = {
+        isSearchLoading = true
+        scope.launch {
+          try {
+            searchResults = searchYoutube(textFieldState.text.toString().trim())
+          } finally {
+            isSearchLoading = false
+          }
+        }
+      }
     )
   }
 }
@@ -294,27 +310,57 @@ fun SearchBar(
 fun SearchResults(
   searchResults: List<Song>, 
   isLoading: Boolean,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  searchQuery: String = "",
+  onRetry: () -> Unit = {}
 ) {
   Container(modifier) {
     if (isLoading) {
       Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         contentAlignment = Alignment.Center
       ) {
         CircularProgressIndicator()
       }
     } else if (searchResults.isEmpty()) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(16.dp)
-      ) {}
+      EmptySearchState(searchQuery, onRetry)
     } else {
       LazyColumn(Modifier.fillMaxSize()) {
         items(searchResults) { song -> SongItem(song) }
+      }
+    }
+  }
+}
+
+@Composable
+private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit) {
+  Column(
+    modifier = Modifier.fillMaxSize().padding(16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
+  ) {
+    Icon(
+      imageVector = Icons.Default.Search,
+      contentDescription = null,
+      modifier = Modifier.size(80.dp).padding(bottom = 16.dp),
+      tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+    )
+    
+    Text(
+      text = if (searchQuery.isNotEmpty()) 
+        "No results found for \"$searchQuery\"" 
+      else 
+        "Search for your favorite songs",
+      style = MaterialTheme.typography.bodyLarge,
+      textAlign = androidx.compose.ui.text.style.TextAlign.Center
+    )
+    
+    if (searchQuery.isNotEmpty()) {
+      Button(
+        onClick = onRetry,
+        modifier = Modifier.padding(top = 16.dp)
+      ) {
+        Text("Try Again")
       }
     }
   }
