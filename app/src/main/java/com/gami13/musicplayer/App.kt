@@ -45,8 +45,6 @@ fun App(modifier: Modifier = Modifier, fab: @Composable () -> Unit = {}, topAppB
             )
 
           }, label = { Text(stringResource(route.translationKey)) },
-
-
             selected = selectedRoute == routeKey, onClick = {
               selectedRoute = routeKey
               MainActivity.FAB = {}

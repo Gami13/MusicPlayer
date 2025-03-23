@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.gami13.musicplayer.Container
+import com.gami13.musicplayer.composables.Container
 import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.locales.LocaleCode
 import com.gami13.musicplayer.locales.formatName

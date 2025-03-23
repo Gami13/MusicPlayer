@@ -1,4 +1,4 @@
-package com.gami13.musicplayer
+package com.gami13.musicplayer.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.MaterialTheme

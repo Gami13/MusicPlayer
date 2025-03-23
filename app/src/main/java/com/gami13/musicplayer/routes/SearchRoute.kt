@@ -1,12 +1,10 @@
 package com.gami13.musicplayer.routes
 
-import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
@@ -14,206 +12,106 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.compose.ui.zIndex
-import com.gami13.musicplayer.Container
 import com.gami13.musicplayer.Song
-import com.gami13.musicplayer.utilities.autoCompleteSearch
-import com.gami13.musicplayer.utilities.formatDuration
-import com.gami13.musicplayer.utilities.formatTimeAgo
-import com.gami13.musicplayer.utilities.getThumbnailImageBitmap
-import com.gami13.musicplayer.utilities.parseYouTubeSuggestions
+import com.gami13.musicplayer.composables.Container
+import com.gami13.musicplayer.composables.Previewer
+import com.gami13.musicplayer.composables.SongItem
+import com.gami13.musicplayer.mocks.ExampleSuggestions
+import com.gami13.musicplayer.mocks.NeverGonnaGiveYouUp
+import com.gami13.musicplayer.utilities.getAutoCompleteSuggestions
 import com.gami13.musicplayer.utilities.searchYoutube
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.LocalDateTime
-import java.io.ByteArrayOutputStream
 
-fun createBlue(): ByteArray {
-
-  val bmp = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-  bmp.eraseColor(android.graphics.Color.BLUE)
-  val outputStream = ByteArrayOutputStream()
-  bmp.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, outputStream)
-  return outputStream.toByteArray()
-
-
-}
-
-val RickAstley = Song(
-  youtubeId = "dQw4w9WgXcQ",
-  title = "Never Gonna Give You Up",
-  artist = "Rick Astley",
-  album = "Whenever You Need Somebody",
-  genre = "Pop",
-  year = 1987,
-  storagePath = "",
-  duration = 213,
-  //blue
-  cover = createBlue(),
-  isFavorite = false,
-  publishedAt = ("2022-01-01T00:00:00")
-)
-val ExampleSuggestions = listOf(
-  "Despacito",
-  "Lose Yourself",
-  "Bohemian Rhapsody",
-  "Hotel California",
-  "Stairway to Heaven",
-  "All I Want for Christmas Is You",
-  "Somebody Once Told Me"
-)
-
+@PreviewLightDark
+@Preview(wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE)
 @Composable
-fun SongItem(song: Song) {
-  ListItem(
-    headlineContent = {
-      SongTitle(title = song.title)
-    },
-    supportingContent = {
-      SongMetadata(song = song)
-    },
-    leadingContent = {
-      SongThumbnail(song = song)
-    },
-    trailingContent = {
-      DownloadButton()
-    },
-    modifier = Modifier
-      .fillMaxWidth()
-      .clickable(onClick = { })
-      .padding(vertical = 2.dp), // Reduced vertical padding
-    colors = ListItemDefaults.colors(
-      containerColor = Color.Transparent
-    )
-  )
-}
-
-@Composable
-fun SongTitle(title: String) {
-  Text(
-    text = title,
-    fontWeight = FontWeight.Bold,
-    maxLines = 1,
-    overflow = TextOverflow.Ellipsis,
-    fontSize = 14.sp // Reduced font size
-  )
-}
-
-@Composable
-fun SongMetadata(song: Song) {
-  Row(
-    horizontalArrangement = Arrangement.spacedBy(4.dp), // Reduced spacing
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier.padding(top = 2.dp) // Reduced top padding
-  ) {
-    Text(
-      text = song.artist, fontSize = 11.sp, // Reduced font size
-      maxLines = 1, overflow = TextOverflow.Ellipsis
-    )
-
-    if (song.duration > 0) {
-      MetadataSeparator()
-
-      Text(
-        text = song.duration.formatDuration(), fontSize = 11.sp, // Reduced font size
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-      )
-    }
-
-    MetadataSeparator()
-
-    Text(
-      text = LocalDateTime.parse(song.publishedAt).formatTimeAgo(),
-      fontSize = 11.sp, // Reduced font size
-      fontWeight = FontWeight.Medium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
+fun SearchRoutePreview() {
+  Previewer {
+    SearchRoute()
   }
 }
 
+@PreviewLightDark
+@Preview(wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE)
 @Composable
-fun MetadataSeparator() {
-  Text(
-    text = "•", fontSize = 11.sp, // Reduced font size
-    color = MaterialTheme.colorScheme.onSurfaceVariant
-  )
-}
-
-@Composable
-fun SongThumbnail(song: Song) {
-  Box(
-    modifier = Modifier.heightIn(min = 56.dp) // Reduced height
-  ) {
-    Image(
-      bitmap = song.getThumbnailImageBitmap(),
-      contentDescription = "Thumbnail for ${song.title}",
-      contentScale = ContentScale.Crop,
-      modifier = Modifier
-        .size(56.dp, 56.dp) // Reduced size
-        .clip(RoundedCornerShape(6.dp)) // Smaller corner radius
-    )
-  }
-}
-
-@Composable
-fun DownloadButton() {
-  IconButton(
-    onClick = {}, modifier = Modifier.size(36.dp) // Smaller icon button
-  ) {
-    Icon(
-      imageVector = Icons.Default.Download,
-      contentDescription = "Download song",
-      tint = MaterialTheme.colorScheme.primary,
-      modifier = Modifier.size(20.dp) // Smaller icon
-    )
+fun DownloadDialogPreview() {
+  Previewer {
+    DownloadDialog(song = NeverGonnaGiveYouUp, onDismiss = {}, onConfirm = {})
   }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun SearchRoute(modifier: Modifier = Modifier) {
-//  var searchResults by remember { mutableStateOf<List<Song>>(listOf(RickAstley)) }
-  var searchResults by remember { mutableStateOf<List<Song>>(listOf()) }
+  var searchResults by remember {
+    mutableStateOf<List<Song>>(
+      listOf(
+        NeverGonnaGiveYouUp,
+        NeverGonnaGiveYouUp, NeverGonnaGiveYouUp, NeverGonnaGiveYouUp, NeverGonnaGiveYouUp
+      )
+    )
+  }
+
+
+//  var searchResults by remember { mutableStateOf<List<Song>>(listOf()) }
   val scope = rememberCoroutineScope()
   val textFieldState = rememberTextFieldState()
   var isExpanded by rememberSaveable { mutableStateOf(false) }
   var isSearchLoading by remember { mutableStateOf(false) }
+  var searchError by remember { mutableStateOf(false) }
+  var suggestions by remember { mutableStateOf(ExampleSuggestions) }
+  var songToDownload by remember { mutableStateOf<Song?>(null) }
 
-  val suggestions = remember { mutableStateOf(ExampleSuggestions) }
+  fun performSearch(query: String) {
+    isExpanded = false
+    isSearchLoading = true
+    scope.launch {
+      try {
+        searchError = false
+        searchResults = searchYoutube(query.trim())
+      } catch (e: Exception) {
+        // Add error handling
+        searchError = true
+        Log.e("SearchRoute", "Error searching YouTube", e)
+      } finally {
+        isSearchLoading = false
+      }
+    }
+  }
+
 
   LaunchedEffect(textFieldState.text) {
     if (textFieldState.text.isEmpty()) {
-      suggestions.value = ExampleSuggestions
+      suggestions = ExampleSuggestions
       return@LaunchedEffect
     }
-    
-    delay(300) // Debounce delay
-    
+    val debounceDelay = 300L
+
+    delay(debounceDelay)
+
     scope.launch(Dispatchers.IO) {
       try {
-        val result = autoCompleteSearch(textFieldState.text.toString())
-        val parsedSuggestions = parseYouTubeSuggestions(result)
+        val parsedSuggestions = getAutoCompleteSuggestions(textFieldState.text.toString())
         withContext(Dispatchers.Main) {
-          suggestions.value = parsedSuggestions
+          suggestions = parsedSuggestions
         }
       } catch (e: Exception) {
         Log.e("SearchRoute", "Error fetching suggestions", e)
@@ -221,6 +119,12 @@ fun SearchRoute(modifier: Modifier = Modifier) {
     }
   }
 
+  if (songToDownload != null) {
+    DownloadDialog(song = songToDownload!!, onDismiss = { songToDownload = null }) {
+      // Download song
+      songToDownload = null
+    }
+  }
   Box(
     modifier
       .fillMaxSize()
@@ -234,34 +138,25 @@ fun SearchRoute(modifier: Modifier = Modifier) {
       onExpandedChange = { isExpanded = it },
       suggestions = suggestions,
       onSearch = {
-        isExpanded = false
-        isSearchLoading = true
-        scope.launch {
-          try {
-            searchResults = searchYoutube(textFieldState.text.toString().trim())
-          } finally {
-            isSearchLoading = false
-          }
-        }
+        performSearch(textFieldState.text.toString().trim())
+
       })
 
     SearchResults(
-      searchResults = searchResults, 
+      searchResults = searchResults,
+      didError = searchError,
       isLoading = isSearchLoading,
       modifier = Modifier
         .fillMaxWidth()
         .padding(top = 64.dp),
       searchQuery = textFieldState.text.toString(),
       onRetry = {
-        isSearchLoading = true
-        scope.launch {
-          try {
-            searchResults = searchYoutube(textFieldState.text.toString().trim())
-          } finally {
-            isSearchLoading = false
-          }
-        }
+        performSearch(textFieldState.text.toString().trim())
+
+      }, songClicked = {
+        songToDownload = it
       }
+
     )
   }
 }
@@ -273,7 +168,7 @@ fun SearchBar(
   textFieldState: TextFieldState,
   isExpanded: Boolean,
   onExpandedChange: (Boolean) -> Unit,
-  suggestions: MutableState<List<String>>,
+  suggestions: List<String>,
   onSearch: () -> Unit
 ) {
   val inputField = @Composable {
@@ -285,20 +180,36 @@ fun SearchBar(
       onExpandedChange = onExpandedChange,
       placeholder = { Text("Hinted search text") },
       leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-      trailingIcon = {
-        IconButton(onClick = onSearch) {
-          Icon(
-            Icons.AutoMirrored.Filled.Send, contentDescription = null
-          )
-        }
-      },
+      colors = SearchBarDefaults.inputFieldColors(
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+          elevation = 1
+            .dp
+        ),
+        focusedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+          elevation = 1
+            .dp
+        ),
+      )
     )
   }
 
-  DockedSearchBar(modifier = modifier,
+  DockedSearchBar(
+    modifier = modifier,
     inputField = inputField,
     onExpandedChange = onExpandedChange,
     expanded = isExpanded,
+    colors = SearchBarDefaults.colors(
+      containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+        elevation = 1
+          .dp
+      ),
+      inputFieldColors = SearchBarDefaults.inputFieldColors(
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+      )
+    ),
     content = {
       SearchSuggestions(
         suggestions = suggestions, textFieldState = textFieldState, doSearch = onSearch
@@ -308,53 +219,73 @@ fun SearchBar(
 
 @Composable
 fun SearchResults(
-  searchResults: List<Song>, 
-  isLoading: Boolean,
   modifier: Modifier = Modifier,
+  searchResults: List<Song>,
+  didError: Boolean = false,
+  isLoading: Boolean,
   searchQuery: String = "",
-  onRetry: () -> Unit = {}
+  onRetry: () -> Unit = {},
+  songClicked: (Song) -> Unit
 ) {
   Container(modifier) {
     if (isLoading) {
       Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(16.dp),
         contentAlignment = Alignment.Center
       ) {
         CircularProgressIndicator()
       }
     } else if (searchResults.isEmpty()) {
-      EmptySearchState(searchQuery, onRetry)
+      EmptySearchState(searchQuery, onRetry, didError)
     } else {
-      LazyColumn(Modifier.fillMaxSize()) {
-        items(searchResults) { song -> SongItem(song) }
+      LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(8.dp)
+      ) {
+        itemsIndexed(searchResults) { index, song ->
+          SongItem(song, onClick = { songClicked(song) })
+          if (index < searchResults.size - 1) {
+            HorizontalDivider(
+              modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+            )
+          }
+        }
       }
     }
   }
 }
 
 @Composable
-private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit) {
+private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit, isError: Boolean = false) {
   Column(
-    modifier = Modifier.fillMaxSize().padding(16.dp),
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
   ) {
     Icon(
       imageVector = Icons.Default.Search,
       contentDescription = null,
-      modifier = Modifier.size(80.dp).padding(bottom = 16.dp),
+      modifier = Modifier
+        .size(80.dp)
+        .padding(bottom = 16.dp),
       tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
     )
-    
+
     Text(
-      text = if (searchQuery.isNotEmpty()) 
-        "No results found for \"$searchQuery\"" 
-      else 
+      text = if (searchQuery.isNotEmpty())
+        "No results found for \"$searchQuery\""
+      else if (isError)
+        "An error occurred when searching YouTube"
+      else
         "Search for your favorite songs",
       style = MaterialTheme.typography.bodyLarge,
       textAlign = androidx.compose.ui.text.style.TextAlign.Center
     )
-    
+
     if (searchQuery.isNotEmpty()) {
       Button(
         onClick = onRetry,
@@ -366,20 +297,15 @@ private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit) {
   }
 }
 
-@Preview
-@Composable
-fun SongPreview() {
-  SongItem(RickAstley)
-}
 
 @Composable
 fun SearchSuggestions(
-  suggestions: MutableState<List<String>>, 
-  textFieldState: TextFieldState, 
+  suggestions: List<String>,
+  textFieldState: TextFieldState,
   doSearch: () -> Unit
 ) {
   Column(Modifier.verticalScroll(rememberScrollState())) {
-    suggestions.value.forEach { suggestion ->
+    suggestions.forEach { suggestion ->
       ListItem(
         headlineContent = { Text(suggestion) },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -392,5 +318,98 @@ fun SearchSuggestions(
           .fillMaxWidth()
       )
     }
+  }
+}
+
+
+@Composable
+fun DownloadDialog(
+  song: Song,
+  onDismiss: () -> Unit,
+  onConfirm: (Song) -> Unit
+) {
+  val dialogWindowProvider = LocalView.current.parent as? DialogWindowProvider
+
+  dialogWindowProvider?.window?.let {
+    Log.d("DownloadDialog", "Setting dim amount")
+    it.setDimAmount(0.5f)
+  }
+  var title by remember { mutableStateOf(song.title) }
+  var artist by remember { mutableStateOf(song.artist) }
+  var album by remember { mutableStateOf(song.album) }
+
+  Dialog(onDismissRequest = onDismiss) {
+
+    Surface(
+      shape = RoundedCornerShape(16.dp),
+      color = MaterialTheme.colorScheme.surface,
+      modifier = Modifier
+    ) {
+      Column(
+        modifier = Modifier
+          .padding(24.dp)
+          .fillMaxWidth()
+      ) {
+        Text(
+          text = "Download Song",
+          style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Editable fields
+        OutlinedTextField(
+          value = title,
+          onValueChange = { title = it },
+          label = { Text("Title") },
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+          value = artist,
+          onValueChange = { artist = it },
+          label = { Text("Artist") },
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+          value = album,
+          onValueChange = { album = it },
+          label = { Text("Album") },
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Buttons
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.End
+        ) {
+          TextButton(onClick = onDismiss) {
+            Text("Cancel")
+          }
+
+          Spacer(modifier = Modifier.width(8.dp))
+
+          Button(onClick = {
+            // Create updated song with edited details
+            val updatedSong = song.copy(
+              title = title,
+              artist = artist,
+              album = album
+            )
+            onConfirm(updatedSong)
+          }) {
+            Text("Download")
+          }
+        }
+      }
+    }
+
   }
 }

@@ -25,10 +25,10 @@ fun LocalDateTime.formatTimeAgo(): String {
   
   return when {
     duration < 1.hours -> "Just now"
-    duration < 24.hours -> "${duration.inWholeHours}h ago"
-    duration < 30.days -> "${duration.inWholeDays}d ago"
-    duration < 365.days -> "${(duration.inWholeDays / 30)}mo ago"
-    else -> "${(duration.inWholeDays / 365)}y ago"
+    duration < 24.hours -> "${duration.inWholeHours} hours ago"
+    duration < 30.days -> "${duration.inWholeDays} days ago"
+    duration < 365.days -> "${(duration.inWholeDays / 30)} months ago"
+    else -> "${(duration.inWholeDays / 365)} years ago"
   }
 }
 
