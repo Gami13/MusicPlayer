@@ -19,13 +19,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogWindowProvider
 import androidx.compose.ui.zIndex
 import com.gami13.musicplayer.Song
 import com.gami13.musicplayer.composables.Container
@@ -328,12 +326,7 @@ fun DownloadDialog(
   onDismiss: () -> Unit,
   onConfirm: (Song) -> Unit
 ) {
-  val dialogWindowProvider = LocalView.current.parent as? DialogWindowProvider
 
-  dialogWindowProvider?.window?.let {
-    Log.d("DownloadDialog", "Setting dim amount")
-    it.setDimAmount(0.5f)
-  }
   var title by remember { mutableStateOf(song.title) }
   var artist by remember { mutableStateOf(song.artist) }
   var album by remember { mutableStateOf(song.album) }
