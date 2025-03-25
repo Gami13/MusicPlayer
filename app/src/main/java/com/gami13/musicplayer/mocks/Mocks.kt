@@ -2,9 +2,23 @@ package com.gami13.musicplayer.mocks
 
 import android.graphics.Bitmap
 import com.gami13.musicplayer.Song
+import com.gami13.musicplayer.utilities.YoutubeSearchResult
+import kotlinx.datetime.LocalDateTime
 import java.io.ByteArrayOutputStream
+import androidx.core.graphics.createBitmap
 
-val NeverGonnaGiveYouUp = Song(
+
+val NeverGonnaGiveYouUp = YoutubeSearchResult(
+  videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  title = "Never Gonna Give You Up",
+  duration = 213,
+  uploader = "Rick Astley",
+  bestThumbanilUrl = "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+  viewCount = 0,
+  publishedAt = LocalDateTime.parse("2022-01-01T00:00:00")
+
+)
+val NeverGonnaGiveYouUpOld = Song(
   youtubeId = "dQw4w9WgXcQ",
   title = "Never Gonna Give You Up",
   artist = "Rick Astley",
@@ -29,9 +43,9 @@ val ExampleSuggestions = listOf(
 )
 
 
-private fun createBlue(): ByteArray {
+ fun createBlue(): ByteArray {
 
-  val bmp = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+  val bmp = createBitmap(100, 100)
   bmp.eraseColor(android.graphics.Color.BLUE)
   val outputStream = ByteArrayOutputStream()
   bmp.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, outputStream)

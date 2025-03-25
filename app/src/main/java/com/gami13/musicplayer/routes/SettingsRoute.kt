@@ -29,11 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.gami13.musicplayer.composables.Container
 import com.gami13.musicplayer.MainActivity
+import com.gami13.musicplayer.R
+import com.gami13.musicplayer.composables.Container
 import com.gami13.musicplayer.locales.LocaleCode
 import com.gami13.musicplayer.locales.formatName
 import com.gami13.musicplayer.locales.new
@@ -56,8 +58,8 @@ fun SettingsRoute(modifier: Modifier = Modifier) {
 
 
         Text(
-          text = "General Settings",
-         style = MaterialTheme.typography.headlineLarge,
+          text = stringResource(R.string.general_settings),
+          style = MaterialTheme.typography.headlineLarge,
           color = MaterialTheme.colorScheme.primary
         )
         LanguageSettings()
@@ -87,7 +89,9 @@ private fun LanguageSettings() {
   Row(
     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
   ) {
-    Body(header = "Language", "Changes the language used in the application's interface")
+    Body(header = stringResource(R.string.language),
+      stringResource(R.string.changes_the_language_used_in_the_application_s_interface)
+    )
 
     ExposedDropdownMenuBox(
 
@@ -103,7 +107,7 @@ private fun LanguageSettings() {
         onValueChange = { newValue ->
           value = newValue
         },
-        label = { Text("Select") },
+        label = { Text(stringResource(R.string.select)) },
         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
 
         )
@@ -134,7 +138,7 @@ private fun LanguageSettings() {
 @Preview
 @Composable
 private fun MusicDirectory() {
-  var selectedDirectory =  if (LocalInspectionMode.current) {
+  var selectedDirectory = if (LocalInspectionMode.current) {
     flowOf("content://com.android.externalstorage.documents/tree/primary%3AMusic")
   } else {
     MainActivity.settingsRepository.musicDirectory
@@ -144,8 +148,8 @@ private fun MusicDirectory() {
     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
   ) {
     Body(
-      "Music directory",
-      "Sets the directory the application will use for storing the music files",
+      stringResource(R.string.music_directory),
+      stringResource(R.string.sets_the_directory_the_application_will_use_for_storing_the_music_files),
     )
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
 
@@ -161,12 +165,12 @@ private fun MusicDirectory() {
           },
         ) {
           Icon(Icons.Default.Folder, contentDescription = null)
-          Text(text = "Browse")
+          Text(text = stringResource(R.string.browse))
         }
         val directoryUri = selectedDirectory.collectAsState(initial = "").value
         Text(
           text = if (directoryUri.isEmpty()) {
-            "No directory selected"
+            stringResource(R.string.no_directory_selected)
           } else {
             directoryUri.split("%3A").last()
           },
@@ -181,11 +185,11 @@ private fun MusicDirectory() {
 @Composable
 private fun Body(header: String, description: String) {
   Column(Modifier.fillMaxWidth(0.55f)) {
-    Text(text = header, style=MaterialTheme.typography.titleMedium)
+    Text(text = header, style = MaterialTheme.typography.titleMedium)
     Text(
       style = MaterialTheme.typography.bodySmall,
       text = description,
 
-    )
+      )
   }
 }

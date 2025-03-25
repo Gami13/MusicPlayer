@@ -35,6 +35,12 @@ android {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
+  splits.abi {
+    isEnable = true
+    reset()
+    include("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
+    isUniversalApk = true
+  }
   kotlinOptions {
     jvmTarget = "11"
   }
@@ -42,6 +48,7 @@ android {
     compose = true
   }
   buildToolsVersion = "35.0.0"
+
 }
 
 
@@ -84,4 +91,9 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.kotlinx.datetime)
   ksp(libs.androidx.room.compiler)
+  implementation(libs.ytdlp.library)
+  implementation(libs.ytdlp.ffmpeg)
+  implementation(libs.ytdlp.aria2c)
+  implementation(libs.coil.compose)
+  implementation(libs.coil.network.okhttp)
 }

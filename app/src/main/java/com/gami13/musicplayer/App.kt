@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.gami13.musicplayer.routes.DownloadRoute
 import com.gami13.musicplayer.routes.HomeRoute
 import com.gami13.musicplayer.routes.RouteKey
 import com.gami13.musicplayer.routes.Routes
@@ -62,7 +61,6 @@ fun App(modifier: Modifier = Modifier, fab: @Composable () -> Unit = {}, topAppB
         composable<RouteKey.Home> { HomeRoute() }
         composable<RouteKey.Search> { SearchRoute() }
         composable<RouteKey.Settings> { SettingsRoute() }
-        composable<RouteKey.Download> { DownloadRoute() }
 
 
       }

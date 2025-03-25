@@ -1,13 +1,17 @@
 package com.gami13.musicplayer.utilities
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.gami13.musicplayer.R
 import com.gami13.musicplayer.Song
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import java.io.ByteArrayOutputStream
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
@@ -18,17 +22,21 @@ fun Song.getThumbnailImageBitmap(): ImageBitmap {
 /**
  * Format a LocalDateTime into a human-readable "time ago" string
  */
-fun LocalDateTime.formatTimeAgo(): String {
+fun LocalDateTime.formatTimeAgo(context: Context): String {
   val now = Clock.System.now()
   val publishedInstant = this.toInstant(TimeZone.currentSystemDefault())
   val duration = now - publishedInstant
-  
+
   return when {
-    duration < 1.hours -> "Just now"
-    duration < 24.hours -> "${duration.inWholeHours} hours ago"
-    duration < 30.days -> "${duration.inWholeDays} days ago"
-    duration < 365.days -> "${(duration.inWholeDays / 30)} months ago"
-    else -> "${(duration.inWholeDays / 365)} years ago"
+    duration < 1.hours -> context.getString(R.string.just_now)
+    duration < 24.hours -> context.getString(R.string.hours_ago, duration.inWholeHours.toString())
+    duration < 30.days -> context.getString(R.string.days_ago, duration.inWholeDays.toString())
+    duration < 365.days -> context.getString(
+      R.string.months_ago,
+      (duration.inWholeDays / 30).toString()
+    )
+
+    else -> context.getString(R.string.years_ago, (duration.inWholeDays / 365).toString())
   }
 }
 
@@ -39,4 +47,14 @@ fun Int.formatDuration(): String {
   val minutes = this / 60
   val seconds = this % 60
   return "$minutes:${seconds.toString().padStart(2, '0')}"
+}
+
+fun Bitmap.toByteArray(): ByteArray {
+  val stream = ByteArrayOutputStream()
+  this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+  return stream.toByteArray()
+}
+
+fun ByteArray.toBitmap(): Bitmap {
+  return BitmapFactory.decodeByteArray(this, 0, this.size)
 }

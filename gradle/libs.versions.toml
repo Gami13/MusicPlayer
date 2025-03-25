@@ -1,7 +1,10 @@
 [versions]
-agp = "8.8.2"
+agp = "8.9.1"
 appcompatResources = "1.7.0"
+coilCompose = "3.1.0"
+coilNetworkOkhttp = "3.1.0"
 datastorePreferences = "1.1.3"
+ytdlp = "0.16.0"
 jetbrainsKotlinxSerializationJson = "1.8.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -12,7 +15,7 @@ kotlinxDatetime = "0.6.2"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.00"
-navigationComposeVersion = "2.8.8"
+navigationComposeVersion = "2.8.9"
 material3ver = "1.4.0-alpha10"
 
 roomVer = "2.6.1"
@@ -26,6 +29,11 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVer" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVer" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+ytdlp-aria2c = { module = "io.github.junkfood02.youtubedl-android:aria2c", version.ref = "ytdlp" }
+ytdlp-ffmpeg = { module = "io.github.junkfood02.youtubedl-android:ffmpeg", version.ref = "ytdlp" }
+ytdlp-library = { module = "io.github.junkfood02.youtubedl-android:library", version.ref = "ytdlp" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

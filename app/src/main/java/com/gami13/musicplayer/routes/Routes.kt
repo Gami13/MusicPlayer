@@ -15,55 +15,50 @@ import kotlinx.serialization.Serializable
 
 
 sealed class RouteKey {
-    @Serializable
-    data object Home : RouteKey()
-    @Serializable
-    data object Player : RouteKey()
-    @Serializable
-    data object Search : RouteKey()
-    @Serializable
-    data object Settings : RouteKey()
-    @Serializable
-    data object Download : RouteKey()
+  @Serializable
+  data object Home : RouteKey()
+
+  @Serializable
+  data object Player : RouteKey()
+
+  @Serializable
+  data object Search : RouteKey()
+
+  @Serializable
+  data object Settings : RouteKey()
+
 }
 
 data class Route(
-    val view: @Composable () -> Unit,
-    val icon: ImageVector?,
-    val iconSelected: ImageVector?,
-    val translationKey: Int,
-    val isVisible: Boolean
+  val view: @Composable () -> Unit,
+  val icon: ImageVector?,
+  val iconSelected: ImageVector?,
+  val translationKey: Int,
+  val isVisible: Boolean
 )
 
 val Routes: Map<RouteKey, Route> = mapOf(
-    RouteKey.Home to Route(
-        view = { HomeRoute() },
-        icon = Icons.Outlined.Home,
-        iconSelected = Icons.Rounded.Home,
-        translationKey = R.string.route_home,
-        isVisible = true
-    ),
+  RouteKey.Home to Route(
+    view = { HomeRoute() },
+    icon = Icons.Outlined.Home,
+    iconSelected = Icons.Rounded.Home,
+    translationKey = R.string.route_home,
+    isVisible = true
+  ),
 
-    RouteKey.Search to Route(
-        view = { SearchRoute() },
-        icon = Icons.Outlined.Download,
-        iconSelected = Icons.Rounded.Download,
-        translationKey = R.string.route_download,
-        isVisible = true
-    ),
-    RouteKey.Settings to Route(
-        view = { SettingsRoute() },
-        icon = Icons.Outlined.Settings,
-        iconSelected = Icons.Rounded.Settings,
-        translationKey = R.string.route_settings,
-        isVisible = true
-    ),
-    RouteKey.Download to Route(
-        view = { DownloadRoute() },
-        icon = null,
-        iconSelected = null,
-        translationKey = R.string.route_download,
-        isVisible = false
+  RouteKey.Search to Route(
+    view = { SearchRoute() },
+    icon = Icons.Outlined.Download,
+    iconSelected = Icons.Rounded.Download,
+    translationKey = R.string.route_download,
+    isVisible = true
+  ),
+  RouteKey.Settings to Route(
+    view = { SettingsRoute() },
+    icon = Icons.Outlined.Settings,
+    iconSelected = Icons.Rounded.Settings,
+    translationKey = R.string.route_settings,
+    isVisible = true
+  ),
 
-    )
-)
+  )

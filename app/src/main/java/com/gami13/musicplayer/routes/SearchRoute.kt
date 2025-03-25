@@ -2,35 +2,60 @@ package com.gami13.musicplayer.routes
 
 import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
-import com.gami13.musicplayer.Song
+import com.gami13.musicplayer.R
 import com.gami13.musicplayer.composables.Container
+import com.gami13.musicplayer.composables.DownloadDialog
 import com.gami13.musicplayer.composables.Previewer
 import com.gami13.musicplayer.composables.SongItem
 import com.gami13.musicplayer.mocks.ExampleSuggestions
 import com.gami13.musicplayer.mocks.NeverGonnaGiveYouUp
+import com.gami13.musicplayer.utilities.YoutubeSearchResult
 import com.gami13.musicplayer.utilities.getAutoCompleteSuggestions
 import com.gami13.musicplayer.utilities.searchYoutube
 import kotlinx.coroutines.Dispatchers
@@ -47,28 +72,23 @@ fun SearchRoutePreview() {
   }
 }
 
-@PreviewLightDark
-@Preview(wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE)
-@Composable
-fun DownloadDialogPreview() {
-  Previewer {
-    DownloadDialog(song = NeverGonnaGiveYouUp, onDismiss = {}, onConfirm = {})
-  }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchRoute(modifier: Modifier = Modifier) {
+
+
   var searchResults by remember {
-    mutableStateOf<List<Song>>(
+    mutableStateOf<List<YoutubeSearchResult>>(
       listOf(
         NeverGonnaGiveYouUp,
-        NeverGonnaGiveYouUp, NeverGonnaGiveYouUp, NeverGonnaGiveYouUp, NeverGonnaGiveYouUp
+        NeverGonnaGiveYouUp,
+        NeverGonnaGiveYouUp,
+        NeverGonnaGiveYouUp,
+        NeverGonnaGiveYouUp
       )
     )
   }
-
-
 //  var searchResults by remember { mutableStateOf<List<Song>>(listOf()) }
   val scope = rememberCoroutineScope()
   val textFieldState = rememberTextFieldState()
@@ -76,7 +96,7 @@ fun SearchRoute(modifier: Modifier = Modifier) {
   var isSearchLoading by remember { mutableStateOf(false) }
   var searchError by remember { mutableStateOf(false) }
   var suggestions by remember { mutableStateOf(ExampleSuggestions) }
-  var songToDownload by remember { mutableStateOf<Song?>(null) }
+  var songToDownload by remember { mutableStateOf<YoutubeSearchResult?>(null) }
 
   fun performSearch(query: String) {
     isExpanded = false
@@ -86,7 +106,6 @@ fun SearchRoute(modifier: Modifier = Modifier) {
         searchError = false
         searchResults = searchYoutube(query.trim())
       } catch (e: Exception) {
-        // Add error handling
         searchError = true
         Log.e("SearchRoute", "Error searching YouTube", e)
       } finally {
@@ -118,19 +137,17 @@ fun SearchRoute(modifier: Modifier = Modifier) {
   }
 
   if (songToDownload != null) {
-    DownloadDialog(song = songToDownload!!, onDismiss = { songToDownload = null }) {
-      // Download song
-      songToDownload = null
-    }
+    DownloadDialog(song = songToDownload!!, onDismiss = { songToDownload = null })
   }
   Box(
     modifier
       .fillMaxSize()
       .padding(8.dp),
   ) {
-    SearchBar(modifier = Modifier
-      .fillMaxWidth()
-      .zIndex(10f),
+    SearchBar(
+      modifier = Modifier
+        .fillMaxWidth()
+        .zIndex(10f),
       textFieldState = textFieldState,
       isExpanded = isExpanded,
       onExpandedChange = { isExpanded = it },
@@ -151,7 +168,8 @@ fun SearchRoute(modifier: Modifier = Modifier) {
       onRetry = {
         performSearch(textFieldState.text.toString().trim())
 
-      }, songClicked = {
+      },
+      songClicked = {
         songToDownload = it
       }
 
@@ -169,6 +187,9 @@ fun SearchBar(
   suggestions: List<String>,
   onSearch: () -> Unit
 ) {
+  val color = MaterialTheme.colorScheme.surfaceColorAtElevation(
+    elevation = 1.dp
+  )
   val inputField = @Composable {
     SearchBarDefaults.InputField(
       modifier = Modifier.fillMaxWidth(),
@@ -176,19 +197,11 @@ fun SearchBar(
       onSearch = { onSearch() },
       expanded = isExpanded,
       onExpandedChange = onExpandedChange,
-      placeholder = { Text("Hinted search text") },
+      placeholder = { Text(stringResource(R.string.hinted_search_text)) },
       leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
       colors = SearchBarDefaults.inputFieldColors(
-        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-          elevation = 1
-            .dp
-        ),
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-          elevation = 1
-            .dp
-        ),
+        unfocusedContainerColor = color,
+        focusedContainerColor = color,
       )
     )
   }
@@ -199,14 +212,7 @@ fun SearchBar(
     onExpandedChange = onExpandedChange,
     expanded = isExpanded,
     colors = SearchBarDefaults.colors(
-      containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-        elevation = 1
-          .dp
-      ),
-      inputFieldColors = SearchBarDefaults.inputFieldColors(
-        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-      )
+      containerColor = color
     ),
     content = {
       SearchSuggestions(
@@ -218,20 +224,19 @@ fun SearchBar(
 @Composable
 fun SearchResults(
   modifier: Modifier = Modifier,
-  searchResults: List<Song>,
+  searchResults: List<YoutubeSearchResult>,
   didError: Boolean = false,
   isLoading: Boolean,
   searchQuery: String = "",
   onRetry: () -> Unit = {},
-  songClicked: (Song) -> Unit
+  songClicked: (YoutubeSearchResult) -> Unit
 ) {
   Container(modifier) {
     if (isLoading) {
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .padding(16.dp),
-        contentAlignment = Alignment.Center
+          .padding(16.dp), contentAlignment = Alignment.Center
       ) {
         CircularProgressIndicator()
       }
@@ -239,8 +244,7 @@ fun SearchResults(
       EmptySearchState(searchQuery, onRetry, didError)
     } else {
       LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(8.dp)
+        modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(8.dp)
       ) {
         itemsIndexed(searchResults) { index, song ->
           SongItem(song, onClick = { songClicked(song) })
@@ -274,22 +278,21 @@ private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit, isError: 
     )
 
     Text(
-      text = if (searchQuery.isNotEmpty())
-        "No results found for \"$searchQuery\""
-      else if (isError)
-        "An error occurred when searching YouTube"
-      else
-        "Search for your favorite songs",
+      text = if (searchQuery.isNotEmpty()) stringResource(
+        R.string.no_results_found_for,
+        searchQuery
+      )
+      else if (isError) stringResource(R.string.an_error_occurred_when_searching_youtube)
+      else stringResource(R.string.search_for_your_favorite_songs),
       style = MaterialTheme.typography.bodyLarge,
       textAlign = androidx.compose.ui.text.style.TextAlign.Center
     )
 
     if (searchQuery.isNotEmpty()) {
       Button(
-        onClick = onRetry,
-        modifier = Modifier.padding(top = 16.dp)
+        onClick = onRetry, modifier = Modifier.padding(top = 16.dp)
       ) {
-        Text("Try Again")
+        Text(stringResource(R.string.try_again))
       }
     }
   }
@@ -298,9 +301,7 @@ private fun EmptySearchState(searchQuery: String, onRetry: () -> Unit, isError: 
 
 @Composable
 fun SearchSuggestions(
-  suggestions: List<String>,
-  textFieldState: TextFieldState,
-  doSearch: () -> Unit
+  suggestions: List<String>, textFieldState: TextFieldState, doSearch: () -> Unit
 ) {
   Column(Modifier.verticalScroll(rememberScrollState())) {
     suggestions.forEach { suggestion ->
@@ -313,96 +314,8 @@ fun SearchSuggestions(
             textFieldState.setTextAndPlaceCursorAtEnd(suggestion)
             doSearch()
           }
-          .fillMaxWidth()
-      )
+          .fillMaxWidth())
     }
   }
 }
 
-
-@Composable
-fun DownloadDialog(
-  song: Song,
-  onDismiss: () -> Unit,
-  onConfirm: (Song) -> Unit
-) {
-
-  var title by remember { mutableStateOf(song.title) }
-  var artist by remember { mutableStateOf(song.artist) }
-  var album by remember { mutableStateOf(song.album) }
-
-  Dialog(onDismissRequest = onDismiss) {
-
-    Surface(
-      shape = RoundedCornerShape(16.dp),
-      color = MaterialTheme.colorScheme.surface,
-      modifier = Modifier
-    ) {
-      Column(
-        modifier = Modifier
-          .padding(24.dp)
-          .fillMaxWidth()
-      ) {
-        Text(
-          text = "Download Song",
-          style = MaterialTheme.typography.titleLarge
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Editable fields
-        OutlinedTextField(
-          value = title,
-          onValueChange = { title = it },
-          label = { Text("Title") },
-          modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-          value = artist,
-          onValueChange = { artist = it },
-          label = { Text("Artist") },
-          modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-          value = album,
-          onValueChange = { album = it },
-          label = { Text("Album") },
-          modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Buttons
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.End
-        ) {
-          TextButton(onClick = onDismiss) {
-            Text("Cancel")
-          }
-
-          Spacer(modifier = Modifier.width(8.dp))
-
-          Button(onClick = {
-            // Create updated song with edited details
-            val updatedSong = song.copy(
-              title = title,
-              artist = artist,
-              album = album
-            )
-            onConfirm(updatedSong)
-          }) {
-            Text("Download")
-          }
-        }
-      }
-    }
-
-  }
-}
