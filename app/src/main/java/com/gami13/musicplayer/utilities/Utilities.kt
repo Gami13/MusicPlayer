@@ -3,8 +3,10 @@ package com.gami13.musicplayer.utilities
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.R
 import com.gami13.musicplayer.Song
 import kotlinx.datetime.Clock
@@ -22,7 +24,8 @@ fun Song.getThumbnailImageBitmap(): ImageBitmap {
 /**
  * Format a LocalDateTime into a human-readable "time ago" string
  */
-fun LocalDateTime.formatTimeAgo(context: Context): String {
+fun LocalDateTime.formatTimeAgo(context: Context= MainActivity.appContext): String {
+  Log.d("TAG", "formatTimeAgo: $this")
   val now = Clock.System.now()
   val publishedInstant = this.toInstant(TimeZone.currentSystemDefault())
   val duration = now - publishedInstant

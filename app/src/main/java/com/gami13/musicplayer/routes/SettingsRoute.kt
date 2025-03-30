@@ -122,6 +122,7 @@ private fun LanguageSettings() {
               value = item.formatName()
               selectedLocale = item
               isExpanded = false
+              
               AppCompatDelegate.setApplicationLocales(item.toListCompat())
 
             },

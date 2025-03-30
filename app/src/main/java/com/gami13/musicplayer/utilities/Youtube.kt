@@ -17,10 +17,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -192,7 +189,7 @@ data class YoutubeSearchResult(
   var duration: Int = 0,
   var uploader: String = "",
   var bestThumbanilUrl: String = "",
-  var viewCount: Int = 0,
+  var viewCount: Long = 0,
   var publishedAt: LocalDateTime
 )
 
@@ -213,28 +210,33 @@ private data class RawYoutubeSearchResult(
   var thumbnails: List<RawThumbnail>,
   var thumbnail: String = "",
   @JsonNames("view_count")
-  var viewCount: Int = 0,
-  var epoch: Int
+  var viewCount: Long = 0,
+  @JsonNames("upload_date")
+  var uploadDate: Int = 0
 )
 
 suspend fun searchYoutube(query: String): List<YoutubeSearchResult> = withContext(Dispatchers.IO) {
   val limit = 20
-  val request = YoutubeDLRequest("ytsearch${limit}:$query").addOption("--flat-playlist")
-    .addOption("--skip-download").addOption("--quiet").addOption("--ignore-errors").addOption(
-      "--print", "%(.{title,webpage_url,duration,uploader,thumbnails,view_count,epoch})j,"
+  val request = YoutubeDLRequest("ytsearch${limit}:$query")
+    .addOption("--flat-playlist")
+    .addOption("--skip-download")
+    .addOption("--quiet")
+    .addOption("--ignore-errors")
+    .addOption("--extractor-args", "youtubetab:approximate_date ")
+    .addOption(
+      "--print", "%(.{title,webpage_url,duration,uploader,thumbnails,view_count,upload_date})j,"
     )
   val songs = mutableListOf<YoutubeSearchResult>()
 
   try {
     YoutubeDL.getInstance().execute(request) { a, b, video ->
       Log.d("YoutubeDL", "$a | $b | $video")
-      //remove last character
       val videoData = video.substring(0, video.length - 1)
       val json = Json.decodeFromString<RawYoutubeSearchResult>(videoData)
+      if(json.webpageUrl.contains("channel")) return@execute
       val bestThumbanilUrl = json.thumbnails.maxByOrNull { it.width * it.height }?.url ?: ""
-      val publishedAt =
-        Instant.fromEpochSeconds(json.epoch.toLong())
-          .toLocalDateTime(TimeZone.currentSystemDefault())
+      //date is in YYYYMMDD format
+      val publishedAt = parsePublishedDate(json.uploadDate.toString())
       songs.add(
         YoutubeSearchResult(
           videoUrl = json.webpageUrl,
@@ -263,10 +265,14 @@ private fun getBestThumbnailUrl(thumbnails: Thumbnails): String {
 
 private fun parsePublishedDate(dateString: String): LocalDateTime {
   return try {
-    Instant.parse(dateString).toLocalDateTime(TimeZone.currentSystemDefault())
+    val year = dateString.substring(0, 4).toInt()
+    val month = dateString.substring(4, 6).toInt()
+    val day = dateString.substring(6, 8).toInt()
+    LocalDateTime(year, month, day, 0, 0, 0, 0)
+
   } catch (e: Exception) {
-    Log.w(TAG, "Failed to parse date: $dateString", e)
-    Instant.parse("1970-01-01T00:00:00").toLocalDateTime(TimeZone.currentSystemDefault())
+    Log.e("ParsePublishedDate", "Error parsing date: $dateString", e)
+    LocalDateTime(1970, 1, 1, 0, 0, 0, 0)
   }
 }
 
