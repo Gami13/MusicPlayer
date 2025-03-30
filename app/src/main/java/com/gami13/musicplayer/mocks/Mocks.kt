@@ -18,20 +18,7 @@ val NeverGonnaGiveYouUp = YoutubeSearchResult(
   publishedAt = LocalDateTime.parse("2022-01-01T00:00:00")
 
 )
-val NeverGonnaGiveYouUpOld = Song(
-  youtubeId = "dQw4w9WgXcQ",
-  title = "Never Gonna Give You Up",
-  artist = "Rick Astley",
-  album = "Whenever You Need Somebody",
-  genre = "Pop",
-  year = 1987,
-  storagePath = "",
-  duration = 213,
-  //blue
-  cover = createBlue(),
-  isFavorite = false,
-  publishedAt = ("2022-01-01T00:00:00")
-)
+
 val ExampleSuggestions = listOf(
   "Despacito",
   "Lose Yourself",

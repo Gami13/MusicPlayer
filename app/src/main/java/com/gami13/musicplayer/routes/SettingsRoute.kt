@@ -140,7 +140,7 @@ private fun LanguageSettings() {
 @Composable
 private fun MusicDirectory() {
   var selectedDirectory = if (LocalInspectionMode.current) {
-    flowOf("content://com.android.externalstorage.documents/tree/primary%3AMusic")
+    flowOf("content://com.android.externalstorage.documents/tree/primary:Music")
   } else {
     MainActivity.settingsRepository.musicDirectory
   }
@@ -173,7 +173,7 @@ private fun MusicDirectory() {
           text = if (directoryUri.isEmpty()) {
             stringResource(R.string.no_directory_selected)
           } else {
-            directoryUri.split("%3A").last()
+            directoryUri.split(":").last()
           },
           fontSize = 10.sp
         )

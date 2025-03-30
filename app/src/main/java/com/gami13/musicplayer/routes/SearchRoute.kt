@@ -156,6 +156,7 @@ fun SearchRoute(modifier: Modifier = Modifier) {
       },
       songClicked = {
         songToDownload = it
+        TODO("Start pre-downloading")
       }
     )
   }

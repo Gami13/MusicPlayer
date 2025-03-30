@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
 
 @Entity(tableName = "songs")
 data class Song(
-  @PrimaryKey val id: Int =0,
+  @PrimaryKey val id: Int = 0,
   var youtubeId: String = "",
   var title: String = "",
   var storagePath: String = "",
@@ -22,7 +22,6 @@ data class Song(
   var year: Int = 0,
   var cover: ByteArray = ByteArray(0),
   var isFavorite: Boolean = false,
-  var publishedAt: String
 )
 
 
@@ -35,7 +34,11 @@ interface SongDao {
   fun getSong(youtubeId: String): Song
 
   @Insert
+  fun insert(song: Song)
+
+  @Insert
   fun insertAll(vararg songs: Song)
+
 
   @Delete
   fun delete(song: Song)

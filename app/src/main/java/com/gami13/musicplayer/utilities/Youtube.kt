@@ -166,7 +166,6 @@ suspend fun searchYoutubeOld(query: String): List<Song> {
           duration = 0,
           cover = thumbnailBytes,
           isFavorite = false,
-          publishedAt = publishedAt.toString()
         )
 
         songs.add(song)

@@ -3,6 +3,7 @@ package com.gami13.musicplayer
 import android.content.ContentResolver
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -19,11 +20,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,8 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var mediaPickerCallBack: (Uri) -> Unit
     lateinit var pickMedia: (
-      media: PickVisualMedia.VisualMediaType, callback:
-        (Uri) -> Unit
+      media: PickVisualMedia.VisualMediaType, callback: (Uri) -> Unit
     ) -> Unit
 
 
@@ -61,8 +65,7 @@ class MainActivity : AppCompatActivity() {
     enableEdgeToEdge()
     setContent {
       App(
-        fab = FAB,
-        topAppBar = TopAppBar
+        fab = FAB, topAppBar = TopAppBar
       )
     }
     db = Room.databaseBuilder(
@@ -80,27 +83,37 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    pickMedia =
-      { media: PickVisualMedia.VisualMediaType, callback: (Uri) -> Unit ->
-        mediaPickerCallBack = callback
-        pickMediaLauncher.launch(PickVisualMediaRequest(media))
-      }
+    pickMedia = { media: PickVisualMedia.VisualMediaType, callback: (Uri) -> Unit ->
+      mediaPickerCallBack = callback
+      pickMediaLauncher.launch(PickVisualMediaRequest(media))
+    }
 
     openDocumentTree =
       registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
         if (uri != null) {
+          appContext.contentResolver.takePersistableUriPermission(
+            uri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+          )
+
           lifecycleScope.launch {
-            settingsRepository.saveMusicDirectory(uri.toString())
+            settingsRepository.saveMusicDirectory(uri.toString().replace("%3A", ":"))
+
           }
         }
       }
 
     try {
       YoutubeDL.getInstance().init(this)
-    } catch (e: YoutubeDLException) {
-      Log.d(TAG, "failed to initialize youtubedl-android", e);
-    }
+      FFmpeg.getInstance().init(this);
+      CoroutineScope(Dispatchers.IO).launch {
 
+        YoutubeDL.getInstance().updateYoutubeDL(appContext)
+        Log.d("MAIN", "Version " + YoutubeDL.getInstance().version(appContext).toString())
+      }
+    } catch (e: YoutubeDLException) {
+      Log.d(TAG, "failed to initialize youtubedl-android", e)
+    }
 
 
   }

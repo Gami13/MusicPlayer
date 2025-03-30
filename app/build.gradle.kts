@@ -31,6 +31,7 @@ android {
       )
     }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -96,4 +97,5 @@ dependencies {
   implementation(libs.ytdlp.aria2c)
   implementation(libs.coil.compose)
   implementation(libs.coil.network.okhttp)
+  implementation(libs.androidx.documentfile)
 }

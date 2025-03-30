@@ -59,5 +59,6 @@
       <option name="previewFile" value="true" />
     </inspection_tool>
     <inspection_tool class="ReplaceCollectionCountWithSize" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnstableApiUsage" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>
