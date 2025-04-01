@@ -14,9 +14,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     var TopAppBar: @Composable () -> Unit by mutableStateOf({})
     lateinit var db: AppDatabase
     lateinit var openDocumentTree: ActivityResultLauncher<Uri?>
-
+    val snackbarHostState =   SnackbarHostState()
     private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var mediaPickerCallBack: (Uri) -> Unit
     lateinit var pickMedia: (
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     enableEdgeToEdge()
     setContent {
       App(
-        fab = FAB, topAppBar = TopAppBar
+        fab = FAB, topAppBar = TopAppBar, snackbarHostState = snackbarHostState
       )
     }
     db = Room.databaseBuilder(

@@ -1,5 +1,6 @@
 package com.gami13.musicplayer.composables
 
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.foundation.Image
@@ -19,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -45,27 +48,41 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.R
+import com.gami13.musicplayer.Song
 import com.gami13.musicplayer.mocks.NeverGonnaGiveYouUp
 import com.gami13.musicplayer.mocks.createBlue
 import com.gami13.musicplayer.utilities.YoutubeSearchResult
 import com.gami13.musicplayer.utilities.downloadThumbnail
 import com.gami13.musicplayer.utilities.toBitmap
+import java.io.ByteArrayOutputStream
 
 @PreviewLightDark
 @Preview(wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE)
 @Composable
 fun DownloadDialogPreview() {
   Previewer {
-    DownloadDialog(song = NeverGonnaGiveYouUp, onDismiss = {})
+    DownloadDialog(
+      song = NeverGonnaGiveYouUp, onDismiss = {}, onSave = {}, getProgress = { 0f },
+      getEta = { 0L })
   }
 }
 
+
+private fun ImageBitmap.toByteArray(): ByteArray {
+  val byteArrayOutputStream = ByteArrayOutputStream()
+  this.asAndroidBitmap()
+    .compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, byteArrayOutputStream)
+  return byteArrayOutputStream.toByteArray()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DownloadDialog(
   song: YoutubeSearchResult,
   onDismiss: () -> Unit,
+  onSave: (Song) -> Unit,
+  getProgress: () -> Float,
+  getEta: () -> Long,
 ) {
 
   var title by remember { mutableStateOf(song.title) }
@@ -75,6 +92,7 @@ fun DownloadDialog(
   var year by remember { mutableStateOf(song.publishedAt.year.toString()) }
   val scope = rememberCoroutineScope()
   var bitmap: ImageBitmap = createBlue().toBitmap().asImageBitmap()
+  var shouldShowProgress by remember { mutableStateOf(false) }
 
   var coverBitmap by remember { mutableStateOf(bitmap) }
   LaunchedEffect(scope) {
@@ -196,20 +214,36 @@ fun DownloadDialog(
           Spacer(modifier = Modifier.width(8.dp))
 
           Button(onClick = {
+            onSave(
+              Song(
+                youtubeId = song.videoUrl,
+                title = title,
+                artist = artist,
+                album = album,
+                genre = genre,
+                year = year.toIntOrNull() ?: 0,
+                storagePath = "",
+                duration = song.duration.toInt(),
+                cover = coverBitmap.toByteArray(),
+                isFavorite = false
+              )
+            )
+            shouldShowProgress = true
 
-            TODO("Save the song with the edited details")
-            // Create updated song with edited details
-//            val updatedSong = song.copy(
-//              title = title,
-//              artist = artist,
-//              album = album,
-////              genre = genre.takeIf { it.isNotBlank() },
-////              year = year.takeIf { it.isNotBlank() }?.toIntOrNull(),
-//            )
 
           }) {
             Text(stringResource(R.string.download))
           }
+
+
+        }
+        if (shouldShowProgress) {
+          LinearProgressIndicator(progress = {
+            getProgress() / 100f
+          })
+          Text(
+            text = "${(getProgress().toInt())}% -- ${getEta()}s",
+          )
         }
       }
     }

@@ -29,7 +29,6 @@ fun HomeRoute(modifier: Modifier = Modifier) {
     },
     onComplete = {},
     onError = {},
-    onCancel = {}
   )
   val scope = rememberCoroutineScope()
   Column {
@@ -68,7 +67,9 @@ fun HomeRoute(modifier: Modifier = Modifier) {
     Button(onClick = {
       scope.launch {
         withContext(Dispatchers.IO) {
+          Log.d("HomeRoute", "Getting songs")
           MainActivity.db.songDao().getAll().forEach {
+
             Log.d("HomeRoute", it.toString())
           }
         }

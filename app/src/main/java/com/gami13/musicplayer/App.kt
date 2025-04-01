@@ -5,6 +5,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,24 +28,32 @@ import com.gami13.musicplayer.ui.theme.MusicPlayerTheme
 
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
-fun App(modifier: Modifier = Modifier, fab: @Composable () -> Unit = {}, topAppBar: @Composable () -> Unit = {}) {
+fun App(
+  modifier: Modifier = Modifier,
+  fab: @Composable () -> Unit = {},
+  topAppBar: @Composable () -> Unit = {},
+  snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+
+) {
 
 
   val navController = rememberNavController()
   var selectedRoute: RouteKey by remember { mutableStateOf(RouteKey.Home) }
+
 
   MusicPlayerTheme {
     Scaffold(bottomBar = {
       NavigationBar {
 
         Routes.forEach { (routeKey, route) ->
-          if (route.isVisible) NavigationBarItem(icon = {
-            Icon(
-              (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
-              contentDescription = stringResource(route.translationKey)
-            )
+          if (route.isVisible) NavigationBarItem(
+            icon = {
+              Icon(
+                (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
+                contentDescription = stringResource(route.translationKey)
+              )
 
-          }, label = { Text(stringResource(route.translationKey)) },
+            }, label = { Text(stringResource(route.translationKey)) },
             selected = selectedRoute == routeKey, onClick = {
               selectedRoute = routeKey
               MainActivity.FAB = {}
@@ -54,7 +64,9 @@ fun App(modifier: Modifier = Modifier, fab: @Composable () -> Unit = {}, topAppB
         }
       }
 
-    }, floatingActionButton = { fab() }, topBar = { topAppBar() }) {
+    }, floatingActionButton = { fab() }, topBar = { topAppBar() }, snackbarHost = {
+      SnackbarHost(hostState = snackbarHostState)
+    }) {
       NavHost(
         navController = navController, startDestination = RouteKey.Home, Modifier.padding(it)
       ) {

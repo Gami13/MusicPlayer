@@ -51,6 +51,9 @@ android {
   buildToolsVersion = "35.0.0"
 
 }
+ksp{
+  arg("room.schemaLocation", "$projectDir/schemas")
+}
 
 
 val localeTask: TaskProvider<GenerateLocaleCodeEnumTask> =

@@ -25,14 +25,12 @@ import kotlin.io.path.deleteIfExists
  * @param onProgress Callback for progress updates
  * @param onComplete Callback when download and save are complete
  * @param onError Callback for error handling
- * @param onCancel Callback when download is cancelled
  */
 class SongDownloader(
   private val songUrl: String,
   private val onProgress: (progress: Float, eta: Long, message: String) -> Unit,
   private val onComplete: () -> Unit,
   private val onError: (error: String) -> Unit,
-  private val onCancel: () -> Unit,
 
   ) {
 
@@ -111,6 +109,7 @@ class SongDownloader(
   }
 
   fun saveSong(song: Song) {
+    Log.d(TAG, "Saving song")
     if (!isDownloading) {
       onError("Not downloading")
       return
@@ -193,7 +192,6 @@ class SongDownloader(
     ytdlp.destroyProcessById(processId)
     cleanupTemporaryFiles()
     isDownloading = false
-    onCancel()
   }
 
   fun cleanupTemporaryFiles() {

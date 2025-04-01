@@ -1,5 +1,6 @@
 package com.gami13.musicplayer
 
+import androidx.room.AutoMigration
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
@@ -11,7 +12,7 @@ import androidx.room.RoomDatabase
 
 @Entity(tableName = "songs")
 data class Song(
-  @PrimaryKey val id: Int = 0,
+  @PrimaryKey(autoGenerate = true) val id: Int = 0,
   var youtubeId: String = "",
   var title: String = "",
   var storagePath: String = "",
@@ -45,7 +46,11 @@ interface SongDao {
 }
 
 
-@Database(entities = [Song::class], version = 1)
+@Database(
+  entities = [Song::class], version = 2, autoMigrations = [
+    AutoMigration(1, 2)
+  ], exportSchema = true
+)
 abstract class AppDatabase : RoomDatabase() {
   abstract fun songDao(): SongDao
 
