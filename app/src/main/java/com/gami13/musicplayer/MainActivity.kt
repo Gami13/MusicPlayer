@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
@@ -36,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
 
   companion object {
+    var isPlaying by mutableStateOf(true)
     val httpClient = HttpClient(CIO)
     lateinit var appContext: Context
     var FAB: @Composable () -> Unit by mutableStateOf({})

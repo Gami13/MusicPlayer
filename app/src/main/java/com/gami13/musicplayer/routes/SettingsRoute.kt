@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -48,28 +47,26 @@ import kotlinx.coroutines.flow.flowOf
 fun SettingsRoute(modifier: Modifier = Modifier) {
 
 
-  Column(
-    modifier
-      .fillMaxSize()
-      .padding(8.dp)
-  ) {
-    Container(Modifier.fillMaxWidth()) {
-      Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+  RouteWrapper {
+    Column {
+      Container(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
 
-        Text(
-          text = stringResource(R.string.general_settings),
-          style = MaterialTheme.typography.headlineLarge,
-          color = MaterialTheme.colorScheme.primary
-        )
-        LanguageSettings()
-        MusicDirectory()
+          Text(
+            text = stringResource(R.string.general_settings),
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary
+          )
+          LanguageSettings()
+          MusicDirectory()
+
+        }
 
       }
 
+
     }
-
-
   }
 }
 
@@ -89,7 +86,8 @@ private fun LanguageSettings() {
   Row(
     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top
   ) {
-    Body(header = stringResource(R.string.language),
+    Body(
+      header = stringResource(R.string.language),
       stringResource(R.string.changes_the_language_used_in_the_application_s_interface)
     )
 
@@ -122,7 +120,7 @@ private fun LanguageSettings() {
               value = item.formatName()
               selectedLocale = item
               isExpanded = false
-              
+
               AppCompatDelegate.setApplicationLocales(item.toListCompat())
 
             },

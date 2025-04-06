@@ -1,5 +1,9 @@
+@file:Suppress("t")
+
 package com.gami13.musicplayer
 
+import MusicPlayer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -16,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -39,42 +44,48 @@ fun App(
 
 
   MusicPlayerTheme {
-    Scaffold(bottomBar = {
-      NavigationBar {
-        Routes.forEach { (routeKey, route) ->
-          if (route.isVisible) NavigationBarItem(
-            icon = {
-              Icon(
-                (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
-                contentDescription = stringResource(route.translationKey)
-              )
-            },
-            label = { Text(stringResource(route.translationKey)) },
-            selected = selectedRoute == routeKey,
-            onClick = {
-              selectedRoute = routeKey
-              MainActivity.FAB = {}
-              MainActivity.TopAppBar = {}
-              navController.navigate(routeKey.toString())
-            },
-            alwaysShowLabel = true
-          )
+    Box {
+
+      Scaffold(bottomBar = {
+        NavigationBar {
+          Routes.forEach { (routeKey, route) ->
+            if (route.isVisible) NavigationBarItem(
+              icon = {
+                Icon(
+                  (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
+                  contentDescription = stringResource(route.translationKey)
+                )
+              },
+              label = { Text(stringResource(route.translationKey)) },
+              selected = selectedRoute == routeKey,
+              onClick = {
+                selectedRoute = routeKey
+                MainActivity.FAB = {}
+                MainActivity.TopAppBar = {}
+                navController.navigate(routeKey.toString())
+              },
+              alwaysShowLabel = true
+            )
+          }
         }
-      }
-    }, floatingActionButton = { fab() }, topBar = { topAppBar() }, snackbarHost = {
-      SnackbarHost(hostState = snackbarHostState)
-    }) {
-      NavHost(
-        navController = navController,
-        startDestination = RouteKey.Home.toString(),
-        Modifier.padding(it)
-      ) {
-        Routes.forEach { (routeKey, route) ->
-          composable(routeKey.toString()) {
-            route.view()
+      }, floatingActionButton = { fab() }, topBar = { topAppBar() }, snackbarHost = {
+        SnackbarHost(hostState = snackbarHostState)
+      }) {
+        NavHost(
+          navController = navController,
+          startDestination = RouteKey.Home.toString(),
+          Modifier.padding(it)
+        ) {
+          Routes.forEach { (routeKey, route) ->
+            composable(routeKey.toString()) {
+              route.view()
+            }
           }
         }
       }
+
+      MusicPlayer(naturalOffset = (-104).dp)
+
     }
   }
 }

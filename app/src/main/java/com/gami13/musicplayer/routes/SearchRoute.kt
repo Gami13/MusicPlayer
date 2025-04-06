@@ -1,8 +1,6 @@
 package com.gami13.musicplayer.routes
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -150,11 +148,7 @@ fun SearchRoute(modifier: Modifier = Modifier) {
       },
     )
   }
-  Box(
-    modifier
-      .fillMaxSize()
-      .padding(8.dp),
-  ) {
+  RouteWrapper {
     SearchBar(
       modifier = Modifier
         .fillMaxWidth()
