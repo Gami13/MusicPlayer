@@ -35,4 +35,11 @@
     <string name="clear_search">Clear Search</string>
     <string name="search">Search</string>
     <string name="experiments">Experiments</string>
+    
+    <!-- All Songs section -->
+    <string name="all_songs">All Songs</string>
+    <string name="no_songs_in_library">No songs in your library yet</string>
+    <string name="add_songs_from_search">Add songs using the search tab</string>
+    <string name="play_song">Play song</string>
+    <string name="unknown_artist">Unknown Artist</string>
 </resources>

@@ -94,7 +94,7 @@ fun SongMetadata(song: YoutubeSearchResult) {
 
 
 @Composable
-fun SongItem(song: YoutubeSearchResult, onClick: () -> Unit = {}) {
+fun SearchItem(song: YoutubeSearchResult, onClick: () -> Unit = {}) {
   Row(
     modifier = Modifier
       .fillMaxWidth(),
@@ -139,6 +139,6 @@ fun SongItem(song: YoutubeSearchResult, onClick: () -> Unit = {}) {
 fun SongPreview() {
   Previewer {
 
-    SongItem(NeverGonnaGiveYouUp)
+    SearchItem(NeverGonnaGiveYouUp)
   }
 }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.gami13.musicplayer.utilities.MusicPlayerState
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
@@ -35,14 +36,15 @@ class MainActivity : AppCompatActivity() {
 
 
   companion object {
-    var isPlaying by mutableStateOf(true)
+    var musicPlayerState by mutableStateOf(MusicPlayerState())
+    var test  by mutableStateOf(false)
     val httpClient = HttpClient(CIO)
     lateinit var appContext: Context
     var FAB: @Composable () -> Unit by mutableStateOf({})
     var TopAppBar: @Composable () -> Unit by mutableStateOf({})
     lateinit var db: AppDatabase
     lateinit var openDocumentTree: ActivityResultLauncher<Uri?>
-    val snackbarHostState =   SnackbarHostState()
+    val snackbarHostState = SnackbarHostState()
     private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var mediaPickerCallBack: (Uri) -> Unit
     lateinit var pickMedia: (
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
     db = Room.databaseBuilder(
       applicationContext, AppDatabase::class.java, "music-player"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     Companion.contentResolver = contentResolver
 

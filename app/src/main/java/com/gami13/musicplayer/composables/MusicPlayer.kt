@@ -1,9 +1,9 @@
-@file:Suppress("t")
 
 import android.util.TypedValue
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
@@ -35,7 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -49,19 +50,19 @@ import androidx.core.util.TypedValueCompat
 import androidx.core.view.WindowInsetsCompat
 import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.composables.Container
+import com.gami13.musicplayer.utilities.getThumbnailImageBitmap
 
 enum class PlayerState {
   MINI,
   FULL
 }
 
-const val author = "Artist Name"
-const val songTitle = "Song Title"
 
-val miniHeight = 72.dp
+
+val miniHeight = 76.dp
 private val miniCoverSize = 60.dp
 private val fullCoverSize = 320.dp
-private val miniPadding = 12.dp
+private val miniPadding = 8.dp
 private val miniTitlePadding = 12.dp
 private val fullTopPadding = 72.dp
 private val fullSpacing = 16.dp
@@ -151,14 +152,14 @@ fun PlayerContent(progress: Float) {
   val textMeasurer = rememberTextMeasurer()
 
   val miniTitleResult = textMeasurer.measure(
-    text = songTitle,
+    text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].title,
     style = MaterialTheme.typography.bodyLarge.copy(
       fontSize = miniTitleSize,
       fontWeight = FontWeight(normalWeight),
     )
   )
   val miniAuthorResult = textMeasurer.measure(
-    text = author,
+    text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].artist,
     style = MaterialTheme.typography.bodyMedium.copy(
       fontSize = miniAuthorSize,
       fontWeight = FontWeight(authorWeight),
@@ -166,7 +167,7 @@ fun PlayerContent(progress: Float) {
   )
   val authorFontWeight = FontWeight(authorWeight)
   val authorNameResult = textMeasurer.measure(
-    text = author,
+    text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].artist,
     style = MaterialTheme.typography.bodyMedium.copy(
       fontSize = authorTextSize,
       fontWeight = authorFontWeight,
@@ -179,7 +180,7 @@ fun PlayerContent(progress: Float) {
 
 
   val titleLayoutResult = textMeasurer.measure(
-    text = songTitle,
+    text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].title,
     style = MaterialTheme.typography.bodyLarge.copy(
       fontSize = titleTextSize,
       fontWeight = titleFontWeight,
@@ -308,14 +309,16 @@ fun AnimatedCoverArt(
       .size(size)
       .offset(x = x, y = y)
       .background(Color(0xFF3C3F41), shape = RoundedCornerShape(8.dp)),
-    contentAlignment = Alignment.Center
+    contentAlignment = Alignment.Center,
+
   ) {
-    Icon(
-      imageVector = Icons.Default.MusicNote,
-      contentDescription = "Album Cover",
-      modifier = Modifier.size(size / 2),
-      tint = Color.White
+    Image(
+      MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx]
+        .getThumbnailImageBitmap(), contentDescription = "Album Cover",
+      contentScale = ContentScale.Crop,
+      modifier = Modifier.clip(RoundedCornerShape(8.dp)).fillMaxSize()
     )
+
   }
 }
 
@@ -343,7 +346,7 @@ fun AnimatedTitle(
 //      .background(Color.Red),
   ) {
     Text(
-      text = songTitle,
+      text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].title,
       color = MaterialTheme.colorScheme.primary,
 
       style = MaterialTheme.typography.bodyLarge.copy(
@@ -391,7 +394,7 @@ fun AnimatedAuthorName(
 //      .background(Color.Red),
   ) {
     Text(
-      text = author,
+      text = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx].artist,
       color = MaterialTheme.colorScheme.onSurface,
       style = MaterialTheme.typography.bodyMedium.copy(
         fontSize = authorTextSize,

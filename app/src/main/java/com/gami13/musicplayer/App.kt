@@ -3,6 +3,9 @@
 package com.gami13.musicplayer
 
 import MusicPlayer
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -84,7 +87,13 @@ fun App(
         }
       }
 
-      MusicPlayer(naturalOffset = (-104).dp)
+       AnimatedVisibility(
+        visible = MainActivity.musicPlayerState.isShown,
+        enter = slideInHorizontally(initialOffsetX = { -it }),  // Slide in from left
+        exit = slideOutHorizontally(targetOffsetX = { -it })    // Slide out to left
+      ) {
+        MusicPlayer(naturalOffset = (-104).dp)
+      }
 
     }
   }

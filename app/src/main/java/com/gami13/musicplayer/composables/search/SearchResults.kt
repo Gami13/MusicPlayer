@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gami13.musicplayer.R
 import com.gami13.musicplayer.composables.Container
-import com.gami13.musicplayer.composables.SongItem
+import com.gami13.musicplayer.composables.SearchItem
 import com.gami13.musicplayer.utilities.YoutubeSearchResult
 
 @Composable
@@ -82,7 +82,7 @@ private fun ResultsList(
   ) {
     itemsIndexed(searchResults) { index, song ->
       // Display song item
-      SongItem(song, onClick = { onSongClick(song) })
+      SearchItem(song, onClick = { onSongClick(song) })
       
       // Add divider between items, but not after the last item
       if (index < searchResults.size - 1) {

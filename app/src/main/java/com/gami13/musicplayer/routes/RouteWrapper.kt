@@ -16,7 +16,8 @@ fun RouteWrapper(modifier: Modifier = Modifier, content: @Composable () -> Unit)
     modifier
       .fillMaxSize()
       .padding(
-        top = 8.dp, start = 8.dp, end = 8.dp, bottom = 8.dp + if (MainActivity.isPlaying) miniHeight
+        top = 8.dp, start = 8.dp, end = 8.dp, bottom = 8.dp + if (MainActivity.musicPlayerState.isShown)
+          miniHeight
         else 0.dp
       ),
   ) {
