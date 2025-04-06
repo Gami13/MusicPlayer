@@ -1,6 +1,7 @@
 package com.gami13.musicplayer.routes
 
 
+import ExperimentsRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Home
@@ -27,6 +28,8 @@ sealed class RouteKey {
   @Serializable
   data object Settings : RouteKey()
 
+  @Serializable
+  data object Experiments : RouteKey()
 }
 
 data class Route(
@@ -60,5 +63,12 @@ val Routes: Map<RouteKey, Route> = mapOf(
     translationKey = R.string.route_settings,
     isVisible = true
   ),
-
+  RouteKey.Experiments to Route(
+    view = { ExperimentsRoute() },
+    icon = Icons.Outlined.Settings,
+    iconSelected = Icons.Rounded.Settings,
+    translationKey = R.string.experiments,
+    isVisible = true
   )
+
+)

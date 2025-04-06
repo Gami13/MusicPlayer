@@ -19,11 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.gami13.musicplayer.routes.HomeRoute
 import com.gami13.musicplayer.routes.RouteKey
 import com.gami13.musicplayer.routes.Routes
-import com.gami13.musicplayer.routes.SearchRoute
-import com.gami13.musicplayer.routes.SettingsRoute
 import com.gami13.musicplayer.ui.theme.MusicPlayerTheme
 
 @Preview(showBackground = true, uiMode = 0x21)
@@ -44,7 +41,6 @@ fun App(
   MusicPlayerTheme {
     Scaffold(bottomBar = {
       NavigationBar {
-
         Routes.forEach { (routeKey, route) ->
           if (route.isVisible) NavigationBarItem(
             icon = {
@@ -52,29 +48,32 @@ fun App(
                 (if (selectedRoute == routeKey) route.iconSelected else route.icon)!!,
                 contentDescription = stringResource(route.translationKey)
               )
-
-            }, label = { Text(stringResource(route.translationKey)) },
-            selected = selectedRoute == routeKey, onClick = {
+            },
+            label = { Text(stringResource(route.translationKey)) },
+            selected = selectedRoute == routeKey,
+            onClick = {
               selectedRoute = routeKey
               MainActivity.FAB = {}
               MainActivity.TopAppBar = {}
-              navController.navigate(routeKey)
-            }, alwaysShowLabel = true
+              navController.navigate(routeKey.toString())
+            },
+            alwaysShowLabel = true
           )
         }
       }
-
     }, floatingActionButton = { fab() }, topBar = { topAppBar() }, snackbarHost = {
       SnackbarHost(hostState = snackbarHostState)
     }) {
       NavHost(
-        navController = navController, startDestination = RouteKey.Home, Modifier.padding(it)
+        navController = navController,
+        startDestination = RouteKey.Home.toString(),
+        Modifier.padding(it)
       ) {
-        composable<RouteKey.Home> { HomeRoute() }
-        composable<RouteKey.Search> { SearchRoute() }
-        composable<RouteKey.Settings> { SettingsRoute() }
-
-
+        Routes.forEach { (routeKey, route) ->
+          composable(routeKey.toString()) {
+            route.view()
+          }
+        }
       }
     }
   }

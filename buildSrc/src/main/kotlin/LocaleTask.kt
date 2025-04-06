@@ -1,3 +1,4 @@
+
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
@@ -7,7 +8,6 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 @CacheableTask
 abstract class GenerateLocaleCodeEnumTask : DefaultTask() {
@@ -33,7 +33,7 @@ abstract class GenerateLocaleCodeEnumTask : DefaultTask() {
       //        .replace("-", "_")
     }?.joinToString("") {
       it.uppercase().replace("-", "_") + "(\"" + it + "\"),\n"
-    }?.dropLast(2) + ";") ?: ""
+    }?.dropLast(2) + ";")
     outputDir.mkdirs()
 
 

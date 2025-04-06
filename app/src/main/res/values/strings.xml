@@ -32,6 +32,7 @@
     <string name="days_ago">%1$s days ago</string>
     <string name="months_ago">%1$s months ago</string>
     <string name="years_ago">%1$s years ago</string>
-    <string name="clear_search">Clear Search\n</string>
+    <string name="clear_search">Clear Search</string>
     <string name="search">Search</string>
+    <string name="experiments">Experiments</string>
 </resources>
