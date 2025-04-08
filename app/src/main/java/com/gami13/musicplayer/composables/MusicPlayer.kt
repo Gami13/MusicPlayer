@@ -1,7 +1,8 @@
+package com.gami13.musicplayer.composables
 
 import android.util.TypedValue
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -49,14 +52,13 @@ import androidx.compose.ui.unit.sp
 import androidx.core.util.TypedValueCompat
 import androidx.core.view.WindowInsetsCompat
 import com.gami13.musicplayer.MainActivity
-import com.gami13.musicplayer.composables.Container
+import com.gami13.musicplayer.utilities.extractDominantColors
 import com.gami13.musicplayer.utilities.getThumbnailImageBitmap
 
 enum class PlayerState {
   MINI,
   FULL
 }
-
 
 
 val miniHeight = 76.dp
@@ -103,16 +105,44 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
     PlayerState.FULL at 0f
     PlayerState.MINI at heightRangePx
   }
-  val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+
+
+  val currentSong = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx]
+  val defaultPrimaryColor = MaterialTheme.colorScheme.primary
+  val defaultSecondaryColor = MaterialTheme.colorScheme.surface
+
+  // Extract dominant colors from album cover
+  val (primaryColor, secondaryColor) = remember(currentSong.id) {
+    try {
+      currentSong.getThumbnailImageBitmap()
+        .extractDominantColors(defaultPrimaryColor.toArgb(), defaultSecondaryColor.toArgb())
+    } catch (e: Exception) {
+      Pair(defaultPrimaryColor, defaultSecondaryColor)
+    }
+  }
+  // Create gradient brush using the extracted colors
+  val gradientBrush = remember(primaryColor, secondaryColor) {
+    Brush.linearGradient(
+      colors = listOf(
+        Color(primaryColor as Int).copy(alpha = 0.35f),
+        Color(secondaryColor as Int).copy(alpha = 0.35f)
+      ),
+      start = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, 0f),
+      end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+    )
+  }
 
   val state = remember {
     AnchoredDraggableState(
       initialValue = PlayerState.MINI,
       anchors = anchors,
       positionalThreshold = { distance: Float -> distance * 0.5f },
-      velocityThreshold = { with(density) { 100.dp.toPx() } },
-      snapAnimationSpec = tween<Float>(durationMillis = 300),
-      decayAnimationSpec = decayAnimationSpec
+      velocityThreshold = { with(density) { 50.dp.toPx() } }, // Reducing velocity threshold to make it harder to trigger
+      snapAnimationSpec = tween<Float>(durationMillis = 300), // Increased duration for slower
+      // animation
+      decayAnimationSpec = exponentialDecay<Float>(
+        frictionMultiplier = 2f // Higher friction slows it down more
+      )
     )
   }
 
@@ -132,11 +162,17 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
         .height(currentHeight)
         .fillMaxWidth()
         .align(Alignment.BottomStart)
-        .anchoredDraggable(state, Orientation.Vertical),
+        .anchoredDraggable(
+          state = state,
+          orientation = Orientation.Vertical,
+
+        ),
       shape = RoundedCornerShape(
         topStart = 8
           .dp, topEnd = 8.dp, bottomEnd = 0.dp, bottomStart = 0.dp
       ),
+      backgroundBrush = gradientBrush,
+      contentColor = MaterialTheme.colorScheme.onSurface, // Use onSurface color for text
 
       ) {
       PlayerContent(progress)
@@ -311,12 +347,14 @@ fun AnimatedCoverArt(
       .background(Color(0xFF3C3F41), shape = RoundedCornerShape(8.dp)),
     contentAlignment = Alignment.Center,
 
-  ) {
+    ) {
     Image(
       MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx]
         .getThumbnailImageBitmap(), contentDescription = "Album Cover",
       contentScale = ContentScale.Crop,
-      modifier = Modifier.clip(RoundedCornerShape(8.dp)).fillMaxSize()
+      modifier = Modifier
+        .clip(RoundedCornerShape(8.dp))
+        .fillMaxSize()
     )
 
   }

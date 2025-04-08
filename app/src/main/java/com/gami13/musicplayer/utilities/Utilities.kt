@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.palette.graphics.Palette
 import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.R
 import com.gami13.musicplayer.Song
@@ -60,4 +62,22 @@ fun Bitmap.toByteArray(): ByteArray {
 
 fun ByteArray.toBitmap(): Bitmap {
   return BitmapFactory.decodeByteArray(this, 0, this.size)
+}
+
+fun Bitmap.extractDominantColors(defaultPrimaryColor: Int, defaultSecondaryColor: Int): Pair<Int, Int> {
+  return try {
+    val palette = Palette.from(this).generate()
+    
+    // Get vibrant and dark vibrant colors, with default fallbacks
+    val primaryColor = palette.getVibrantColor(defaultPrimaryColor)
+    val secondaryColor = palette.getDarkVibrantColor(defaultSecondaryColor)
+    
+    Pair(primaryColor, secondaryColor)
+  } catch (e: Exception) {
+    Pair(defaultPrimaryColor, defaultSecondaryColor)
+  }
+}
+
+fun ImageBitmap.extractDominantColors(defaultPrimaryColor: Int, defaultSecondaryColor: Int): Pair<Int, Int> {
+  return this.asAndroidBitmap().extractDominantColors(defaultPrimaryColor, defaultSecondaryColor)
 }

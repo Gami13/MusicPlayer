@@ -5,6 +5,7 @@ coilCompose = "3.1.0"
 coilNetworkOkhttp = "3.1.0"
 datastorePreferences = "1.1.4"
 foundation = "1.7.8"
+paletteKtx = "1.0.0"
 ytdlp = "0.17.2"
 jetbrainsKotlinxSerializationJson = "1.8.0"
 kotlin = "2.0.21"
@@ -31,6 +32,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfileVer" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVer" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVer" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }

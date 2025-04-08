@@ -1,6 +1,9 @@
 package com.gami13.musicplayer.composables
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
@@ -8,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
@@ -32,18 +36,38 @@ fun Container(
     },
     shadowElevation: Dp = 0.dp,
     border: BorderStroke? = null,
+    backgroundBrush: Brush? = null,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(LocalElevationLevel provides elevationLevel) {
-        Surface(
-            modifier = modifier,
-            shape = shape,
-            color = color,
-            contentColor = contentColor,
-            tonalElevation = tonalElevation,
-            shadowElevation = shadowElevation,
-            border = border,
-            content = content
-        )
+        if (backgroundBrush != null) {
+            Surface(
+                modifier = modifier,
+                shape = shape,
+                contentColor = contentColor,
+                tonalElevation = 0.dp, // No elevation when using brush
+                shadowElevation = shadowElevation,
+                border = border,
+            ) {
+                // Use Box with background brush when gradient is provided
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(backgroundBrush),
+                    content = { content() }
+                )
+            }
+        } else {
+            Surface(
+                modifier = modifier,
+                shape = shape,
+                color = color,
+                contentColor = contentColor,
+                tonalElevation = tonalElevation,
+                shadowElevation = shadowElevation,
+                border = border,
+                content = content
+            )
+        }
     }
 }

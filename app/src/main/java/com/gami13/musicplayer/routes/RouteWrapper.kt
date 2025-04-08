@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gami13.musicplayer.MainActivity
-import miniHeight
+import com.gami13.musicplayer.composables.miniHeight
 
 
 @Composable

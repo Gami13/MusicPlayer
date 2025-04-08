@@ -49,6 +49,11 @@ android {
     compose = true
   }
   buildToolsVersion = "35.0.0"
+  packaging {
+    jniLibs {
+      useLegacyPackaging = true
+    }
+  }
 
 }
 ksp{
@@ -101,4 +106,5 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.coil.network.okhttp)
   implementation(libs.androidx.documentfile)
+  implementation(libs.androidx.palette.ktx)
 }
