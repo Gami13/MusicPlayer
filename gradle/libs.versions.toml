@@ -5,7 +5,9 @@ coilCompose = "3.1.0"
 coilNetworkOkhttp = "3.1.0"
 datastorePreferences = "1.1.4"
 foundation = "1.7.8"
+media = "1.7.0"
 paletteKtx = "1.0.0"
+supportV4 = "27.0.1'"
 ytdlp = "0.17.2"
 jetbrainsKotlinxSerializationJson = "1.8.0"
 kotlin = "2.0.21"
@@ -32,11 +34,13 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfileVer" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-media = { module = "androidx.media:media", version.ref = "media" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVer" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVer" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+support-v4 = { module = "'com.android.support:support-v4", version.ref = "supportV4" }
 ytdlp-aria2c = { module = "io.github.junkfood02.youtubedl-android:aria2c", version.ref = "ytdlp" }
 ytdlp-ffmpeg = { module = "io.github.junkfood02.youtubedl-android:ffmpeg", version.ref = "ytdlp" }
 ytdlp-library = { module = "io.github.junkfood02.youtubedl-android:library", version.ref = "ytdlp" }

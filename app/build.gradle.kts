@@ -107,4 +107,5 @@ dependencies {
   implementation(libs.coil.network.okhttp)
   implementation(libs.androidx.documentfile)
   implementation(libs.androidx.palette.ktx)
+  implementation(libs.androidx.media)
 }

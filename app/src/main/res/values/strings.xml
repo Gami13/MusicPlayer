@@ -42,4 +42,6 @@
     <string name="add_songs_from_search">Add songs using the search tab</string>
     <string name="play_song">Play song</string>
     <string name="unknown_artist">Unknown Artist</string>
+    <string name="channel_name">channel name</string>
+    <string name="channel_description">channel description</string>
 </resources>

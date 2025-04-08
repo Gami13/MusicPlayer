@@ -6,10 +6,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,15 +25,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -54,6 +63,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.gami13.musicplayer.MainActivity
 import com.gami13.musicplayer.utilities.extractDominantColors
 import com.gami13.musicplayer.utilities.getThumbnailImageBitmap
+import kotlinx.coroutines.launch
 
 enum class PlayerState {
   MINI,
@@ -107,7 +117,8 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
   }
 
 
-  val currentSong = MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx]
+  val currentSong =
+    MainActivity.musicPlayerState.queue[MainActivity.musicPlayerState.currentSongIdx]
   val defaultPrimaryColor = MaterialTheme.colorScheme.primary
   val defaultSecondaryColor = MaterialTheme.colorScheme.surface
 
@@ -151,7 +162,7 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
     (fullHeightPx - state.offset).coerceIn(miniHeightPx, fullHeightPx).toDp()
   }
   val progress = (1 - (state.offset / heightRangePx)).coerceIn(0f, 1f)
-
+  val scope = rememberCoroutineScope()
   Box(
     modifier = modifier
       .fillMaxSize()
@@ -165,16 +176,27 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
         .anchoredDraggable(
           state = state,
           orientation = Orientation.Vertical,
+        )
+        // Add clickable behavior to expand the mini player
+        .clickable(
+          enabled = progress < 0.1f, // Only enable click when in mini mode
+          onClick = {
+            // Switch to full player mode
+            scope.launch {
 
+              state.animateTo(PlayerState.FULL)
+            }
+          }
         ),
       shape = RoundedCornerShape(
-        topStart = 8
-          .dp, topEnd = 8.dp, bottomEnd = 0.dp, bottomStart = 0.dp
+        topStart = 8.dp,
+        topEnd = 8.dp,
+        bottomEnd = 0.dp,
+        bottomStart = 0.dp
       ),
       backgroundBrush = gradientBrush,
       contentColor = MaterialTheme.colorScheme.onSurface, // Use onSurface color for text
-
-      ) {
+    ) {
       PlayerContent(progress)
     }
   }
@@ -239,94 +261,154 @@ fun PlayerContent(progress: Float) {
     ) {
 
       Spacer(modifier = Modifier.size(miniCoverSize)) // Space for the cover
-      Spacer(modifier = Modifier.weight(1f)) // Space for title
-
-      Row {
-        IconButton(onClick = { /* Play/Pause */ }) {
-          Icon(Icons.Default.PlayArrow, contentDescription = "Play")
-        }
-        IconButton(onClick = { /* Next */ }) {
-          Icon(Icons.Default.SkipNext, contentDescription = "Next")
-        }
+      Spacer(modifier = Modifier.weight(1f)) // Space for title      Row {
+      IconButton(onClick = { MainActivity.musicPlayerState.playOrPause() }) {
+        Icon(
+          if (MainActivity.musicPlayerState.isPlaying)
+            Icons.Default.Pause
+          else
+            Icons.Default.PlayArrow,
+          contentDescription = if (MainActivity.musicPlayerState.isPlaying) "Pause" else "Play"
+        )
+      }
+      IconButton(onClick = { MainActivity.musicPlayerState.playNext() }) {
+        Icon(Icons.Default.SkipNext, contentDescription = "Next")
       }
     }
+  }
+  // Full layout (Column) - only for UI elements when expanded
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(horizontal = 16.dp, vertical = 72.dp)
+      .alpha(progress),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Spacer(modifier = Modifier.height(32.dp))
 
-    // Full layout (Column) - only for UI elements when expanded
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 16.dp, vertical = 72.dp)
-        .alpha(progress),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    // Artwork placeholder (just for spacing)
+    Spacer(modifier = Modifier.size(fullCoverSize))
+
+    Spacer(modifier = Modifier.height(fullSpacing + fullTitleSize.value.dp))
+    Spacer(modifier = Modifier.height(fullAuthorSize.value.dp))    // Seek bar and time display - only visible in full view
+    if (progress > 0.8f) {
       Spacer(modifier = Modifier.height(32.dp))
 
-      // Artwork placeholder (just for spacing)
-      Spacer(modifier = Modifier.size(fullCoverSize))
+      // Time progress display
+      val currentPosition = MainActivity.musicPlayerState.currentPositionSeconds
+      val duration = MainActivity.musicPlayerState.durationSeconds
 
-      Spacer(modifier = Modifier.height(fullSpacing + fullTitleSize.value.dp))
-      Spacer(modifier = Modifier.height(fullAuthorSize.value.dp))
+      // Slider for seeking
+      var sliderPosition by remember { mutableFloatStateOf(currentPosition.toFloat()) }
+      val isSliding = remember { mutableStateOf(false) }
 
-      Spacer(Modifier.weight(1f))
-
-      // Controls in full view
-      Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-          .fillMaxWidth()
-          .alpha(
-            0f + progress
-          )
-
-      ) {
-        IconButton(onClick = { /* Previous */ }) {
-          Icon(Icons.Default.SkipPrevious, contentDescription = "Previous")
-        }
-        IconButton(onClick = { /* Play/Pause */ }) {
-          Icon(
-            Icons.Default.PlayArrow,
-            contentDescription = "Play",
-            modifier = Modifier.size(40.dp)
-          )
-        }
-        IconButton(onClick = { /* Next */ }) {
-          Icon(Icons.Default.SkipNext, contentDescription = "Next")
+      // Keep slider position updated with song position when not sliding
+      androidx.compose.runtime.LaunchedEffect(currentPosition) {
+        if (!isSliding.value) {
+          sliderPosition = currentPosition.toFloat()
         }
       }
+
+      // Show time progress text (current position / total duration)
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+      ) {
+        Text(
+          text = formatTime(currentPosition),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+        )
+
+        Text(
+          text = formatTime(duration),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+        )
+      }
+
+      Spacer(modifier = Modifier.height(8.dp))
+
+      // Seek bar
+      Slider(
+        value = sliderPosition,
+        onValueChange = {
+          sliderPosition = it
+          isSliding.value = true
+        },
+        onValueChangeFinished = {
+          // Update playback position when user finishes sliding
+          isSliding.value = false
+          MainActivity.musicPlayerState.seekTo(sliderPosition.toInt())
+        },
+        valueRange = 0f..duration.toFloat().coerceAtLeast(1f),
+        modifier = Modifier.fillMaxWidth()
+      )
     }
 
-    // Directly position animated elements with calculations instead of measurements
+    Spacer(Modifier.weight(1f))
 
-    // Animated cover art - calculate positions directly
-    AnimatedCoverArt(
-      progress = progress,
-      miniCoverSize = miniCoverSize,
-      fullCoverSize = fullCoverSize,
-      screenWidth = screenWidth
-    )
-
-    // Animated title - calculate positions directly
-    AnimatedTitle(
-      progress = progress,
-      screenWidth = screenWidth,
-      miniTitleHeight = miniTitleResult.size.height.toFloat().toDp(),
-      miniSizeDifference = miniSizeDifference(),
-      titleLayoutWidth = titleLayoutResult.size.width.toFloat().toDp(),
-      titleTextSize = titleTextSize,
-      titleFontWeight = titleFontWeight
-    )
-//     Animated author name - calculate positions directly
-    AnimatedAuthorName(
-      progress = progress,
-      screenWidth = screenWidth,
-      authorTextSize = authorTextSize,
-      authorFontWeight = authorFontWeight,
-      authorTextWidth = authorTextWidth,
-      miniAuthorHeight = miniAuthorResult.size.height.toFloat().toDp(),
-      miniSizeDifference = miniSizeDifference()
-    )
+    // Controls in full view
+    Row(
+      horizontalArrangement = Arrangement.SpaceEvenly,
+      modifier = Modifier
+        .fillMaxWidth()
+        .alpha(0f + progress)
+    ) {
+      IconButton(onClick = { MainActivity.musicPlayerState.playPrevious() }) {
+        Icon(Icons.Default.SkipPrevious, contentDescription = "Previous")
+      }
+      IconButton(
+        onClick = { MainActivity.musicPlayerState.playOrPause() },
+        modifier = Modifier.size(56.dp) // Make play/pause button larger
+      ) {
+        Icon(
+          if (MainActivity.musicPlayerState.isPlaying)
+            Icons.Default.Pause
+          else
+            Icons.Default.PlayArrow,
+          contentDescription = if (MainActivity.musicPlayerState.isPlaying) "Pause" else "Play",
+          modifier = Modifier.size(32.dp)
+        )
+      }
+      IconButton(onClick = { MainActivity.musicPlayerState.playNext() }) {
+        Icon(Icons.Default.SkipNext, contentDescription = "Next")
+      }
+    }
   }
+
+  // Directly position animated elements with calculations instead of measurements
+
+  // Animated cover art - calculate positions directly
+  AnimatedCoverArt(
+    progress = progress,
+    miniCoverSize = miniCoverSize,
+    fullCoverSize = fullCoverSize,
+    screenWidth = screenWidth
+  )
+
+  // Animated title - calculate positions directly
+  AnimatedTitle(
+    progress = progress,
+    screenWidth = screenWidth,
+    miniTitleHeight = miniTitleResult.size.height.toFloat().toDp(),
+    miniSizeDifference = miniSizeDifference(),
+    titleLayoutWidth = titleLayoutResult.size.width.toFloat().toDp(),
+    titleTextSize = titleTextSize,
+    titleFontWeight = titleFontWeight
+  )
+//     Animated author name - calculate positions directly
+  AnimatedAuthorName(
+    progress = progress,
+    screenWidth = screenWidth,
+    authorTextSize = authorTextSize,
+    authorFontWeight = authorFontWeight,
+    authorTextWidth = authorTextWidth,
+    miniAuthorHeight = miniAuthorResult.size.height.toFloat().toDp(),
+    miniSizeDifference = miniSizeDifference()
+  )
 }
+
 
 @Composable
 fun AnimatedCoverArt(
@@ -476,5 +558,13 @@ private fun TextUnit.toDp(): Dp {
     TypedValue.COMPLEX_UNIT_DIP, this.toPx(), MainActivity
       .appContext.resources.displayMetrics
   ).dp
+}
 
+/**
+ * Format seconds into mm:ss format
+ */
+private fun formatTime(seconds: Int): String {
+  val minutes = seconds / 60
+  val remainingSeconds = seconds % 60
+  return String.format("%d:%02d", minutes, remainingSeconds)
 }

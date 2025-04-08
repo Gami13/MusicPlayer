@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.gami13.musicplayer.playback.AudioPlayerManager
 import com.gami13.musicplayer.utilities.MusicPlayerState
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
@@ -34,10 +36,9 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-
   companion object {
     var musicPlayerState by mutableStateOf(MusicPlayerState())
-    var test  by mutableStateOf(false)
+    var test by mutableStateOf(false)
     val httpClient = HttpClient(CIO)
     lateinit var appContext: Context
     var FAB: @Composable () -> Unit by mutableStateOf({})
@@ -51,6 +52,8 @@ class MainActivity : AppCompatActivity() {
       media: PickVisualMedia.VisualMediaType, callback: (Uri) -> Unit
     ) -> Unit
 
+    // Audio player manager to handle media playback
+    var audioPlayerManager: AudioPlayerManager? = null
 
     lateinit var contentResolver: ContentResolver
 
@@ -62,7 +65,6 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-
     appContext = applicationContext
     super.onCreate(savedInstanceState)
 
@@ -72,6 +74,18 @@ class MainActivity : AppCompatActivity() {
         fab = FAB, topAppBar = TopAppBar, snackbarHostState = snackbarHostState
       )
     }
+
+    // Initialize the audio player manager
+    audioPlayerManager = AudioPlayerManager(applicationContext)
+    audioPlayerManager?.setOnProgressUpdateListener { position, duration ->
+      musicPlayerState.currentPositionSeconds = position
+      musicPlayerState.durationSeconds = duration
+      Log.d("YEPPERS", "Progress update: $position / $duration")
+    }
+
+    // Set volume controls to adjust the media volume
+    volumeControlStream = AudioManager.STREAM_MUSIC
+
     db = Room.databaseBuilder(
       applicationContext, AppDatabase::class.java, "music-player"
     ).fallbackToDestructiveMigration().build()
@@ -106,7 +120,6 @@ class MainActivity : AppCompatActivity() {
           }
         }
       }
-
     try {
       YoutubeDL.getInstance().init(this)
       FFmpeg.getInstance().init(this);
@@ -118,8 +131,13 @@ class MainActivity : AppCompatActivity() {
     } catch (e: YoutubeDLException) {
       Log.d(TAG, "failed to initialize youtubedl-android", e)
     }
+  }
 
-
+  override fun onDestroy() {
+    super.onDestroy()
+    // Release the audio player to free resources
+    audioPlayerManager?.release()
+    audioPlayerManager = null
   }
 }
 
