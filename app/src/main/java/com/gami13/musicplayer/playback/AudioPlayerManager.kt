@@ -199,6 +199,7 @@ class AudioPlayerManager(private val context: Context) {
         override fun onSeekTo(pos: Long) {
           super.onSeekTo(pos)
           mediaPlayer.seekTo(pos.toInt())
+
         }
       })
 
@@ -404,13 +405,18 @@ class AudioPlayerManager(private val context: Context) {
     mediaPlayer.seekTo(milliseconds)
 
     // Immediately update UI without waiting for onSeekCompleteListener
-    onProgressUpdate?.invoke(seconds, mediaPlayer.duration / 1000)
+//    onProgressUpdate?.invoke(seconds, mediaPlayer.duration / 1000)
 
-    // Make sure progress updates are running
+//    // Make sure progress updates are running
     if (mediaPlayer.isPlaying) {
       handler.removeCallbacks(progressRunnable)
       handler.post(progressRunnable)
+      this.pausePlayback()
+      this.resumePlayback()
+
     }
+
+
 
     Log.d(TAG, "Seeking to $seconds seconds")
   }

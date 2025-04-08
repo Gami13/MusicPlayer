@@ -31,13 +31,13 @@ class MusicPlayerState(
   var durationSeconds by mutableIntStateOf(0)
 
   // Initialize progress tracking
-  init {
-    MainActivity.audioPlayerManager?.setOnProgressUpdateListener { position, duration ->
-      currentPositionSeconds = position
-      durationSeconds = duration
-      Log.d(TAG, "Progress update: $position / $duration")
-    }
-  }
+//  init {
+//    MainActivity.audioPlayerManager?.setOnProgressUpdateListener { position, duration ->
+//      currentPositionSeconds = position
+//      durationSeconds = duration
+//      Log.d(TAG, "Progress update: $position / $duration")
+//    }
+//  }
 
   fun show() {
     isShown = true

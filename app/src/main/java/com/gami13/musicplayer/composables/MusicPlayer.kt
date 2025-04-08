@@ -1,6 +1,7 @@
 package com.gami13.musicplayer.composables
 
 import android.util.TypedValue
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -157,12 +158,20 @@ fun MusicPlayer(modifier: Modifier = Modifier, naturalOffset: Dp) {
     )
   }
 
-
   val currentHeight = with(density) {
     (fullHeightPx - state.offset).coerceIn(miniHeightPx, fullHeightPx).toDp()
   }
   val progress = (1 - (state.offset / heightRangePx)).coerceIn(0f, 1f)
   val scope = rememberCoroutineScope()
+  
+  // Add back handler to minimize player instead of closing app when back is pressed
+  BackHandler(enabled = progress > 0.5f) {
+    // Only handle back when player is expanded enough
+    scope.launch {
+      state.animateTo(PlayerState.MINI)
+    }
+  }
+  
   Box(
     modifier = modifier
       .fillMaxSize()
@@ -296,9 +305,7 @@ fun PlayerContent(progress: Float) {
 
       // Time progress display
       val currentPosition = MainActivity.musicPlayerState.currentPositionSeconds
-      val duration = MainActivity.musicPlayerState.durationSeconds
-
-      // Slider for seeking
+      val duration = MainActivity.musicPlayerState.durationSeconds      // Slider for seeking
       var sliderPosition by remember { mutableFloatStateOf(currentPosition.toFloat()) }
       val isSliding = remember { mutableStateOf(false) }
 
@@ -309,13 +316,16 @@ fun PlayerContent(progress: Float) {
         }
       }
 
+      // Display time based on slider position during sliding, otherwise use actual position
+      val displayPosition = if (isSliding.value) sliderPosition.toInt() else currentPosition
+
       // Show time progress text (current position / total duration)
       Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Text(
-          text = formatTime(currentPosition),
+          text = formatTime(displayPosition+1),
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )
@@ -339,7 +349,9 @@ fun PlayerContent(progress: Float) {
         onValueChangeFinished = {
           // Update playback position when user finishes sliding
           isSliding.value = false
-          MainActivity.musicPlayerState.seekTo(sliderPosition.toInt())
+          if (sliderPosition.toInt() != currentPosition) {
+            MainActivity.musicPlayerState.seekTo(sliderPosition.toInt())
+          }
         },
         valueRange = 0f..duration.toFloat().coerceAtLeast(1f),
         modifier = Modifier.fillMaxWidth()
