@@ -125,7 +125,6 @@ class AudioPlayerManager(private val context: Context) {
       .setOnAudioFocusChangeListener(audioFocusChangeListener)
       .build()
   }
-
   private fun setupMediaPlayer() {
     mediaPlayer.setAudioAttributes(
       AudioAttributes.Builder()
@@ -145,9 +144,26 @@ class AudioPlayerManager(private val context: Context) {
       false
     }
 
+    mediaPlayer.setOnSeekCompleteListener {
+      // Update UI immediately after seeking completes
+      if (mediaPlayer.duration > 0) {
+        onProgressUpdate?.invoke(
+          mediaPlayer.currentPosition / 1000,
+          mediaPlayer.duration / 1000
+        )
+      }
+    }
+
     mediaPlayer.setOnPreparedListener {
       // Start playback if we have audio focus or request audio focus
       requestAudioFocus()
+      // Report initial duration
+      if (mediaPlayer.duration > 0) {
+        onProgressUpdate?.invoke(
+          mediaPlayer.currentPosition / 1000,
+          mediaPlayer.duration / 1000
+        )
+      }
     }
   }
 
@@ -380,9 +396,23 @@ class AudioPlayerManager(private val context: Context) {
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.cancel(NOTIFICATION_ID)
   }
-
   fun seekTo(seconds: Int) {
-    mediaPlayer.seekTo(seconds * 1000)
+    // Convert seconds to milliseconds for MediaPlayer
+    val milliseconds = seconds * 1000
+
+    // Perform the seek operation
+    mediaPlayer.seekTo(milliseconds)
+
+    // Immediately update UI without waiting for onSeekCompleteListener
+    onProgressUpdate?.invoke(seconds, mediaPlayer.duration / 1000)
+
+    // Make sure progress updates are running
+    if (mediaPlayer.isPlaying) {
+      handler.removeCallbacks(progressRunnable)
+      handler.post(progressRunnable)
+    }
+
+    Log.d(TAG, "Seeking to $seconds seconds")
   }
 
   fun isPlaying(): Boolean {
