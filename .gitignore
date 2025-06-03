@@ -15,3 +15,6 @@
 local.properties
 */Secrets.kt
 app/src/main/java/com/gami13/musicplayer/Secrets.kt
+*/problems-report.html
+
+build/reports/problems/problems-report.html
