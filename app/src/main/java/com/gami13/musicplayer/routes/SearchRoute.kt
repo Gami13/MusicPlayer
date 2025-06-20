@@ -210,7 +210,6 @@ fun SearchRoute(modifier: Modifier = Modifier) {
         }
         songToDownload = it
 
-//        TODO("Start pre-downloading")
       }
     )
   }

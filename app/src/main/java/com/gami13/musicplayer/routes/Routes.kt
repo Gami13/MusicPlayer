@@ -63,12 +63,12 @@ val Routes: Map<RouteKey, Route> = mapOf(
     translationKey = R.string.route_settings,
     isVisible = true
   ),
-  RouteKey.Experiments to Route(
-    view = { ExperimentsRoute() },
-    icon = Icons.Outlined.Settings,
-    iconSelected = Icons.Rounded.Settings,
-    translationKey = R.string.experiments,
-    isVisible = true
-  )
+//  RouteKey.Experiments to Route(
+//    view = { ExperimentsRoute() },
+//    icon = Icons.Outlined.Settings,
+//    iconSelected = Icons.Rounded.Settings,
+//    translationKey = R.string.experiments,
+//    isVisible = true
+//  )
 
 )

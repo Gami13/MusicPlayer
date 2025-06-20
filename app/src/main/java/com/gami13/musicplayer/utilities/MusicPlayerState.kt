@@ -30,14 +30,7 @@ class MusicPlayerState(
   var currentPositionSeconds by mutableIntStateOf(0)
   var durationSeconds by mutableIntStateOf(0)
 
-  // Initialize progress tracking
-//  init {
-//    MainActivity.audioPlayerManager?.setOnProgressUpdateListener { position, duration ->
-//      currentPositionSeconds = position
-//      durationSeconds = duration
-//      Log.d(TAG, "Progress update: $position / $duration")
-//    }
-//  }
+
 
   fun show() {
     isShown = true
@@ -80,22 +73,22 @@ class MusicPlayerState(
     }
 
     if (isPlaying) {
-      MainActivity.audioPlayerManager?.pausePlayback()
+//      MainActivity.audioPlayerManager?.pausePlayback()
     } else {
-      MainActivity.audioPlayerManager?.resumePlayback()
+//      MainActivity.audioPlayerManager?.resumePlayback()
     }
   }
 
   fun playNext() {
     if (queue.isEmpty()) return
 
-    MainActivity.audioPlayerManager?.playNext()
+//    MainActivity.audioPlayerManager?.playNext()
   }
 
   fun playPrevious() {
     if (queue.isEmpty()) return
 
-    MainActivity.audioPlayerManager?.playPrevious()
+//    MainActivity.audioPlayerManager?.playPrevious()
   }
 
   fun seekTo(seconds: Int) {
@@ -103,10 +96,10 @@ class MusicPlayerState(
       TAG,
       "Seeking to $seconds seconds (current position: $currentPositionSeconds, duration: $durationSeconds)"
     )
-    MainActivity.audioPlayerManager?.seekTo(seconds)
-    if (MainActivity.audioPlayerManager != null) {
-      Log.d("TAG", "AudioPlayerManager is not null")
-    }
+//    MainActivity.audioPlayerManager?.seekTo(seconds)
+//    if (MainActivity.audioPlayerManager != null) {
+//      Log.d("TAG", "AudioPlayerManager is not null")
+//    }
   }
 
   private fun loadCurrentSong() {
@@ -115,7 +108,7 @@ class MusicPlayerState(
       return
     }
 
-    MainActivity.audioPlayerManager?.loadSong(queue[currentSongIdx])
+//    MainActivity.audioPlayerManager?.loadSong(queue[currentSongIdx])
   }
 
   fun log() {

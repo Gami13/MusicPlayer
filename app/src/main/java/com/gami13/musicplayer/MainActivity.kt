@@ -22,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import com.gami13.musicplayer.playback.AudioPlayerManager
 import com.gami13.musicplayer.utilities.MusicPlayerState
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
@@ -51,12 +50,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var pickMedia: (
       media: PickVisualMedia.VisualMediaType, callback: (Uri) -> Unit
     ) -> Unit
-
-    // Audio player manager to handle media playback
-    var audioPlayerManager: AudioPlayerManager? = null
-
     lateinit var contentResolver: ContentResolver
-
     val settingsRepository by lazy {
       SettingsRepository(
         context = appContext
@@ -75,16 +69,6 @@ class MainActivity : AppCompatActivity() {
       )
     }
 
-    // Initialize the audio player manager
-    audioPlayerManager = AudioPlayerManager(applicationContext)
-    audioPlayerManager?.setOnProgressUpdateListener { position, duration ->
-      musicPlayerState.currentPositionSeconds = position
-      musicPlayerState.durationSeconds = duration
-      Log.d("YEPPERS", "Progress update: $position / $duration")
-    }
-
-    // Set volume controls to adjust the media volume
-    volumeControlStream = AudioManager.STREAM_MUSIC
 
     db = Room.databaseBuilder(
       applicationContext, AppDatabase::class.java, "music-player"
@@ -136,8 +120,8 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
     // Release the audio player to free resources
-    audioPlayerManager?.release()
-    audioPlayerManager = null
+//    audioPlayerManager?.release()
+//    audioPlayerManager = null
   }
 }
 
