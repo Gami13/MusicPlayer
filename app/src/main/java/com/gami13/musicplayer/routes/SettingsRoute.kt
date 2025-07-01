@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gami13.musicplayer.R
 import com.gami13.musicplayer.composables.Container
+import com.gami13.musicplayer.composables.Previewer
 import com.gami13.musicplayer.locales.LocaleCode
 import com.gami13.musicplayer.locales.formatName
 import com.gami13.musicplayer.viewmodels.SettingsUiState
@@ -39,12 +40,49 @@ import kotlinx.coroutines.flow.flowOf
 
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
+fun SettingsRoutePreview() {
+  val uiState = SettingsUiState(
+    selectedLocale = LocaleCode.EN_US,
+    isLanguageDropdownExpanded = false,
+    languageDropdownValue = "English",
+    musicDirectoryUri = "",
+    musicDirectoryUriPretty = "",
+    availableLanguages = LocaleCode.entries.sortedBy { it.formatName() }
+
+  )
+  Previewer {
+    SettingsRouteContent(
+      uiState = uiState,
+      onLanguageDropdownExpandedChanged = {},
+      onLanguageSelected = {},
+      onBrowseDirectoryClicked = {}
+    )
+  }
+}
+
+@Composable
 fun SettingsRoute(
-  modifier: Modifier = Modifier,
   viewModel: SettingsViewModel = viewModel()
 ) {
   val uiState by viewModel.uiState.collectAsState()
 
+  SettingsRouteContent(
+    uiState = uiState,
+    onLanguageDropdownExpandedChanged = viewModel::onLanguageDropdownExpandedChanged,
+    onLanguageSelected = viewModel::onLanguageSelected,
+    onBrowseDirectoryClicked = viewModel::onBrowseDirectoryClicked
+  )
+}
+
+
+@Composable
+fun SettingsRouteContent(
+  uiState: SettingsUiState = SettingsUiState(),
+  onLanguageDropdownExpandedChanged: (Boolean) -> Unit = {},
+  onLanguageSelected: (LocaleCode) -> Unit = {},
+  onBrowseDirectoryClicked: () -> Unit = {}
+
+) {
   RouteWrapper {
     Column {
       Container(Modifier.fillMaxWidth()) {
@@ -58,13 +96,13 @@ fun SettingsRoute(
 
           LanguageSettings(
             uiState = uiState,
-            onLanguageDropdownExpandedChanged = viewModel::onLanguageDropdownExpandedChanged,
-            onLanguageSelected = viewModel::onLanguageSelected
+            onLanguageDropdownExpandedChanged = onLanguageDropdownExpandedChanged,
+            onLanguageSelected = onLanguageSelected
           )
 
           MusicDirectory(
             uiState = uiState,
-            onBrowseDirectoryClicked = viewModel::onBrowseDirectoryClicked
+            onBrowseDirectoryClicked = onBrowseDirectoryClicked
           )
         }
       }
@@ -73,7 +111,6 @@ fun SettingsRoute(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 private fun LanguageSettings(
   uiState: SettingsUiState = SettingsUiState(),
@@ -118,14 +155,11 @@ private fun LanguageSettings(
   }
 }
 
-@Preview
 @Composable
 private fun MusicDirectory(
   uiState: SettingsUiState = SettingsUiState(),
   onBrowseDirectoryClicked: () -> Unit = {}
 ) {
-
-
   Row(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.Top
@@ -155,7 +189,7 @@ private fun MusicDirectory(
 
 @Composable
 private fun Body(header: String, description: String) {
-  Column(Modifier.fillMaxWidth(0.55f)) {
+  Column(Modifier.fillMaxWidth(0.55f).padding(end = 8.dp)) {
     Text(text = header, style = MaterialTheme.typography.titleMedium)
     Text(
       style = MaterialTheme.typography.bodySmall,

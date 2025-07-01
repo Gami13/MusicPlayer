@@ -69,7 +69,6 @@ class SettingsViewModel(
             isLanguageDropdownExpanded = false
         )
 
-        // Apply the language change
         AppCompatDelegate.setApplicationLocales(locale.toListCompat())
     }
 
