@@ -7,7 +7,7 @@
     <string name="route_download">Pobieranie</string>
     <string name="download_song">Pobierz piosenke</string>
     <string name="cover">Okładka</string>
-    <string name="change_cover_image">Zmień okładke</string>
+    <string name="change_cover">Zmień okładke</string>
     <string name="title">Tytuł</string>
     <string name="artist">Artysta</string>
     <string name="album">Album</string>
@@ -17,15 +17,13 @@
     <string name="download">Pobierz</string>
     <string name="general_settings">Główne ustawienia</string>
     <string name="hinted_search_text">Podpowiedź wyszukanego tekstu</string>
-    <string name="no_results_found_for">Nie znaleziono wyników dla \"%1$s\"</string>
-    <string name="an_error_occurred_when_searching_youtube">Wystąpił błąd</string>
-    <string name="search_for_your_favorite_songs">Szukaj twojej ulubionej muzyki</string>
+    <string name="search_description">Szukaj twojej ulubionej muzyki</string>
     <string name="try_again">Spróbuj ponownie</string>
-    <string name="changes_the_language_used_in_the_application_s_interface">Zmienia język używany w interfejsie aplikacji</string>
+    <string name="settings_language_description">Zmienia język używany w interfejsie aplikacji</string>
     <string name="language">Język</string>
     <string name="select">Wybierz</string>
     <string name="music_directory">Katalog muzyki</string>
-    <string name="sets_the_directory_the_application_will_use_for_storing_the_music_files">Ustawia katalog który będzie używany do przechowywania twojej muzyki</string>
+    <string name="music_directory_description">Ustawia katalog który będzie używany do przechowywania twojej muzyki</string>
     <string name="no_directory_selected">Nie wybrano katalogu</string>
     <string name="browse">Przeglądaj</string>
     <string name="thumbnail_for">Miniaturka dla %1$s</string>
@@ -42,4 +40,6 @@
     <string name="add_songs_from_search">Dodaj piosenki używając zakładki wyszukiwania</string>
     <string name="play_song">Graj piosenke</string>
     <string name="unknown_artist">Nieznany artysta</string>
+    <string name="no_results">Nie znaleziono wyników dla \"%1$s\"</string>
+    <string name="youtube_search_error">Wystąpił błąd</string>
 </resources>

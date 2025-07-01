@@ -119,9 +119,9 @@ private fun EmptySearchState(
 
     // Status message based on current state
     val messageText = when {
-      searchQuery.isNotEmpty() -> stringResource(R.string.no_results_found_for, searchQuery)
-      isError -> stringResource(R.string.an_error_occurred_when_searching_youtube)
-      else -> stringResource(R.string.search_for_your_favorite_songs)
+      searchQuery.isNotEmpty() -> stringResource(R.string.no_results, searchQuery)
+      isError -> stringResource(R.string.youtube_search_error)
+      else -> stringResource(R.string.search_description)
     }
     
     Text(

@@ -5,7 +5,7 @@
     <string name="route_download">Download</string>
     <string name="download_song">Download Song</string>
     <string name="cover">Cover</string>
-    <string name="change_cover_image">Change cover image</string>
+    <string name="change_cover">Change cover image</string>
     <string name="title">Title</string>
     <string name="artist">Artist</string>
     <string name="album">Album</string>
@@ -15,15 +15,17 @@
     <string name="download">Download</string>
     <string name="general_settings">General Settings</string>
     <string name="hinted_search_text">Hinted search text</string>
-    <string name="no_results_found_for">No results found for \"%1$s\"</string>
-    <string name="an_error_occurred_when_searching_youtube">An error occurred when searching YouTube</string>
-    <string name="search_for_your_favorite_songs">Search for your favorite songs</string>
+    <string name="no_results">No results found for \"%1$s\"</string>
+    <string name="youtube_search_error">An error occurred when searching YouTube</string>
+    <string name="search_description">Search for your favorite songs</string>
     <string name="try_again">Try Again</string>
-    <string name="changes_the_language_used_in_the_application_s_interface">Changes the language used in the application\'s interface</string>
+    <string name="settings_language_description">Changes the language used in the application\'s
+        interface</string>
     <string name="language">Language</string>
     <string name="select">Select</string>
     <string name="music_directory">Music directory</string>
-    <string name="sets_the_directory_the_application_will_use_for_storing_the_music_files">Sets the directory the application will use for storing the music files</string>
+    <string name="music_directory_description">Sets the directory the application will use for
+        storing the music files</string>
     <string name="no_directory_selected">No directory selected</string>
     <string name="browse">Browse</string>
     <string name="thumbnail_for">Thumbnail for %1$s</string>
@@ -44,4 +46,5 @@
     <string name="unknown_artist">Unknown Artist</string>
     <string name="channel_name">channel name</string>
     <string name="channel_description">channel description</string>
+    <string name="route_player">Player</string>
 </resources>

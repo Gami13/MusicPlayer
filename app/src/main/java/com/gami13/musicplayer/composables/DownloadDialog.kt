@@ -144,7 +144,7 @@ fun DownloadDialog(
             ) {
               Icon(
                 Icons.Default.AddPhotoAlternate,
-                contentDescription = stringResource(R.string.change_cover_image)
+                contentDescription = stringResource(R.string.change_cover)
               )
             }
           }
