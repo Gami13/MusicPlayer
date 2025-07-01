@@ -1,4 +1,4 @@
-package com.gami13.musicplayer.viewmodels
+package com.gami13.musicplayer.routes.settings
 
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
@@ -13,10 +13,9 @@ import com.gami13.musicplayer.locales.toListCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class SettingsUiState(
+data class SettingsUIState(
     val selectedLocale: LocaleCode = LocaleCode.EN_US,
     val isLanguageDropdownExpanded: Boolean = false,
     val languageDropdownValue: String = "",
@@ -29,8 +28,8 @@ class SettingsViewModel(
     private val settingsRepository: SettingsRepository = MainActivity.settingsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState())
-    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SettingsUIState())
+    val uiState: StateFlow<SettingsUIState> = _uiState.asStateFlow()
 
     init {
         initializeSettings()

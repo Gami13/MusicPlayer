@@ -1,4 +1,4 @@
-package com.gami13.musicplayer.routes
+package com.gami13.musicplayer.routes.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,15 +32,13 @@ import com.gami13.musicplayer.composables.Container
 import com.gami13.musicplayer.composables.Previewer
 import com.gami13.musicplayer.locales.LocaleCode
 import com.gami13.musicplayer.locales.formatName
-import com.gami13.musicplayer.viewmodels.SettingsUiState
-import com.gami13.musicplayer.viewmodels.SettingsViewModel
-import kotlinx.coroutines.flow.flowOf
+import com.gami13.musicplayer.routes.RouteWrapper
 
 
 @Preview(showBackground = true, uiMode = 0x21)
 @Composable
 fun SettingsRoutePreview() {
-  val uiState = SettingsUiState(
+  val uiState = SettingsUIState(
     selectedLocale = LocaleCode.EN_US,
     isLanguageDropdownExpanded = false,
     languageDropdownValue = "English",
@@ -77,7 +74,7 @@ fun SettingsRoute(
 
 @Composable
 fun SettingsRouteContent(
-  uiState: SettingsUiState = SettingsUiState(),
+  uiState: SettingsUIState = SettingsUIState(),
   onLanguageDropdownExpandedChanged: (Boolean) -> Unit = {},
   onLanguageSelected: (LocaleCode) -> Unit = {},
   onBrowseDirectoryClicked: () -> Unit = {}
@@ -113,7 +110,7 @@ fun SettingsRouteContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LanguageSettings(
-  uiState: SettingsUiState = SettingsUiState(),
+  uiState: SettingsUIState = SettingsUIState(),
   onLanguageDropdownExpandedChanged: (Boolean) -> Unit = {},
   onLanguageSelected: (LocaleCode) -> Unit = {}
 ) {
@@ -157,7 +154,7 @@ private fun LanguageSettings(
 
 @Composable
 private fun MusicDirectory(
-  uiState: SettingsUiState = SettingsUiState(),
+  uiState: SettingsUIState = SettingsUIState(),
   onBrowseDirectoryClicked: () -> Unit = {}
 ) {
   Row(

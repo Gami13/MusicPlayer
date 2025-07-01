@@ -1,7 +1,6 @@
 package com.gami13.musicplayer.routes
 
 
-import ExperimentsRoute
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Home
@@ -12,6 +11,9 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gami13.musicplayer.R
+import com.gami13.musicplayer.routes.home.HomeRoute
+import com.gami13.musicplayer.routes.search.SearchRoute
+import com.gami13.musicplayer.routes.settings.SettingsRoute
 import kotlinx.serialization.Serializable
 
 

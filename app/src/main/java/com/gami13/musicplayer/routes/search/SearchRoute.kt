@@ -1,4 +1,4 @@
-package com.gami13.musicplayer.routes
+package com.gami13.musicplayer.routes.search
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +30,7 @@ import com.gami13.musicplayer.composables.search.SearchBar
 import com.gami13.musicplayer.composables.search.SearchResults
 import com.gami13.musicplayer.mocks.ExampleSuggestions
 import com.gami13.musicplayer.mocks.NeverGonnaGiveYouUp
+import com.gami13.musicplayer.routes.RouteWrapper
 import com.gami13.musicplayer.utilities.YoutubeSearchResult
 import com.gami13.musicplayer.utilities.getAutoCompleteSuggestions
 import com.gami13.musicplayer.utilities.searchYoutube

@@ -1,4 +1,4 @@
-package com.gami13.musicplayer.routes
+package com.gami13.musicplayer.routes.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,41 +17,49 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gami13.musicplayer.MainActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gami13.musicplayer.R
 import com.gami13.musicplayer.Song
 import com.gami13.musicplayer.composables.Container
 import com.gami13.musicplayer.composables.LibrarySongItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.gami13.musicplayer.composables.Previewer
+import com.gami13.musicplayer.routes.RouteWrapper
+
+
+@Preview(showBackground = true, uiMode = 0x21)
+@Composable
+fun HomeRoutePreview() {
+  val uiState = HomeUIState()
+  Previewer {
+    HomeRouteContent(
+      uiState = uiState,
+    )
+  }
+}
+
+
+@Composable
+fun HomeRoute(
+  viewModel: HomeViewModel = viewModel()
+) {
+  val uiState by viewModel.uiState.collectAsState()
+  HomeRouteContent(
+    uiState = uiState,
+  )
+}
 
 @Preview(showBackground = true)
 @Composable
-fun HomeRoute(modifier: Modifier = Modifier) {
-  var songs by remember { mutableStateOf<List<Song>>(emptyList()) }
-  var isLoading by remember { mutableStateOf(true) }
-
-  // Load songs from database when the screen is first shown
-  LaunchedEffect(Unit) {
-    withContext(Dispatchers.IO) {
-      val result = MainActivity.db.songDao().getAll()
-      songs = result
-      isLoading = false
-    }
-  }
+fun HomeRouteContent(modifier: Modifier = Modifier, uiState: HomeUIState = HomeUIState()) {
 
   RouteWrapper {
-
     Column(modifier = modifier.fillMaxSize()) {
       // Title section
       Text(
@@ -67,9 +75,9 @@ fun HomeRoute(modifier: Modifier = Modifier) {
           .weight(1f)
       ) {
         when {
-          isLoading -> LoadingState()
-          songs.isEmpty() -> EmptyLibraryState()
-          else -> SongsList(songs = songs)
+          uiState.isLoading -> LoadingState()
+          uiState.songs.isEmpty() -> EmptyLibraryState()
+          else -> SongsList(songs = uiState.songs)
         }
       }
     }
@@ -125,7 +133,6 @@ private fun EmptyLibraryState() {
 
 @Composable
 private fun SongsList(songs: List<Song>, modifier: Modifier = Modifier) {
-  // Create a LazyColumn to display the songs
   LazyColumn(
     modifier = modifier.fillMaxSize(),
     contentPadding = PaddingValues(8.dp)
@@ -133,8 +140,8 @@ private fun SongsList(songs: List<Song>, modifier: Modifier = Modifier) {
     itemsIndexed(songs) { index, song ->
       // Display song item
       LibrarySongItem(song = song, onClick = {
-        MainActivity.musicPlayerState.show()
-        MainActivity.musicPlayerState.enqueue(song)
+//        MainActivity.musicPlayerState.show()
+//        MainActivity.musicPlayerState.enqueue(song)
       })
 
       // Add divider between items, but not after the last item
